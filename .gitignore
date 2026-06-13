@@ -1,0 +1,27 @@
+# Sistema
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Editores
+.vscode/
+.idea/
+.claude/
+
+# Node (por si más adelante usas CLI de Supabase)
+node_modules/
+
+# Supabase CLI
+supabase/.temp/
+
+# Secretos de despliegue — NUNCA subir
+.env.deploy
+.env
+*.key
+*-private*.json
+keys.txt
+
+# Nota: supabase-config.js contiene SOLO la clave pública (anon/publishable),
+# que es pública por diseño; es seguro versionarla. Si prefieres no subirla,
+# descomenta la línea siguiente y crea el archivo en cada despliegue:
+# supabase-config.js

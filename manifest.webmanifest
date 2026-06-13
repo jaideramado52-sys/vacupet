@@ -1,0 +1,17 @@
+{
+  "name": "VacuPet — Carné de salud para mascotas",
+  "short_name": "VacuPet",
+  "description": "Carné digital para tu mascota: vacunas, desparasitación, peso y recordatorios.",
+  "start_url": "./VacuPet.html",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#F4F8F4",
+  "theme_color": "#16A34A",
+  "lang": "es",
+  "categories": ["lifestyle", "medical", "utilities"],
+  "icons": [
+    { "src": "./icon.svg", "type": "image/svg+xml", "sizes": "any", "purpose": "any" },
+    { "src": "./icon-maskable.svg", "type": "image/svg+xml", "sizes": "any", "purpose": "maskable" }
+  ]
+}

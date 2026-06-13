@@ -1,0 +1,15 @@
+# Netlify / Cloudflare Pages — cabeceras de producción
+
+# El service worker y la config NO deben cachearse (para que las actualizaciones lleguen)
+/service-worker.js
+  Cache-Control: public, max-age=0, must-revalidate
+/supabase-config.js
+  Cache-Control: public, max-age=0, must-revalidate
+
+# El manifest con su tipo correcto
+/manifest.webmanifest
+  Content-Type: application/manifest+json; charset=utf-8
+
+# Permite que el service worker controle toda la raíz
+/service-worker.js
+  Service-Worker-Allowed: /
