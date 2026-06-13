@@ -204,6 +204,31 @@ nav.tabbar button.on{color:var(--accent)}
 .linkbox{display:flex;gap:8px;margin-top:12px}
 .linkbox input{font-size:12px;color:var(--muted)}
 
+/* ---- Asistente (chat) ---- */
+.fab{position:fixed;right:16px;bottom:calc(80px + env(safe-area-inset-bottom));z-index:38;width:54px;height:54px;border-radius:50%;background:var(--accent);color:#fff;border:0;box-shadow:var(--shadow-lg);display:grid;place-items:center}
+.fab svg{width:24px;height:24px}
+.chat{display:flex;flex-direction:column;height:90dvh}
+.chat-body{flex:1;overflow-y:auto;padding:16px;display:flex;flex-direction:column;gap:9px}
+.bub{max-width:84%;padding:10px 13px;border-radius:16px;font-size:14.5px;line-height:1.45;white-space:pre-wrap;word-wrap:break-word}
+.bub.bot{background:var(--surface-2);border:1px solid var(--line);border-bottom-left-radius:5px;align-self:flex-start}
+.bub.user{background:var(--accent);color:#fff;border-bottom-right-radius:5px;align-self:flex-end}
+.bub .inline-actions{display:flex;flex-wrap:wrap;gap:7px;margin-top:9px}
+.bub .ia-btn{border:1px solid var(--line);background:var(--surface);color:var(--accent-ink);border-radius:999px;padding:6px 11px;font-size:13px;font-weight:600}
+.chips-row{display:flex;gap:7px;overflow-x:auto;padding:0 16px 8px;scrollbar-width:none}
+.chips-row::-webkit-scrollbar{display:none}
+.chip-btn{flex:none;border:1px solid var(--line);background:var(--surface);color:var(--accent-ink);border-radius:999px;padding:7px 12px;font-size:13px;font-weight:600;white-space:nowrap}
+.chat-input{display:flex;gap:8px;padding:12px 16px 6px;border-top:1px solid var(--line-2);background:var(--surface)}
+.chat-input input{flex:1}
+.chat-input .btn{height:46px;padding:0 14px}
+.chat-disc{font-size:11px;color:var(--muted);text-align:center;padding:4px 16px calc(10px + env(safe-area-inset-bottom))}
+/* ---- OCR review ---- */
+.ocr-item{display:flex;align-items:center;gap:11px;padding:11px 4px;border-bottom:1px solid var(--line-2)}
+.ocr-item:last-child{border-bottom:0}
+.ocr-item input[type=checkbox]{width:20px;height:20px;flex:none}
+.ocr-item .oi{flex:1;min-width:0}
+.ocr-item .oi b{font-size:14px;display:block}
+.ocr-item .oi span{font-size:12.5px;color:var(--muted)}
+
 /* ---- Toast ---- */
 .toast{position:fixed;left:50%;bottom:88px;transform:translateX(-50%) translateY(20px);z-index:80;
   background:var(--ink);color:var(--bg);padding:11px 18px;border-radius:12px;font-size:14px;font-weight:600;
@@ -248,6 +273,8 @@ nav.tabbar button.on{color:var(--accent)}
 <nav class="tabbar" id="tabbar" role="tablist"></nav>
 
 <div id="modalRoot"></div>
+<div id="assistantRoot"></div>
+<button class="fab hide" id="fab" aria-label="Asistente"></button>
 <div class="toast" id="toast" role="status" aria-live="polite"></div>
 <div id="printArea"></div>
 
@@ -283,6 +310,9 @@ const I = {
   pdf:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M14 3H6v18h12V7z"/><path d="M14 3v4h4M8 13h8M8 17h5"/></svg>',
   share:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><path d="M8.6 13.5l6.8 4M15.4 6.5l-6.8 4"/></svg>',
   copy:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="12" height="12" rx="2"/><path d="M5 15V5a2 2 0 0 1 2-2h8"/></svg>',
+  spark:'<svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2.5l1.7 4.6 4.6 1.7-4.6 1.7L12 15.1l-1.7-4.6L5.7 8.8l4.6-1.7L12 2.5z"/><path d="M19 14l.9 2.4 2.4.9-2.4.9L19 21l-.9-2.4-2.4-.9 2.4-.9L19 14z"/></svg>',
+  camera:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 8.5A2.5 2.5 0 0 1 5.5 6h1L8 4h8l1.5 2h1A2.5 2.5 0 0 1 21 8.5v9A2.5 2.5 0 0 1 18.5 20h-13A2.5 2.5 0 0 1 3 17.5z"/><circle cx="12" cy="13" r="3.5"/></svg>',
+  send:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12l16-7-7 16-2.5-6.5L4 12z"/></svg>',
   download:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v12m0 0 4-4m-4 4-4-4M5 21h14"/></svg>',
   upload:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 21V9m0 0 4 4m-4-4-4 4M5 3h14"/></svg>',
 };
@@ -330,6 +360,23 @@ const STR = {
     auth_title:'Iniciar sesión', auth_email:'Tu correo', auth_send:'Enviar código', auth_code:'Código de 6 dígitos', auth_verify:'Verificar',
     auth_sent:'Te enviamos un código a tu correo', cloud_off:'La nube no está configurada (modo local).',
     sync_done:'Sincronizado', sync_pulled:'Datos actualizados desde la nube', sync_err:'No se pudo sincronizar', signed_out:'Sesión cerrada', loading:'Cargando…',
+    asst_title:'Asistente VacuPet', asst_open:'Asistente', asst_open_sub:'¿Qué le falta? Próximas dosis, dudas…',
+    asst_ph:'Escribe tu pregunta…', asst_disc:'Información general. No reemplaza al veterinario.',
+    asst_greeting:'¡Hola! Soy tu asistente. Puedo decirte qué le falta a tu mascota, cuándo toca la próxima dosis o resolver dudas generales. ¿Qué necesitas?',
+    asst_thinking:'Pensando…', asst_faq_err:'No pude consultar ahora mismo. Intenta de nuevo.',
+    chip_missing:'¿Qué le falta?', chip_next:'Próxima dosis', chip_deworm:'Desparasitación', chip_register:'Registrar', chip_explain:'¿Cómo funciona?',
+    a_none_pet:'Primero añade una mascota para poder ayudarte.',
+    a_uptodate:'¡{nombre} está al día! No hay dosis vencidas ni próximas en tu ventana de aviso.',
+    a_missing_intro:'Según el esquema de {especie}, podrían faltarle: {lista}.', a_status:'Estado: {venc} vencida(s), {prox} próxima(s).', a_nomissing:'Tiene registradas todas las vacunas del esquema.',
+    a_next:'La próxima es {nombre} el {fecha} ({cuando}).', a_next_none:'No hay próximas fechas registradas.',
+    a_deworm_next:'Próxima desparasitación: {nombre} el {fecha}.', a_deworm_none:'No hay desparasitaciones programadas. Toca “Registrar”.',
+    a_register:'¿Qué quieres registrar?', a_explain:'Calculo las fechas con el esquema por especie: en cachorros, refuerzos cada pocas semanas; en adultos, refuerzo anual. Todo es orientativo: confírmalo con tu veterinario.',
+    a_consent:'Para responder dudas generales envío tu pregunta (sin tus datos) al asistente en la nube. ¿Permites?', a_consent_yes:'Permitir y preguntar',
+    a_local_only:'Puedo ayudarte con el carné de tu mascota (qué le falta, próximas dosis). Para dudas generales de salud, consulta a tu veterinario.',
+    ocr_scan:'Escanear carné con IA', ocr_scan_sub:'Detecta vacunas desde una foto',
+    ocr_consent:'La foto se enviará al servicio de IA para leerla, con tu permiso. ¿Continuar?',
+    ocr_sending:'Leyendo el carné…', ocr_review:'Revisa antes de guardar', ocr_none:'No se detectaron registros. Prueba con una foto más nítida.',
+    ocr_save:'Guardar seleccionados', ocr_err:'No se pudo escanear. Revisa la conexión o configura la IA.', ocr_saved:'{n} registro(s) añadidos',
   },
   en:{
     tab_home:'Home', tab_card:'Record', tab_pet:'Pet', tab_more:'More',
@@ -368,6 +415,23 @@ const STR = {
     auth_title:'Sign in', auth_email:'Your email', auth_send:'Send code', auth_code:'6-digit code', auth_verify:'Verify',
     auth_sent:'We sent a code to your email', cloud_off:'Cloud is not configured (local mode).',
     sync_done:'Synced', sync_pulled:'Updated from the cloud', sync_err:'Could not sync', signed_out:'Signed out', loading:'Loading…',
+    asst_title:'VacuPet assistant', asst_open:'Assistant', asst_open_sub:"What's missing? Next doses, questions…",
+    asst_ph:'Type your question…', asst_disc:'General info. Does not replace your vet.',
+    asst_greeting:"Hi! I'm your assistant. I can tell you what your pet is missing, when the next dose is due, or answer general questions. What do you need?",
+    asst_thinking:'Thinking…', asst_faq_err:"Couldn't check right now. Try again.",
+    chip_missing:"What's missing?", chip_next:'Next dose', chip_deworm:'Deworming', chip_register:'Add record', chip_explain:'How does it work?',
+    a_none_pet:'Add a pet first so I can help.',
+    a_uptodate:'{nombre} is up to date! No overdue or upcoming doses within your window.',
+    a_missing_intro:'Per the {especie} schedule, it may be missing: {lista}.', a_status:'Status: {venc} overdue, {prox} upcoming.', a_nomissing:'All schedule vaccines are recorded.',
+    a_next:'Next is {nombre} on {fecha} ({cuando}).', a_next_none:'No upcoming dates recorded.',
+    a_deworm_next:'Next deworming: {nombre} on {fecha}.', a_deworm_none:'No deworming scheduled. Tap “Add record”.',
+    a_register:'What would you like to add?', a_explain:'I compute dates from the species schedule: puppies get boosters every few weeks; adults a yearly booster. All guidance — confirm with your vet.',
+    a_consent:'To answer general questions I send your question (without your data) to the cloud assistant. Allow?', a_consent_yes:'Allow and ask',
+    a_local_only:"I can help with your pet's record (what's missing, next doses). For general health questions, consult your vet.",
+    ocr_scan:'Scan record with AI', ocr_scan_sub:'Detect vaccines from a photo',
+    ocr_consent:'The photo will be sent to the AI service to read it, with your permission. Continue?',
+    ocr_sending:'Reading the record…', ocr_review:'Review before saving', ocr_none:'No records detected. Try a sharper photo.',
+    ocr_save:'Save selected', ocr_err:'Could not scan. Check your connection or configure AI.', ocr_saved:'{n} record(s) added',
   },
   pt:{
     tab_home:'Início', tab_card:'Carteira', tab_pet:'Pet', tab_more:'Mais',
@@ -406,6 +470,23 @@ const STR = {
     auth_title:'Entrar', auth_email:'Seu e-mail', auth_send:'Enviar código', auth_code:'Código de 6 dígitos', auth_verify:'Verificar',
     auth_sent:'Enviamos um código para seu e-mail', cloud_off:'A nuvem não está configurada (modo local).',
     sync_done:'Sincronizado', sync_pulled:'Atualizado da nuvem', sync_err:'Não foi possível sincronizar', signed_out:'Sessão encerrada', loading:'Carregando…',
+    asst_title:'Assistente VacuPet', asst_open:'Assistente', asst_open_sub:'O que falta? Próximas doses, dúvidas…',
+    asst_ph:'Digite sua pergunta…', asst_disc:'Informação geral. Não substitui o veterinário.',
+    asst_greeting:'Oi! Sou seu assistente. Posso dizer o que falta para seu pet, quando é a próxima dose ou tirar dúvidas gerais. O que você precisa?',
+    asst_thinking:'Pensando…', asst_faq_err:'Não consegui consultar agora. Tente de novo.',
+    chip_missing:'O que falta?', chip_next:'Próxima dose', chip_deworm:'Vermífugo', chip_register:'Registrar', chip_explain:'Como funciona?',
+    a_none_pet:'Adicione um pet primeiro para eu ajudar.',
+    a_uptodate:'{nombre} está em dia! Nenhuma dose vencida ou próxima na sua janela de aviso.',
+    a_missing_intro:'Pelo esquema de {especie}, pode faltar: {lista}.', a_status:'Situação: {venc} vencida(s), {prox} próxima(s).', a_nomissing:'Todas as vacinas do esquema estão registradas.',
+    a_next:'A próxima é {nombre} em {fecha} ({cuando}).', a_next_none:'Nenhuma data próxima registrada.',
+    a_deworm_next:'Próximo vermífugo: {nombre} em {fecha}.', a_deworm_none:'Nenhum vermífugo agendado. Toque em “Registrar”.',
+    a_register:'O que você quer registrar?', a_explain:'Calculo as datas pelo esquema da espécie: filhotes recebem reforços a cada poucas semanas; adultos, reforço anual. Tudo orientativo: confirme com seu veterinário.',
+    a_consent:'Para responder dúvidas gerais envio sua pergunta (sem seus dados) ao assistente na nuvem. Permite?', a_consent_yes:'Permitir e perguntar',
+    a_local_only:'Posso ajudar com a carteira do seu pet (o que falta, próximas doses). Para dúvidas gerais de saúde, consulte seu veterinário.',
+    ocr_scan:'Escanear carteira com IA', ocr_scan_sub:'Detecta vacinas a partir de uma foto',
+    ocr_consent:'A foto será enviada ao serviço de IA para leitura, com sua permissão. Continuar?',
+    ocr_sending:'Lendo a carteira…', ocr_review:'Revise antes de salvar', ocr_none:'Nenhum registro detectado. Tente uma foto mais nítida.',
+    ocr_save:'Salvar selecionados', ocr_err:'Não foi possível escanear. Verifique a conexão ou configure a IA.', ocr_saved:'{n} registro(s) adicionados',
   },
 };
 function t(k){ const l=data.lang||'es'; return (STR[l]&&STR[l][k])||STR.es[k]||k; }
@@ -614,6 +695,9 @@ function renderChrome(){
   document.getElementById('tabbar').innerHTML = shared ? '' : tabs().map(t0=>
     `<button data-tab="${t0.id}" role="tab" aria-selected="${currentTab===t0.id}" class="${currentTab===t0.id?'on':''}">${t0.icon}<span>${t0.label}</span></button>`
   ).join('');
+  const fab = document.getElementById('fab');
+  fab.innerHTML = I.spark;
+  fab.classList.toggle('hide', shared || data.pets.length===0);
 }
 
 /* ---------------------------- Render principal ---------------------------- */
@@ -700,6 +784,7 @@ function viewHome(){
 
     <section class="block">
       <div class="block-title">${t('sec_tools')}</div>
+      <button class="tile" data-asst style="margin-bottom:11px"><span class="ic c-violet">${I.spark}</span><span class="tt"><b>${t('asst_open')}</b><span>${t('asst_open_sub')}</span></span><span class="chev">${I.chev}</span></button>
       <button class="tile" data-go="card" style="margin-bottom:11px"><span class="ic c-green">${I.card}</span><span class="tt"><b>${t('tool_card')}</b><span>${t('tool_card_sub')}</span></span><span class="chev">${I.chev}</span></button>
       <button class="tile" data-go="more"><span class="ic c-amber">${I.bell}</span><span class="tt"><b>${t('tool_more')}</b><span>${t('tool_more_sub')}</span></span><span class="chev">${I.chev}</span></button>
     </section>
@@ -748,7 +833,7 @@ function viewCard(){
     <h1 style="font-size:22px">${t('card_of')} ${esc(pet.info.nombre)}</h1>
     <section class="block" style="margin-top:14px"><div class="block-title">${t('sec_vaccines')}</div>
       ${vac.length?`<div class="card">${vac.map(v=>vacRow(v,false)).join('')}</div>`:`<div class="card pad empty">${I.syringe}<div>${t('no_vac')}</div></div>`}
-      <button class="btn btn-block" data-add="vacuna" style="margin-top:11px">${I.plus} ${t('add_vac')}</button></section>
+      <div class="row-actions"><button class="btn" style="flex:1" data-add="vacuna">${I.plus} ${t('add_vac')}</button><button class="btn" id="ocrScan">${I.camera} ${t('ocr_scan')}</button></div></section>
     <section class="block"><div class="block-title">${t('sec_deworm')}</div>
       ${dew.length?`<div class="card">${dew.map(d=>dewRow(d,false)).join('')}</div>`:`<div class="card pad empty">${I.bug}<div>${t('no_dew')}</div></div>`}
       <button class="btn btn-block" data-add="desparasitacion" style="margin-top:11px">${I.plus} ${t('add_dew')}</button></section>
@@ -1251,6 +1336,151 @@ async function syncNow(){ toast(t('loading')); await pullState(); await pushStat
 async function signOut(){ const c=await ensureSupabase(); if(c){ try{ await c.auth.signOut(); }catch(_){} } session=null; toast(t('signed_out')); render(); }
 
 /* ======================================================================
+   Asistente: motor de reglas offline + chat + FAQ (nube) + OCR
+   ====================================================================== */
+let chatMsgs = [];
+
+// --- Motor de reglas (en el dispositivo, sin enviar datos) ---
+function missingVaccines(pet){
+  const have = new Set((pet.vaccines||[]).map(v=>(v.nombre||'').trim().toLowerCase()));
+  return vaccineOptions(pet.info.especie).filter(n=>!have.has(n.toLowerCase()));
+}
+function aWhatsMissing(){
+  const pet=activePet(); if(!pet) return t('a_none_pet');
+  const s=petSummary(pet); const miss=missingVaccines(pet);
+  if(s.estado==='aldia' && !miss.length) return tf('a_uptodate',{nombre:pet.info.nombre});
+  const parts=[ tf('a_status',{venc:s.vencidas, prox:s.proximas}) ];
+  parts.push(miss.length ? tf('a_missing_intro',{especie:cap(pet.info.especie), lista:miss.join(', ')}) : t('a_nomissing'));
+  return parts.join('\n');
+}
+function aNextDose(){
+  const pet=activePet(); if(!pet) return t('a_none_pet');
+  const s=petSummary(pet); if(!s.next) return t('a_next_none');
+  const cuando = s.next.fecha<todayISO()
+    ? tf('overdue_ago',{n:Math.abs(daysBetween(s.next.fecha,todayISO()))})
+    : tf('in_days',{n:daysBetween(todayISO(),s.next.fecha)});
+  return tf('a_next',{nombre:s.next.nombre, fecha:fmt(s.next.fecha), cuando});
+}
+function aNextDeworm(){
+  const pet=activePet(); if(!pet) return t('a_none_pet');
+  const dews=(pet.dewormings||[]).filter(d=>d.proxima).sort((a,b)=>a.proxima<b.proxima?-1:1);
+  if(!dews.length) return t('a_deworm_none');
+  const d=dews.find(x=>x.proxima>=todayISO()) || dews[0];
+  return tf('a_deworm_next',{nombre:d.producto||(d.tipo==='externa'?'Antipulgas':'Interna'), fecha:fmt(d.proxima)});
+}
+function aRegister(){
+  return { html: esc(t('a_register'))+`<div class="inline-actions"><button class="ia-btn" data-chatadd="vacuna">${esc(t('tile_vac'))}</button><button class="ia-btn" data-chatadd="desparasitacion">${esc(t('tile_dew'))}</button></div>` };
+}
+function classify(text){
+  const s=(text||'').toLowerCase(); const has=(...a)=>a.some(w=>s.includes(w));
+  if(has('cómo funciona','como funciona','explica','explain','how does','how do','recomendador','funciona')) return 'explain';
+  if(has('registrar','register','anotar','registr','añadir','adicionar','add ')) return 'register';
+  if(has('desparas','antipulg','vermífug','vermifug','deworm','pulga','garrapata','flea','tick')) return 'deworm';
+  if(has('falta','missing','faltan')) return 'missing';
+  if(has('próxim','proxim','next','dosis','vacuna','vaccine','dose','vacina')) return 'next';
+  return 'faq';
+}
+function handleIntent(intent, text){
+  if(intent==='missing')  return { html: esc(aWhatsMissing()) };
+  if(intent==='next')     return { html: esc(aNextDose()) };
+  if(intent==='deworm')   return { html: esc(aNextDeworm()) };
+  if(intent==='register') return aRegister();
+  if(intent==='explain')  return { html: esc(t('a_explain')) };
+  return { async: askFaq(text) };
+}
+
+// --- FAQ general (nube, opcional, con consentimiento) ---
+async function askFaq(question){
+  const ai = window.VACUPET_AI || {};
+  if(!ai.faqEndpoint) return esc(t('a_local_only'));
+  if(!data.faqConsent){
+    return esc(t('a_consent'))+`<div class="inline-actions"><button class="ia-btn" data-consent="${esc(question)}">${esc(t('a_consent_yes'))}</button></div>`;
+  }
+  try{
+    const pet=activePet();
+    const r=await fetch(ai.faqEndpoint,{ method:'POST', headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({ question, especie: pet?pet.info.especie:'', lang:data.lang||'es' }) });
+    const j=await r.json();
+    return esc(j.answer || j.error || t('asst_faq_err'));
+  }catch(e){ console.warn('faq:', e); return esc(t('asst_faq_err')); }
+}
+
+// --- UI del chat ---
+function openAssistant(){ chatMsgs=[{role:'bot', html: esc(t('asst_greeting'))}]; renderAssistant(); }
+function closeAssistant(){ document.getElementById('assistantRoot').innerHTML=''; }
+function userSay(text, forcedIntent){
+  chatMsgs.push({ role:'user', text });
+  const reply = handleIntent(forcedIntent || classify(text), text);
+  if(reply.async){
+    chatMsgs.push({ role:'bot', html: esc(t('asst_thinking')) }); renderAssistant();
+    reply.async.then(html=>{ chatMsgs[chatMsgs.length-1] = { role:'bot', html }; renderAssistant(); });
+  } else { chatMsgs.push({ role:'bot', html: reply.html }); renderAssistant(); }
+}
+function renderAssistant(){
+  const root=document.getElementById('assistantRoot');
+  const chips=['missing','next','deworm','register','explain'].map(k=>`<button class="chip-btn" data-intent="${k}">${esc(t('chip_'+k))}</button>`).join('');
+  root.innerHTML = `<div class="scrim" id="achat" role="dialog" aria-modal="true" aria-label="${esc(t('asst_title'))}"><div class="modal chat">
+    <div class="modal-head"><button class="x" id="aClose" aria-label="${t('close')}">${I.x}</button><h3>${esc(t('asst_title'))}</h3></div>
+    <div class="chat-body" id="chatBody">${chatMsgs.map(m=>`<div class="bub ${m.role}">${m.html!=null?m.html:esc(m.text)}</div>`).join('')}</div>
+    <div class="chips-row">${chips}</div>
+    <div class="chat-input"><input id="chatIn" placeholder="${esc(t('asst_ph'))}" autocomplete="off" aria-label="${esc(t('asst_ph'))}"><button class="btn btn-primary" id="chatSend" aria-label="OK">${I.send}</button></div>
+    <div class="chat-disc">${esc(t('asst_disc'))}</div></div></div>`;
+  const sc=document.getElementById('achat');
+  sc.addEventListener('click', e=>{
+    if(e.target.id==='achat'){ closeAssistant(); return; }
+    if(e.target.closest('#aClose')){ closeAssistant(); return; }
+    const intent=e.target.closest('[data-intent]'); if(intent){ userSay(t('chip_'+intent.dataset.intent), intent.dataset.intent); return; }
+    if(e.target.closest('#chatSend')){ const v=(document.getElementById('chatIn').value||'').trim(); if(v) userSay(v); return; }
+    const add=e.target.closest('[data-chatadd]'); if(add){ const k=add.dataset.chatadd; closeAssistant(); k==='vacuna'?vaccineModal():dewormModal(); return; }
+    const con=e.target.closest('[data-consent]'); if(con){ data.faqConsent=true; save(); userSay(con.dataset.consent); return; }
+  });
+  const inp=document.getElementById('chatIn');
+  if(inp){ inp.addEventListener('keydown', e=>{ if(e.key==='Enter'){ const v=inp.value.trim(); if(v) userSay(v); } }); }
+  const body=document.getElementById('chatBody'); body.scrollTop=body.scrollHeight;
+}
+
+// --- OCR: escanear carné con IA (revisión obligatoria) ---
+function ocrStart(){
+  const ai=window.VACUPET_AI||{};
+  if(!ai.ocrEndpoint){ toast(t('ocr_err')); return; }
+  if(!confirm(t('ocr_consent'))) return;
+  const inp=document.getElementById('photoInput'); inp.value='';
+  inp.onchange=()=>{ const f=inp.files[0]; if(f) compressImage(f, url=>ocrSend(url)); };
+  inp.click();
+}
+async function ocrSend(dataUrl){
+  const ai=window.VACUPET_AI||{}; toast(t('ocr_sending'));
+  try{
+    const r=await fetch(ai.ocrEndpoint,{ method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify({ image:dataUrl, lang:data.lang||'es' }) });
+    const j=await r.json();
+    if(!r.ok || j.error){ toast(j.error||t('ocr_err')); return; }
+    const items=[ ...(j.vacunas||[]).map(v=>({kind:'vacuna',...v})), ...(j.desparasitaciones||[]).map(d=>({kind:'desparasitacion',...d})) ];
+    if(!items.length){ toast(t('ocr_none')); return; }
+    ocrReview(items);
+  }catch(e){ console.warn('ocr:', e); toast(t('ocr_err')); }
+}
+function ocrReview(items){
+  const rows=items.map((it,i)=>{
+    const title = it.kind==='vacuna' ? (it.nombre||'Vacuna') : (it.producto||'Desparasitación');
+    const sub = [it.fecha?fmt(it.fecha):'', it.kind==='vacuna'?(it.dosis||''):(it.tipo||''), it.proxima?('→ '+fmt(it.proxima)):''].filter(Boolean).join(' · ');
+    return `<label class="ocr-item"><input type="checkbox" data-i="${i}" checked>
+      <span class="ic ${it.kind==='vacuna'?'c-accent':'c-blue'}" style="width:34px;height:34px;border-radius:9px;display:grid;place-items:center">${it.kind==='vacuna'?I.syringe:I.bug}</span>
+      <span class="oi"><b>${esc(title)}</b><span>${esc(sub)||'—'}</span></span></label>`;
+  }).join('');
+  openModal(modalShell(t('ocr_scan'), `<p class="hint">${esc(t('ocr_review'))}</p><div class="card pad">${rows}</div>`,
+    `<button class="btn btn-ghost" data-close style="flex:none">${t('cancel')}</button><button class="btn btn-primary btn-block" id="ocrSave">${t('ocr_save')}</button>`));
+  document.getElementById('ocrSave').addEventListener('click', ()=>{
+    const pet=activePet(); let n=0;
+    document.querySelectorAll('#modalRoot input[type=checkbox]:checked').forEach(cb=>{
+      const it=items[Number(cb.dataset.i)];
+      if(it.kind==='vacuna'){ pet.vaccines.push({ id:uid(), nombre:it.nombre||'Vacuna', fecha:it.fecha||todayISO(), dosis:it.dosis||'', proxima:it.proxima||'', marca:it.marca||'', lote:it.lote||'', lugar:'', via:'', aplicada_por:'', notas:'', source:'ocr' }); n++; }
+      else { pet.dewormings.push({ id:uid(), tipo:it.tipo==='externa'?'externa':'interna', producto:it.producto||'', fecha:it.fecha||todayISO(), peso:'', proxima:it.proxima||'', notas:'', source:'ocr' }); n++; }
+    });
+    save(); closeModal(); toast(tf('ocr_saved',{n})); render();
+  });
+}
+
+/* ======================================================================
    Eventos (delegación)
    ====================================================================== */
 document.addEventListener('click', e=>{
@@ -1279,6 +1509,8 @@ document.addEventListener('click', e=>{
     else if(k==='peso'){ pet.weights=pet.weights.filter(x=>x.id!==id); const l=pet.weights.slice().sort((a,b)=>a.fecha<b.fecha?1:-1)[0]; pet.info.peso=l?l.kg:pet.info.peso; }
     else if(k==='visita') pet.vetVisits=pet.vetVisits.filter(x=>x.id!==id);
     save(); toast(t('deleted')); render(); return; }
+  if(t0.closest('#fab')||t0.closest('[data-asst]')){ openAssistant(); return; }
+  if(t0.closest('#ocrScan')){ ocrStart(); return; }
   if(t0.closest('#signIn')){ authModal(); return; }
   if(t0.closest('#syncNow')){ syncNow(); return; }
   if(t0.closest('#signOut')){ signOut(); return; }

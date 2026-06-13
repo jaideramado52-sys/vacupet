@@ -72,14 +72,16 @@ Objetivo: que el aviso llegue aunque la app esté cerrada.
 - [x] `docs/DESPLIEGUE.md` (checklist punta a punta) + `deploy.sh` + `.env.deploy.example` (del scaffold).
 - [ ] **Cron diario** y **secrets**: lo configura el usuario al desplegar (SQL `cron.schedule` + `bash deploy.sh`).
 
-## Fase 5 — IA por reglas + asistente 🔲 → ⏳
+## Fase 5 — IA por reglas + asistente ✅ (código) → ⏳ (desplegar IA)
 Objetivo: que la app responda "¿qué le falta a mi mascota?".
+> Verificado: cliente sintaxis + headless sin errores + 17 pruebas (clasificación de intenciones es/en/pt, motor de reglas, FAQ con/sin endpoint y consentimiento). Las funciones IA requieren `ANTHROPIC_API_KEY` al desplegar.
 
-- [ ] **Motor de reglas offline** (en dispositivo, sin enviar datos): "¿qué le falta?", "próxima dosis", "próxima desparasitación", "registrar por chat" (prellena formulario), "explica el recomendador".
-- [ ] **UI de chat** (panel, burbujas, chips, descargo) + lanzadores (tile + burbuja flotante).
-- [ ] Edge Function `vacupet-faq`: **FAQ veterinaria general** con Claude + **disclaimers fuertes** ("no reemplaza al veterinario; nunca da dosis ni diagnósticos"). Consentimiento explícito.
-- [ ] Edge Function `vacupet-ocr`: **escanear carné veterinario** con Claude visión + structured outputs → pantalla de revisión obligatoria antes de guardar (`source:"ocr"`).
-- [ ] **i18n del asistente** (responde en el idioma del usuario).
+- [x] **Motor de reglas offline** (en dispositivo, sin enviar datos): "¿qué le falta?", "próxima dosis", "próxima desparasitación", "registrar por chat" (abre el formulario), "explica el recomendador". Clasificador de intenciones es/en/pt.
+- [x] **UI de chat** (panel, burbujas, chips, descargo) + lanzadores (**burbuja flotante FAB** + tile en Inicio).
+- [x] Edge Function `vacupet-faq`: **FAQ veterinaria** con Claude + disclaimers fuertes; **consentimiento explícito** en el chat antes de enviar a la nube (`data.faqConsent`).
+- [x] Edge Function `vacupet-ocr`: **escanear carné** con Claude visión + **salida estructurada** (tool use forzado) → **pantalla de revisión obligatoria** con casillas antes de guardar (`source:"ocr"`).
+- [x] **i18n del asistente** (responde en el idioma del usuario; chrome del chat traducido es/en/pt).
+- [ ] **Desplegar IA**: configurar `ANTHROPIC_API_KEY` y `OCR_MODEL` (lo hace el usuario; sin esto el asistente funciona en local con reglas y la FAQ/OCR degradan).
 
 ## Fase 6 — Exportación profesional y verificación 🔲 → ⏳
 Objetivo: un carné que un veterinario o aduana pueda confiar.
