@@ -103,12 +103,14 @@ Objetivo: un carné que un veterinario o aduana pueda confiar.
 - [x] `docs/PRIVACIDAD.md` · `docs/TERMINOS.md` (borradores orientativos).
 - [ ] **Desplegar**: la eliminación de cuenta real requiere la función desplegada (lo hace el usuario; sin nube, "Borrar mis datos" funciona en local).
 
-## Fase 8 — (opcional) Viajero + crecimiento 🔲
-- [ ] **Pasaporte de viaje**: requisitos por destino (certificado de rabia, titulación FAVN/RNATT para UE/países libres de rabia, microchip ISO) y contraste con el carné.
-- [ ] **Veterinarias / urgencias cercanas** (geolocalización).
-- [ ] **Más países afinados** (legalidad de rabia, nombres comerciales de vacunas).
-- [ ] **Campañas/recordatorios estacionales** (antipulgas en verano, leishmania en zona endémica).
-- [ ] **Gamificación** (logros por carné al día) — opcional.
+## Fase 8 — (opcional) Viajero + crecimiento ✅
+> Verificado: cliente sintaxis + headless sin errores + 15 pruebas (requisitos por destino vs. carné: rabia vigente, microchip, desparasitación reciente, trámites; logros).
+
+- [x] **Pasaporte de viaje** (modo viajero): requisitos por destino (microchip ISO, rabia vigente, titulación FAVN/RNATT, desparasitación, certificado) **contrastados con el carné** (✓ cumplido / pendiente / requiere trámite) + descargo.
+- [x] **Veterinarias cercanas** (geolocalización → búsqueda en mapa, con fallback si se deniega).
+- [x] **Gamificación**: logros por mascota (carné al día, microchip, esquema completo, control de peso).
+- [~] **Más países afinados**: 5 destinos base (UE, Reino Unido, EE.UU., países libres de rabia, Latinoamérica). Ampliar al país objetivo es ajuste de datos.
+- [ ] **Campañas/recordatorios estacionales**: diferido (se solapa con el sistema de recordatorios; bajo valor por ahora).
 
 ## Fase 9 — Calidad / producción 🔲
 - [ ] **Tests**: motor de esquema por especie, i18n, crypto del QR.

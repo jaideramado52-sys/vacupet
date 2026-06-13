@@ -249,6 +249,14 @@ nav.tabbar button.on{color:var(--accent)}
 .vbadge.bad{background:color-mix(in srgb,var(--red) 13%,var(--surface));color:var(--red)}
 .vbadge.unk{background:var(--surface-2);color:var(--muted)}
 
+/* ---- Logros ---- */
+.ach{display:grid;grid-template-columns:repeat(4,1fr);gap:9px}
+.ach .a{background:var(--surface);border:1px solid var(--line);border-radius:13px;padding:12px 6px;text-align:center;box-shadow:var(--shadow);opacity:.42}
+.ach .a.got{opacity:1}
+.ach .a .ai{width:30px;height:30px;margin:0 auto 6px;border-radius:9px;display:grid;place-items:center}
+.ach .a .ai svg{width:17px;height:17px}
+.ach .a span{font-size:10.5px;color:var(--muted);display:block;line-height:1.2}
+
 /* ---- Pantalla de bloqueo ---- */
 .lockscreen{position:fixed;inset:0;z-index:90;background:var(--bg);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:16px;padding:32px;text-align:center}
 .lockscreen .lk-logo{width:64px;height:64px;border-radius:18px;background:var(--accent);display:grid;place-items:center;color:#fff}
@@ -410,6 +418,13 @@ const STR = {
     enc_done:'Respaldo cifrado descargado', enc_bad:'Contraseña incorrecta o archivo inválido', enc_restored:'Respaldo restaurado', enc_working:'Cifrando…',
     del_confirm:'¿Borrar TODOS los datos de este dispositivo? No se puede deshacer.', del_done:'Datos borrados',
     delacc_confirm:'¿Eliminar tu cuenta y todos tus datos en la nube? Es permanente.', delacc_done:'Cuenta eliminada', delacc_err:'No se pudo eliminar la cuenta',
+    sec_travel:'Viajero', travel_open:'Modo viajero', travel_open_sub:'Requisitos para viajar por destino',
+    travel_pick:'Destino', travel_disc:'Requisitos orientativos. Verifica con la autoridad sanitaria y tu veterinario antes de viajar; suele exigirse certificado / veterinario oficial.',
+    st_met:'Cumplido', st_warn:'Pendiente', st_manual:'Requiere trámite',
+    req_microchip:'Microchip ISO', req_rabia:'Vacuna de rabia vigente', req_titulacion:'Titulación de anticuerpos (FAVN/RNATT)', req_desparasitacion:'Desparasitación reciente', req_certificado:'Certificado veterinario oficial',
+    vets_open:'Veterinarias cercanas', vets_open_sub:'Buscar en el mapa', vets_nogeo:'No se pudo obtener tu ubicación',
+    sec_achievements:'Logros', ach_uptodate:'Carné al día', ach_microchip:'Microchip', ach_complete:'Esquema completo', ach_tracker:'Control de peso',
+    dest_ue:'Unión Europea', dest_uk:'Reino Unido', dest_us:'Estados Unidos', dest_rabiesfree:'Países libres de rabia', dest_latam:'Latinoamérica (general)',
   },
   en:{
     tab_home:'Home', tab_card:'Record', tab_pet:'Pet', tab_more:'More',
@@ -480,6 +495,13 @@ const STR = {
     enc_done:'Encrypted backup downloaded', enc_bad:'Wrong password or invalid file', enc_restored:'Backup restored', enc_working:'Encrypting…',
     del_confirm:'Erase ALL data on this device? This cannot be undone.', del_done:'Data erased',
     delacc_confirm:'Delete your account and all your cloud data? This is permanent.', delacc_done:'Account deleted', delacc_err:'Could not delete the account',
+    sec_travel:'Travel', travel_open:'Travel mode', travel_open_sub:'Entry requirements by destination',
+    travel_pick:'Destination', travel_disc:'Guidance only. Check with the health authority and your vet before traveling; an official certificate / vet is usually required.',
+    st_met:'Met', st_warn:'Pending', st_manual:'Needs paperwork',
+    req_microchip:'ISO microchip', req_rabia:'Valid rabies vaccine', req_titulacion:'Antibody titration (FAVN/RNATT)', req_desparasitacion:'Recent deworming', req_certificado:'Official vet certificate',
+    vets_open:'Nearby vets', vets_open_sub:'Search on the map', vets_nogeo:'Could not get your location',
+    sec_achievements:'Achievements', ach_uptodate:'Record up to date', ach_microchip:'Microchip', ach_complete:'Schedule complete', ach_tracker:'Weight tracking',
+    dest_ue:'European Union', dest_uk:'United Kingdom', dest_us:'United States', dest_rabiesfree:'Rabies-free countries', dest_latam:'Latin America (general)',
   },
   pt:{
     tab_home:'Início', tab_card:'Carteira', tab_pet:'Pet', tab_more:'Mais',
@@ -550,6 +572,13 @@ const STR = {
     enc_done:'Backup criptografado baixado', enc_bad:'Senha incorreta ou arquivo inválido', enc_restored:'Backup restaurado', enc_working:'Criptografando…',
     del_confirm:'Apagar TODOS os dados deste aparelho? Não pode ser desfeito.', del_done:'Dados apagados',
     delacc_confirm:'Excluir sua conta e todos os seus dados na nuvem? É permanente.', delacc_done:'Conta excluída', delacc_err:'Não foi possível excluir a conta',
+    sec_travel:'Viagem', travel_open:'Modo viagem', travel_open_sub:'Requisitos por destino',
+    travel_pick:'Destino', travel_disc:'Requisitos orientativos. Verifique com a autoridade sanitária e seu veterinário antes de viajar; costuma exigir certificado / veterinário oficial.',
+    st_met:'Cumprido', st_warn:'Pendente', st_manual:'Requer trâmite',
+    req_microchip:'Microchip ISO', req_rabia:'Vacina de raiva vigente', req_titulacion:'Titulação de anticorpos (FAVN/RNATT)', req_desparasitacion:'Vermífugo recente', req_certificado:'Certificado veterinário oficial',
+    vets_open:'Veterinários próximos', vets_open_sub:'Buscar no mapa', vets_nogeo:'Não foi possível obter sua localização',
+    sec_achievements:'Conquistas', ach_uptodate:'Carteira em dia', ach_microchip:'Microchip', ach_complete:'Esquema completo', ach_tracker:'Controle de peso',
+    dest_ue:'União Europeia', dest_uk:'Reino Unido', dest_us:'Estados Unidos', dest_rabiesfree:'Países livres de raiva', dest_latam:'América Latina (geral)',
   },
 };
 function t(k){ const l=data.lang||'es'; return (STR[l]&&STR[l][k])||STR.es[k]||k; }
@@ -849,6 +878,8 @@ function viewHome(){
       <div class="block-title">${t('sec_tools')}</div>
       <button class="tile" data-asst style="margin-bottom:11px"><span class="ic c-violet">${I.spark}</span><span class="tt"><b>${t('asst_open')}</b><span>${t('asst_open_sub')}</span></span><span class="chev">${I.chev}</span></button>
       <button class="tile" data-go="card" style="margin-bottom:11px"><span class="ic c-green">${I.card}</span><span class="tt"><b>${t('tool_card')}</b><span>${t('tool_card_sub')}</span></span><span class="chev">${I.chev}</span></button>
+      <button class="tile" id="travelOpen" style="margin-bottom:11px"><span class="ic c-blue">${I.shield}</span><span class="tt"><b>${t('travel_open')}</b><span>${t('travel_open_sub')}</span></span><span class="chev">${I.chev}</span></button>
+      <button class="tile" id="vetsOpen" style="margin-bottom:11px"><span class="ic c-red">${I.stetho}</span><span class="tt"><b>${t('vets_open')}</b><span>${t('vets_open_sub')}</span></span><span class="chev">${I.chev}</span></button>
       <button class="tile" data-go="more"><span class="ic c-amber">${I.bell}</span><span class="tt"><b>${t('tool_more')}</b><span>${t('tool_more_sub')}</span></span><span class="chev">${I.chev}</span></button>
     </section>
     <p class="disclaimer">${t('disc')}</p>
@@ -939,7 +970,9 @@ function viewPet(){
       <button class="btn btn-block" id="addWeight" style="margin-top:11px">${I.plus} ${t('add_weight')}</button>
     </section>
 
-    <div class="row-actions">
+    <section class="block"><div class="block-title">${t('sec_achievements')}</div>${achievementsHTML(pet)}</section>
+
+    <div class="row-actions" style="margin-top:22px">
       <button class="btn btn-primary" style="flex:1" id="editPet">${t('edit_pet')}</button>
       <button class="btn btn-danger" id="delPet" aria-label="${t('delete')}">${I.trash}</button>
     </div>
@@ -1777,6 +1810,80 @@ async function deleteAccount(){
 }
 
 /* ======================================================================
+   Viajero (pasaporte), veterinarias cercanas y logros
+   ====================================================================== */
+const DESTINOS = [
+  { key:'ue',         reqs:['microchip','rabia','titulacion','desparasitacion','certificado'] },
+  { key:'uk',         reqs:['microchip','rabia','desparasitacion','certificado'] },
+  { key:'us',         reqs:['microchip','rabia','certificado'] },
+  { key:'rabiesfree', reqs:['microchip','rabia','titulacion','certificado'] },
+  { key:'latam',      reqs:['rabia','certificado'] },
+];
+function hasValidRabies(pet){
+  const today=todayISO();
+  return (pet.vaccines||[]).some(v=>{
+    if(!/rabia|rabies|raiva/i.test(v.nombre||'')) return false;
+    if(v.proxima) return v.proxima>=today;             // refuerzo futuro → vigente
+    if(v.fecha)  return daysBetween(v.fecha,today)<=365 && daysBetween(v.fecha,today)>=0; // aplicada hace <1 año
+    return false;
+  });
+}
+function recentDeworm(pet){
+  const today=todayISO();
+  return (pet.dewormings||[]).some(d=>d.fecha && daysBetween(d.fecha,today)<=30 && daysBetween(d.fecha,today)>=0);
+}
+function checkReq(pet, key){
+  if(key==='microchip')       return pet.info.microchip ? 'met' : 'warn';
+  if(key==='rabia')           return hasValidRabies(pet) ? 'met' : 'warn';
+  if(key==='desparasitacion') return recentDeworm(pet) ? 'met' : 'warn';
+  if(key==='titulacion' || key==='certificado') return 'manual'; // trámite externo
+  return 'warn';
+}
+function reqRow(pet, key){
+  const st=checkReq(pet,key);
+  const cls = st==='met'?'c-green':st==='manual'?'c-blue':'c-amber';
+  const icon = st==='met'?I.check:st==='manual'?I.info:I.bell;
+  const label = st==='met'?t('st_met'):st==='manual'?t('st_manual'):t('st_warn');
+  return `<div class="rec"><span class="ic ${cls}">${icon}</span><div class="rr"><b>${esc(t('req_'+key))}</b><span>${esc(label)}</span></div></div>`;
+}
+function travelBody(destKey){
+  const pet=activePet(); const dest=DESTINOS.find(d=>d.key===destKey)||DESTINOS[0];
+  return `<div class="field" style="margin-top:0"><label>${t('travel_pick')}</label>
+      <select id="travelDest">${DESTINOS.map(d=>`<option value="${d.key}" ${d.key===destKey?'selected':''}>${esc(t('dest_'+d.key))}</option>`).join('')}</select></div>
+    <div class="card" style="margin-top:12px">${dest.reqs.map(k=>reqRow(pet,k)).join('')}</div>
+    <p class="hint" style="margin-top:12px">${esc(t('travel_disc'))}</p>`;
+}
+function travelModal(){
+  if(!activePet()) return;
+  const bind=()=>{ const sel=document.getElementById('travelDest'); if(sel) sel.onchange=()=>{ document.getElementById('travelWrap').innerHTML=travelBody(sel.value); bind(); }; };
+  openModal(modalShell(t('travel_open'), `<div id="travelWrap">${travelBody(DESTINOS[0].key)}</div>`, `<button class="btn btn-block" data-close>${t('close')}</button>`));
+  bind();
+}
+function openVets(){
+  const open=(u)=>{ try{ window.open(u,'_blank'); }catch(_){ location.href=u; } };
+  const fallback='https://www.google.com/maps/search/veterinaria+cerca';
+  if(navigator.geolocation){
+    navigator.geolocation.getCurrentPosition(
+      pos=>{ const {latitude:la, longitude:lo}=pos.coords; open(`https://www.google.com/maps/search/veterinaria/@${la},${lo},14z`); },
+      ()=>{ toast(t('vets_nogeo')); open(fallback); },
+      { timeout:8000, maximumAge:300000 }
+    );
+  } else open(fallback);
+}
+function achievements(pet){
+  const s=petSummary(pet);
+  return [
+    { key:'uptodate', icon:I.check,   got: s.aplicadas>0 && s.vencidas===0 },
+    { key:'microchip',icon:I.shield,  got: !!pet.info.microchip },
+    { key:'complete', icon:I.syringe, got: (pet.vaccines||[]).length>0 && missingVaccines(pet).length===0 },
+    { key:'tracker',  icon:I.scale,   got: (pet.weights||[]).length>=3 },
+  ];
+}
+function achievementsHTML(pet){
+  return `<div class="ach">${achievements(pet).map(a=>`<div class="a ${a.got?'got':''}"><div class="ai ${a.got?'c-accent':''}">${a.icon}</div><span>${esc(t('ach_'+a.key))}</span></div>`).join('')}</div>`;
+}
+
+/* ======================================================================
    Eventos (delegación)
    ====================================================================== */
 document.addEventListener('click', e=>{
@@ -1810,6 +1917,8 @@ document.addEventListener('click', e=>{
   if(t0.closest('#pvWipe')){ wipeLocal(); return; }
   if(t0.closest('#pvDelAcc')){ deleteAccount(); return; }
   if(t0.closest('#fab')||t0.closest('[data-asst]')){ openAssistant(); return; }
+  if(t0.closest('#travelOpen')){ travelModal(); return; }
+  if(t0.closest('#vetsOpen')){ openVets(); return; }
   if(t0.closest('#ocrScan')){ ocrStart(); return; }
   if(t0.closest('#signIn')){ authModal(); return; }
   if(t0.closest('#syncNow')){ syncNow(); return; }
