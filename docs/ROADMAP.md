@@ -127,6 +127,16 @@ Objetivo: un carné que un veterinario o aduana pueda confiar.
 (nube, push/email, IA, firma) es opcional y degrada con elegancia. Para activarlo, el usuario
 sigue `docs/DESPLIEGUE.md` y `docs/PUBLICAR.md`. Regresión: `node tests/run.mjs`.
 
+## Mejoras adicionales (post-v1) ✅
+> `node tests/run.mjs` → **77 OK**. Verificadas con headless + capturas.
+
+- [x] **Rediseño del Inicio — héroe con foto**: foto de la mascota como protagonista, anillo de progreso animado, estado del día sobre la imagen, chips interactivos.
+- [x] **Mascota de ejemplo**: botón "Ver ejemplo" + enlace `#demo` (carga "Rocky" con datos completos).
+- [x] **Cuidados y recordatorios propios**: baño, uñas, medicación, peluquería, cumpleaños, otro — con frecuencia y próxima fecha; integrados en recordatorios.
+- [x] **Personalización visual**: color de acento (6) en vivo + color por especie en el héroe + estados vacíos mejorados.
+- [x] **Micro-interacciones**: confeti al desbloquear logros + transiciones entre pestañas (View Transitions); respeta `prefers-reduced-motion`.
+- [x] **Álbum y documentos**: galería de fotos con fecha (lightbox) + adjuntar imagen/PDF por mascota (local).
+
 ---
 
 ## Diferencias clave heredadas de VacunaFam (qué se reutiliza y qué cambia)
