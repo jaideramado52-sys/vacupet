@@ -6,6 +6,11 @@
   publish = "dist"
   command = "bash netlify-build.sh"
 
+# No reescribir /VacuPet.html → /VacuPet (rompería el manifest, los enlaces
+# compartidos y el caché del service worker, que usan rutas con .html).
+[build.processing.html]
+  pretty_urls = false
+
 # Cabeceras (además del archivo _headers que se copia a dist/).
 [[headers]]
   for = "/service-worker.js"
@@ -23,8 +28,10 @@
   [headers.values]
     Content-Type = "application/manifest+json; charset=utf-8"
 
-# Servir la app en la raíz sin el salto de index.html (conserva el hash de los enlaces).
+# Servir la app en la raíz sin el salto de index.html (conserva el hash y las
+# meta Open Graph al compartir). force = true para tener prioridad sobre index.html.
 [[redirects]]
   from = "/"
   to = "/VacuPet.html"
   status = 200
+  force = true
