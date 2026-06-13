@@ -5,20 +5,21 @@
 
 ---
 
-## Fase 0 — MVP personal (offline, sin backend) 🔲
+## Fase 0 — MVP personal (offline, sin backend) ✅
 Objetivo: una mascota con su carné funcional en `localStorage`. Es la base de todo.
+> Verificado: sintaxis JS válida + render headless (Chrome) sin errores de consola.
 
-- [ ] Shell PWA de un solo archivo `VacuPet.html` (header, tabbar, vistas).
-- [ ] **Sistema de diseño**: tokens monocromos + 1 acento, tipografía Inter, modo claro/oscuro, hairlines, radios suaves, iconos SVG (nada de emojis en UI).
-- [ ] **Perfil de mascota**: nombre, **especie** (perro/gato/otro), raza, sexo, nacimiento/adopción, color, microchip, esterilizado (sí/no), peso, foto, veterinario habitual.
-- [ ] **Registro de vacunas**: nombre, fecha, dosis, lote, marca, lugar, aplicada por, próxima, vía, notas. Validación de campos.
-- [ ] **Registro de desparasitación**: tipo (interna/externa), producto, fecha, peso, próxima, notas.
-- [ ] **Modelo de datos local** `vacupet:data:v1` + migración futura preparada.
-- [ ] **Recordatorios locales**: badge de pendientes/vencidas, ventana configurable (`remDays`).
-- [ ] **Exportar .ics** (calendario) de próximas dosis/desparasitaciones.
-- [ ] **Exportar PDF** del carné (área imprimible).
-- [ ] **Respaldo JSON** (exportar/importar) — seed y modo offline.
-- [ ] **Esquema por edad/especie** básico (autocompletar próxima dosis sugerida).
+- [x] Shell PWA de un solo archivo `VacuPet.html` (header, tabbar, vistas).
+- [x] **Sistema de diseño**: tokens monocromos + 1 acento, tipografía Inter, modo claro/oscuro, hairlines, radios suaves, iconos SVG (emojis solo como avatar de especie).
+- [x] **Perfil de mascota**: nombre, **especie** (perro/gato/conejo/hurón/ave/otro), raza, sexo, nacimiento/adopción, color, microchip, esterilizado (sí/no/no sé), peso, foto, veterinario habitual, notas.
+- [x] **Registro de vacunas**: nombre, fecha, dosis, lote, marca, lugar, aplicada por, próxima, vía, notas. Validación de campos.
+- [x] **Registro de desparasitación**: tipo (interna/externa), producto, fecha, peso, próxima, notas.
+- [x] **Modelo de datos local** `vacupet:data:v1` + función `migrate()` preparada para versiones futuras.
+- [x] **Recordatorios locales**: chips de pendientes/vencidas, ventana configurable (`remDays`), banner de próxima (prioriza vencida).
+- [x] **Exportar .ics** (calendario) de próximas dosis/desparasitaciones.
+- [x] **Exportar PDF** del carné (área imprimible con tablas).
+- [x] **Respaldo JSON** (exportar/importar con confirmación) — seed y modo offline.
+- [x] **Esquema por edad/especie** básico (`suggestProxima`/`suggestDeworm`: serie cachorro vs. refuerzo anual).
 
 ## Fase 1 — Carné pro (sin backend) 🔲
 Objetivo: convertirlo en un carné serio y multimascota.
