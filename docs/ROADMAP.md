@@ -83,13 +83,15 @@ Objetivo: que la app responda "¿qué le falta a mi mascota?".
 - [x] **i18n del asistente** (responde en el idioma del usuario; chrome del chat traducido es/en/pt).
 - [ ] **Desplegar IA**: configurar `ANTHROPIC_API_KEY` y `OCR_MODEL` (lo hace el usuario; sin esto el asistente funciona en local con reglas y la FAQ/OCR degradan).
 
-## Fase 6 — Exportación profesional y verificación 🔲 → ⏳
+## Fase 6 — Exportación profesional y verificación ✅ (código) → ⏳ (desplegar firma)
 Objetivo: un carné que un veterinario o aduana pueda confiar.
+> Verificado: cliente sintaxis + headless sin errores + **6 pruebas criptográficas** (token válido verifica, payload manipulado/firma corrupta rechazados, extracción del carné firmado). La firma requiere `SIGN_PRIVATE_JWK` al desplegar.
 
-- [ ] **PDF clínico veterinario** con datos de la mascota + tablas de vacunas/desparasitación/peso.
-- [ ] **QR de integridad firmado** (`buildIntegrityToken` ES256 + verificación en la vista compartida: ✓ verificada / ⚠ alterada). Verificador `verifyIntegrity` (ECDSA P-256, WebCrypto).
-- [ ] Edge Function `vacupet-sign` (firma ES256 + JWKS público).
-- [ ] **Exportar registro veterinario estándar** (JSON/CSV legible por clínicas; no FHIR humano).
+- [x] **PDF clínico veterinario** con datos de la mascota + tablas de vacunas/desparasitación/**peso**/**visitas**.
+- [x] **QR de integridad firmado**: `buildIntegrityToken` (JWS/JWT ES256 vía `vacupet-sign`) + verificación en la vista compartida (✓ verificada / ⚠ alterada / integridad no verificable). `verifyIntegrity` con ECDSA P-256 (WebCrypto) contra el JWKS público.
+- [x] Edge Function `vacupet-sign`: firma ES256 (`POST {payload}→{token}`) + **JWKS público** (`GET ?jwks=1`).
+- [x] **Exportar registro veterinario** en **CSV** (UTF-8 con BOM, legible por clínicas / hojas de cálculo).
+- [ ] **Desplegar firma**: generar claves (`gen-keys.mjs`) y configurar `SIGN_PRIVATE_JWK`/`SIGN_KID` (lo hace el usuario; sin esto, los carnés se comparten sin firmar y la vista muestra “integridad no verificable”).
 
 ## Fase 7 — Privacidad, seguridad y cuenta 🔲 → ⏳
 - [ ] **Bloqueo con PIN** + **biométrico (WebAuthn)** opcional al abrir.

@@ -243,6 +243,11 @@ nav.tabbar button.on{color:var(--accent)}
 /* ---- Compartido (solo lectura) ---- */
 .sharebar{background:var(--accent);color:#fff;text-align:center;padding:10px 16px;font-size:13px;font-weight:600;display:flex;gap:10px;align-items:center;justify-content:center}
 .sharebar button{background:rgba(255,255,255,.2);color:#fff;border:0;border-radius:9px;padding:6px 12px;font-weight:600;font-size:13px}
+.vbadge{display:flex;align-items:center;justify-content:center;gap:8px;margin-top:14px;padding:11px 14px;border-radius:13px;font-size:13.5px;font-weight:650;border:1px solid var(--line)}
+.vbadge svg{width:17px;height:17px}
+.vbadge.ok{background:color-mix(in srgb,var(--green) 13%,var(--surface));color:var(--green)}
+.vbadge.bad{background:color-mix(in srgb,var(--red) 13%,var(--surface));color:var(--red)}
+.vbadge.unk{background:var(--surface-2);color:var(--muted)}
 
 .disclaimer{font-size:12px;color:var(--muted);text-align:center;padding:24px 16px 8px;line-height:1.6}
 
@@ -377,6 +382,8 @@ const STR = {
     ocr_consent:'La foto se enviará al servicio de IA para leerla, con tu permiso. ¿Continuar?',
     ocr_sending:'Leyendo el carné…', ocr_review:'Revisa antes de guardar', ocr_none:'No se detectaron registros. Prueba con una foto más nítida.',
     ocr_save:'Guardar seleccionados', ocr_err:'No se pudo escanear. Revisa la conexión o configura la IA.', ocr_saved:'{n} registro(s) añadidos',
+    verifying:'Verificando integridad…', verify_ok:'Carné verificado', verify_bad:'Carné alterado', verify_unknown:'Integridad no verificable',
+    m_csv:'Exportar registro (CSV)', m_csv_sub:'Para clínicas / hojas de cálculo', signing:'Firmando carné…',
   },
   en:{
     tab_home:'Home', tab_card:'Record', tab_pet:'Pet', tab_more:'More',
@@ -432,6 +439,8 @@ const STR = {
     ocr_consent:'The photo will be sent to the AI service to read it, with your permission. Continue?',
     ocr_sending:'Reading the record…', ocr_review:'Review before saving', ocr_none:'No records detected. Try a sharper photo.',
     ocr_save:'Save selected', ocr_err:'Could not scan. Check your connection or configure AI.', ocr_saved:'{n} record(s) added',
+    verifying:'Verifying integrity…', verify_ok:'Record verified', verify_bad:'Record tampered', verify_unknown:'Integrity not verifiable',
+    m_csv:'Export record (CSV)', m_csv_sub:'For clinics / spreadsheets', signing:'Signing record…',
   },
   pt:{
     tab_home:'Início', tab_card:'Carteira', tab_pet:'Pet', tab_more:'Mais',
@@ -487,6 +496,8 @@ const STR = {
     ocr_consent:'A foto será enviada ao serviço de IA para leitura, com sua permissão. Continuar?',
     ocr_sending:'Lendo a carteira…', ocr_review:'Revise antes de salvar', ocr_none:'Nenhum registro detectado. Tente uma foto mais nítida.',
     ocr_save:'Salvar selecionados', ocr_err:'Não foi possível escanear. Verifique a conexão ou configure a IA.', ocr_saved:'{n} registro(s) adicionados',
+    verifying:'Verificando integridade…', verify_ok:'Carteira verificada', verify_bad:'Carteira alterada', verify_unknown:'Integridade não verificável',
+    m_csv:'Exportar registro (CSV)', m_csv_sub:'Para clínicas / planilhas', signing:'Assinando carteira…',
   },
 };
 function t(k){ const l=data.lang||'es'; return (STR[l]&&STR[l][k])||STR.es[k]||k; }
@@ -705,7 +716,7 @@ function render(){
   document.documentElement.lang = data.lang||'es';
   renderChrome();
   const app = document.getElementById('app');
-  if(shared){ app.innerHTML = viewShared(); return; }
+  if(shared){ app.innerHTML = viewShared(); if(sharedSig) setTimeout(runShareVerify, 0); return; }
   if(data.pets.length===0){ app.innerHTML = viewOnboarding(); return; }
   if(currentTab==='home') app.innerHTML = viewHome();
   else if(currentTab==='card') app.innerHTML = viewCard();
@@ -898,6 +909,7 @@ function viewMore(){
     <section class="block"><div class="block-title">${t('sec_export')}</div>
       <button class="tile" id="shareCard"><span class="ic c-accent">${I.share}</span><span class="tt"><b>${t('m_share')}</b><span>${t('m_share_sub')}</span></span><span class="chev">${I.chev}</span></button>
       <button class="tile" id="expPdf" style="margin-top:11px"><span class="ic c-red">${I.pdf}</span><span class="tt"><b>${t('m_pdf')}</b><span>${t('m_pdf_sub')}</span></span><span class="chev">${I.chev}</span></button>
+      <button class="tile" id="expCsv" style="margin-top:11px"><span class="ic c-violet">${I.download}</span><span class="tt"><b>${t('m_csv')}</b><span>${t('m_csv_sub')}</span></span><span class="chev">${I.chev}</span></button>
       <button class="tile" id="expJson" style="margin-top:11px"><span class="ic c-blue">${I.download}</span><span class="tt"><b>${t('m_json')}</b><span>${t('m_json_sub')}</span></span><span class="chev">${I.chev}</span></button>
       <button class="tile" id="impJson" style="margin-top:11px"><span class="ic c-green">${I.upload}</span><span class="tt"><b>${t('m_import')}</b><span>${t('m_import_sub')}</span></span><span class="chev">${I.chev}</span></button>
     </section>
@@ -931,6 +943,7 @@ function viewShared(){
   const dew=(pet.dewormings||[]).slice().sort((a,b)=>(b.fecha||'')<(a.fecha||'')?-1:1);
   return `<div class="view">
     <div class="sharebar"><span>${t('shared_title')}</span><button id="openMine">${t('open_mine')}</button></div>
+    ${sharedSig?`<div id="vbadge" class="vbadge unk">${esc(t('verifying'))}</div>`:''}
     <div class="card hero" style="margin-top:14px">
       <div class="av" style="width:60px;height:60px;font-size:28px;border-radius:50%;background:var(--surface-2);border:1px solid var(--line);display:grid;place-items:center;flex:none">${SPECIES_EMOJI[pet.info.especie]||'🐾'}</div>
       <div><h2>${esc(pet.info.nombre)}</h2><div class="sub">${esc(cap(pet.info.especie))}${pet.info.raza?` · ${esc(pet.info.raza)}`:''}${pet.info.nacimiento?` · ${ageText(pet.info.nacimiento)}`:''}</div></div>
@@ -1109,7 +1122,12 @@ function switchModal(){
 /* ---- Compartir ---- */
 async function shareModal(){
   const pet=activePet();
-  const payload = { app:'vacupet', v:1, pet:{ info:{...pet.info, foto:undefined}, vaccines:pet.vaccines, dewormings:pet.dewormings } };
+  const petPayload = { info:{...pet.info, foto:undefined}, vaccines:pet.vaccines, dewormings:pet.dewormings };
+  // Si hay servicio de firma, pide un token de integridad (ES256). Si no, va sin firmar.
+  let token = null;
+  if((window.VACUPET_AI||{}).signEndpoint){ toast(t('signing')); token = await buildIntegrityToken(petPayload); }
+  const payload = token ? { app:'vacupet', v:1, sig:token } : { app:'vacupet', v:1, pet:petPayload };
+
   let link = null;
   // Con sesión: crea un enlace con TOKEN que caduca (30 días), sin datos en la URL.
   if(session){
@@ -1143,8 +1161,9 @@ async function loadSharedToken(token){
   if(!c){ document.getElementById('app').innerHTML = `<div class="view"><div class="card pad empty">${t('shared_bad')}</div></div>`; return; }
   try{
     const { data:payload, error } = await c.rpc('get_share', { p_token: token });
-    if(error || !payload || !payload.pet) throw new Error('bad');
-    shared = payload.pet; render();
+    const pet = decodeShareObj(payload);
+    if(error || !pet) throw new Error('bad');
+    shared = pet; render();
   }catch(e){ console.warn('get_share:', e); document.getElementById('app').innerHTML = `<div class="view"><div class="card pad empty">${t('shared_bad')}</div></div>`; }
 }
 let qrLoading=false;
@@ -1175,10 +1194,52 @@ function compressImage(file, cb){
    ====================================================================== */
 function b64urlEncode(str){ return btoa(unescape(encodeURIComponent(str))).replace(/\+/g,'-').replace(/\//g,'_').replace(/=+$/,''); }
 function b64urlDecode(s){ s=s.replace(/-/g,'+').replace(/_/g,'/'); while(s.length%4) s+='='; return decodeURIComponent(escape(atob(s))); }
+
+// Convierte un carné compartido (firmado o no) en {pet} + fija sharedSig si lo lleva.
+let sharedSig = null;
+function decodeShareObj(obj){
+  if(!obj || obj.app!=='vacupet') return null;
+  if(obj.sig){ try{ const pet=JSON.parse(b64urlDecode(obj.sig.split('.')[1])); sharedSig=obj.sig; return pet; }catch(e){ return null; } }
+  if(obj.pet){ sharedSig=null; return obj.pet; }
+  return null;
+}
 function readShareHash(){
   const h=location.hash||'';
-  if(h.startsWith('#v=')){ try{ const obj=JSON.parse(b64urlDecode(h.slice(3))); if(obj&&obj.app==='vacupet'&&obj.pet){ return obj.pet; } }catch(e){ console.warn(e); } }
+  if(h.startsWith('#v=')){ try{ return decodeShareObj(JSON.parse(b64urlDecode(h.slice(3)))); }catch(e){ console.warn(e); } }
   return null;
+}
+
+/* ---- Integridad (QR firmado, ES256 / WebCrypto) ---- */
+async function buildIntegrityToken(payload){
+  const ai=window.VACUPET_AI||{};
+  if(!ai.signEndpoint) return null;
+  try{
+    const r=await fetch(ai.signEndpoint,{ method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify({ payload }) });
+    const j=await r.json(); return j.token||null;
+  }catch(e){ console.warn('sign:', e); return null; }
+}
+async function verifyIntegrity(token, signEndpoint){
+  try{
+    const parts=token.split('.'); if(parts.length!==3) return false;
+    const [h,p,s]=parts;
+    const jwksUrl = signEndpoint + (signEndpoint.includes('?')?'&':'?') + 'jwks=1';
+    const jwks = await (await fetch(jwksUrl)).json();
+    const header = JSON.parse(b64urlDecode(h));
+    const jwk = (jwks.keys||[]).find(k=>k.kid===header.kid) || (jwks.keys||[])[0];
+    if(!jwk) return false;
+    const key = await crypto.subtle.importKey('jwk', jwk, { name:'ECDSA', namedCurve:'P-256' }, false, ['verify']);
+    const sig = urlB64ToUint8(s);
+    const dataBytes = new TextEncoder().encode(h+'.'+p);
+    return await crypto.subtle.verify({ name:'ECDSA', hash:'SHA-256' }, key, sig, dataBytes);
+  }catch(e){ console.warn('verify:', e); return false; }
+}
+async function runShareVerify(){
+  const badge=document.getElementById('vbadge'); if(!badge || !sharedSig) return;
+  const ai=window.VACUPET_AI||{};
+  if(!ai.signEndpoint){ badge.className='vbadge unk'; badge.innerHTML=I.info+' '+esc(t('verify_unknown')); return; }
+  const okv = await verifyIntegrity(sharedSig, ai.signEndpoint);
+  badge.className = 'vbadge '+(okv?'ok':'bad');
+  badge.innerHTML = (okv?I.check:I.x)+' '+esc(okv?t('verify_ok'):t('verify_bad'));
 }
 
 /* ======================================================================
@@ -1196,15 +1257,30 @@ function exportPDF(){
   const pet=activePet(); const info=pet.info;
   const vac=(pet.vaccines||[]).slice().sort((a,b)=>(a.fecha||'')<(b.fecha||'')?-1:1);
   const dew=(pet.dewormings||[]).slice().sort((a,b)=>(a.fecha||'')<(b.fecha||'')?-1:1);
+  const wts=(pet.weights||[]).slice().sort((a,b)=>(a.fecha||'')<(b.fecha||'')?-1:1);
+  const vis=(pet.vetVisits||[]).slice().sort((a,b)=>(a.fecha||'')<(b.fecha||'')?-1:1);
   const rowV=v=>`<tr><td>${esc(v.nombre)}</td><td>${fmt(v.fecha)}</td><td>${esc(v.dosis||'')}</td><td>${esc(v.lote||'')}</td><td>${esc(v.marca||'')}</td><td>${v.proxima?fmt(v.proxima):''}</td></tr>`;
   const rowD=d=>`<tr><td>${esc(d.producto||(d.tipo==='externa'?'Externa':'Interna'))}</td><td>${d.tipo==='externa'?'Externa':'Interna'}</td><td>${fmt(d.fecha)}</td><td>${d.peso?d.peso+' kg':''}</td><td>${d.proxima?fmt(d.proxima):''}</td></tr>`;
+  const rowW=w=>`<tr><td>${fmt(w.fecha)}</td><td>${esc(w.kg)} kg</td></tr>`;
+  const rowI=v=>`<tr><td>${fmt(v.fecha)}</td><td>${esc(v.motivo||'')}</td><td>${esc(v.diagnostico||'')}</td><td>${esc(v.clinica||'')}</td></tr>`;
   document.getElementById('printArea').innerHTML=`<h1>🐾 ${t('card_of')} ${esc(info.nombre)}</h1>
     <div>${esc(cap(info.especie))}${info.raza?` · ${esc(info.raza)}`:''}${info.nacimiento?` · ${fmt(info.nacimiento)} (${ageText(info.nacimiento)})`:''}</div>
     <div>${info.microchip?`Microchip: ${esc(info.microchip)} · `:''}${info.esterilizado===true?'Esterilizado/a · ':''}${info.veterinario?`Vet: ${esc(info.veterinario)}`:''}</div>
     <h3>${t('sec_vaccines')}</h3>${vac.length?`<table><thead><tr><th>Vacuna</th><th>Fecha</th><th>Dosis</th><th>Lote</th><th>Marca</th><th>Próxima</th></tr></thead><tbody>${vac.map(rowV).join('')}</tbody></table>`:'<div>—</div>'}
     <h3>${t('sec_deworm')}</h3>${dew.length?`<table><thead><tr><th>Producto</th><th>Tipo</th><th>Fecha</th><th>Peso</th><th>Próxima</th></tr></thead><tbody>${dew.map(rowD).join('')}</tbody></table>`:'<div>—</div>'}
+    ${wts.length?`<h3>${t('sec_weight')}</h3><table><thead><tr><th>Fecha</th><th>Peso</th></tr></thead><tbody>${wts.map(rowW).join('')}</tbody></table>`:''}
+    ${vis.length?`<h3>${t('sec_visits')}</h3><table><thead><tr><th>Fecha</th><th>Motivo</th><th>Diagnóstico</th><th>Clínica</th></tr></thead><tbody>${vis.map(rowI).join('')}</tbody></table>`:''}
     <p style="margin-top:18px;font-size:11px;color:#666">VacuPet · ${fmt(todayISO())}. ${t('disc')}</p>`;
   setTimeout(()=>window.print(),60);
+}
+function exportCSV(){
+  const pet=activePet();
+  const q=c=>`"${String(c==null?'':c).replace(/"/g,'""')}"`;
+  const rows=[['registro','nombre','fecha','dosis_o_tipo','lote','marca','proxima']];
+  (pet.vaccines||[]).forEach(v=>rows.push(['vacuna',v.nombre,v.fecha,v.dosis||'',v.lote||'',v.marca||'',v.proxima||'']));
+  (pet.dewormings||[]).forEach(d=>rows.push(['desparasitacion',d.producto||'',d.fecha,d.tipo||'','','',d.proxima||'']));
+  const csv='﻿'+rows.map(r=>r.map(q).join(',')).join('\r\n');
+  download(`vacupet-${slug(pet.info.nombre)}.csv`, csv, 'text/csv;charset=utf-8'); toast(t('m_csv'));
 }
 function exportJSON(){ download(`vacupet-respaldo-${todayISO()}.json`, JSON.stringify(data,null,2), 'application/json'); toast(t('m_json')); }
 function importJSON(){
@@ -1519,6 +1595,7 @@ document.addEventListener('click', e=>{
   if(t0.closest('#shareCard')){ shareModal(); return; }
   if(t0.closest('#expIcs')){ exportICS(); return; }
   if(t0.closest('#expPdf')){ exportPDF(); return; }
+  if(t0.closest('#expCsv')){ exportCSV(); return; }
   if(t0.closest('#expJson')){ exportJSON(); return; }
   if(t0.closest('#impJson')){ importJSON(); return; }
 });
