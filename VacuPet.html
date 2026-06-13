@@ -447,6 +447,7 @@ const STR = {
     sec_achievements:'Logros', ach_uptodate:'Carné al día', ach_microchip:'Microchip', ach_complete:'Esquema completo', ach_tracker:'Control de peso',
     dest_ue:'Unión Europea', dest_uk:'Reino Unido', dest_us:'Estados Unidos', dest_rabiesfree:'Países libres de rabia', dest_latam:'Latinoamérica (general)',
     a11y_big:'Texto grande', a11y_big_sub:'Aumenta el tamaño de la interfaz', update_ready:'Nueva versión disponible. Recarga la app.',
+    demo_view:'Ver ejemplo', demo_loaded:'Mascota de ejemplo creada · explórala y bórrala cuando quieras',
   },
   en:{
     tab_home:'Home', tab_card:'Record', tab_pet:'Pet', tab_more:'More',
@@ -525,6 +526,7 @@ const STR = {
     sec_achievements:'Achievements', ach_uptodate:'Record up to date', ach_microchip:'Microchip', ach_complete:'Schedule complete', ach_tracker:'Weight tracking',
     dest_ue:'European Union', dest_uk:'United Kingdom', dest_us:'United States', dest_rabiesfree:'Rabies-free countries', dest_latam:'Latin America (general)',
     a11y_big:'Large text', a11y_big_sub:'Increase the interface size', update_ready:'New version available. Reload the app.',
+    demo_view:'View example', demo_loaded:'Example pet created · explore it and delete it anytime',
   },
   pt:{
     tab_home:'Início', tab_card:'Carteira', tab_pet:'Pet', tab_more:'Mais',
@@ -603,6 +605,7 @@ const STR = {
     sec_achievements:'Conquistas', ach_uptodate:'Carteira em dia', ach_microchip:'Microchip', ach_complete:'Esquema completo', ach_tracker:'Controle de peso',
     dest_ue:'União Europeia', dest_uk:'Reino Unido', dest_us:'Estados Unidos', dest_rabiesfree:'Países livres de raiva', dest_latam:'América Latina (geral)',
     a11y_big:'Texto grande', a11y_big_sub:'Aumenta o tamanho da interface', update_ready:'Nova versão disponível. Recarregue o app.',
+    demo_view:'Ver exemplo', demo_loaded:'Pet de exemplo criado · explore e exclua quando quiser',
   },
 };
 function t(k){ const l=data.lang||'es'; return (STR[l]&&STR[l][k])||STR.es[k]||k; }
@@ -847,6 +850,7 @@ function viewOnboarding(){
       <h2 style="margin-top:10px">${t('onb_title')}</h2>
       <p style="color:var(--muted);margin:8px 0 18px">${t('onb_sub')}</p>
       <button class="btn btn-primary btn-block" id="onbAdd">${I.plus} ${t('onb_add')}</button>
+      <button class="btn btn-ghost btn-block" id="onbDemo" style="margin-top:8px">${I.paw} ${t('demo_view')}</button>
     </div>
     <p class="disclaimer">${t('disc_full')}</p>
   </div>`;
@@ -1925,6 +1929,29 @@ function achievementsHTML(pet){
 }
 
 /* ======================================================================
+   Mascota de ejemplo (para explorar sin teclear)
+   ====================================================================== */
+function demoFoto(){
+  const svg = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 400"><defs><linearGradient id="g" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#f59e0b"/><stop offset="1" stop-color="#b45309"/></linearGradient></defs><rect width="400" height="400" fill="url(#g)"/><g fill="#fff" opacity="0.92" transform="translate(96,150) scale(9)"><circle cx="6" cy="10" r="2.1"/><circle cx="10.5" cy="6.5" r="2.1"/><circle cx="15.5" cy="6.5" r="2.1"/><circle cx="19" cy="10.5" r="2"/><path d="M12.5 11c-2.4 0-4.3 1.7-5.2 3.4-.9 1.7-1.6 3.6.2 4.6 1.2.7 2.6-.2 4-.2s2.8.9 4 .2c1.8-1 .9-2.9 0-4.6C14.8 12.7 14.9 11 12.5 11z"/></g></svg>';
+  return 'data:image/svg+xml;base64,' + btoa(svg);
+}
+function loadDemoPet(){
+  const d = n => toISO(addDays(new Date(), n));
+  const pet = {
+    info:{ id:uid(), nombre:'Rocky', especie:'perro', raza:'Labrador', sexo:'m', nacimiento:'2022-03-10',
+           microchip:'941000012345678', esterilizado:true, peso:28, foto:demoFoto(), veterinario:'Clínica Patitas', notas:'Mascota de ejemplo', demo:true },
+    vaccines:[
+      { id:uid(), nombre:'Rabia', fecha:d(-190), proxima:d(5),  source:'manual' },
+      { id:uid(), nombre:'Polivalente (quíntuple/séxtuple)', fecha:d(-220), proxima:d(40), source:'manual' },
+    ],
+    dewormings:[ { id:uid(), tipo:'externa', producto:'Pipeta antipulgas', fecha:d(-5), proxima:d(25) } ],
+    weights:[ { id:uid(), fecha:d(-100), kg:25 }, { id:uid(), fecha:d(-50), kg:27 }, { id:uid(), fecha:d(-8), kg:28 } ],
+    vetVisits:[ { id:uid(), fecha:d(-20), motivo:'Revisión anual', clinica:'Clínica Patitas', diagnostico:'Sano', notas:'' } ],
+  };
+  data.pets.push(pet); data.activeId = pet.info.id; save(); toast(t('demo_loaded')); go('home');
+}
+
+/* ======================================================================
    Eventos (delegación)
    ====================================================================== */
 document.addEventListener('click', e=>{
@@ -1939,6 +1966,7 @@ document.addEventListener('click', e=>{
   const goEl=t0.closest('[data-go]'); if(goEl){ go(goEl.dataset.go); return; }
   if(t0.closest('#btnBackup')){ go('more'); return; }
   if(t0.closest('#onbAdd')||t0.closest('#addPet')){ petModal(null); return; }
+  if(t0.closest('#onbDemo')){ loadDemoPet(); return; }
   const pa=t0.closest('[data-pet]'); if(pa){ data.activeId=pa.dataset.pet; save(); render(); return; }
   const sw=t0.closest('[data-switch]'); if(sw){ data.activeId=sw.dataset.switch; save(); closeModal(); go('home'); return; }
   if(t0.closest('#switchPet')){ switchModal(); return; }
@@ -2074,6 +2102,8 @@ if(tokenMatch){
   }
   if(!shared && !data.activeId && data.pets[0]) data.activeId = data.pets[0].info.id;
   render();
+  // Enlace #demo: crea una mascota de ejemplo si aún no hay ninguna.
+  if(!shared && /[#&]demo/.test(hash0) && data.pets.length===0){ history.replaceState(null,'',location.pathname); loadDemoPet(); }
   // Bloqueo: si está activado, cubre la app hasta desbloquear.
   if(!shared && data.lock && data.lock.enabled) showLock();
   // Tras renderizar, abre el modal del acceso directo si procede y hay mascota.
