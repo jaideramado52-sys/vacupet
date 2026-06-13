@@ -8,6 +8,12 @@
 <title>VacuPet — Carné de salud para mascotas</title>
 <link rel="manifest" href="./manifest.webmanifest">
 <link rel="icon" href="./icon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="./icon.svg">
+<meta property="og:type" content="website">
+<meta property="og:title" content="VacuPet — Carné de salud para mascotas">
+<meta property="og:description" content="Vacunas, desparasitación, peso y recordatorios para tu mascota. Funciona offline.">
+<meta property="og:image" content="./og-image.svg">
+<meta name="twitter:card" content="summary_large_image">
 <script src="./supabase-config.js" defer></script>
 <style>
 /* ============================ Sistema de diseño ============================ */
@@ -314,6 +320,11 @@ const STR = {
     copied:'Enlace copiado', saved_pet:'Mascota guardada', saved_vac:'Vacuna registrada', saved_dew:'Desparasitación registrada',
     saved_weight:'Peso registrado', saved_visit:'Visita registrada', deleted:'Registro eliminado', pref_saved:'Preferencia guardada',
     new_pet:'Nueva mascota', reg_vac:'Registrar vacuna', reg_dew:'Registrar desparasitación', reg_weight:'Registrar peso', reg_visit:'Registrar visita',
+    sec_app:'Aplicación', m_install:'Instalar VacuPet', m_install_sub:'Añade la app a tu pantalla de inicio',
+    m_notif:'Avisos en este dispositivo', notif_on:'Activados · toca para probar', notif_off:'Toca para activar',
+    notif_blocked:'Bloqueados — actívalos en los ajustes del navegador', notif_unsupported:'No disponible en este navegador',
+    notif_enabled:'Avisos activados', notif_test_body:'Así se verán tus recordatorios de VacuPet.',
+    notif_test_sent:'Aviso de prueba enviado', installed:'App instalada',
   },
   en:{
     tab_home:'Home', tab_card:'Record', tab_pet:'Pet', tab_more:'More',
@@ -342,6 +353,11 @@ const STR = {
     copied:'Link copied', saved_pet:'Pet saved', saved_vac:'Vaccine saved', saved_dew:'Deworming saved',
     saved_weight:'Weight saved', saved_visit:'Visit saved', deleted:'Record deleted', pref_saved:'Preference saved',
     new_pet:'New pet', reg_vac:'Add vaccine', reg_dew:'Add deworming', reg_weight:'Add weight', reg_visit:'Add visit',
+    sec_app:'App', m_install:'Install VacuPet', m_install_sub:'Add the app to your home screen',
+    m_notif:'Alerts on this device', notif_on:'On · tap to test', notif_off:'Tap to enable',
+    notif_blocked:'Blocked — enable them in your browser settings', notif_unsupported:'Not available in this browser',
+    notif_enabled:'Alerts enabled', notif_test_body:'This is how your VacuPet reminders will look.',
+    notif_test_sent:'Test alert sent', installed:'App installed',
   },
   pt:{
     tab_home:'Início', tab_card:'Carteira', tab_pet:'Pet', tab_more:'Mais',
@@ -370,6 +386,11 @@ const STR = {
     copied:'Link copiado', saved_pet:'Pet salvo', saved_vac:'Vacina registrada', saved_dew:'Vermífugo registrado',
     saved_weight:'Peso registrado', saved_visit:'Visita registrada', deleted:'Registro excluído', pref_saved:'Preferência salva',
     new_pet:'Novo pet', reg_vac:'Registrar vacina', reg_dew:'Registrar vermífugo', reg_weight:'Registrar peso', reg_visit:'Registrar visita',
+    sec_app:'App', m_install:'Instalar VacuPet', m_install_sub:'Adicione o app à tela inicial',
+    m_notif:'Avisos neste aparelho', notif_on:'Ativados · toque para testar', notif_off:'Toque para ativar',
+    notif_blocked:'Bloqueados — ative nas configurações do navegador', notif_unsupported:'Indisponível neste navegador',
+    notif_enabled:'Avisos ativados', notif_test_body:'É assim que seus lembretes do VacuPet vão aparecer.',
+    notif_test_sent:'Aviso de teste enviado', installed:'App instalado',
   },
 };
 function t(k){ const l=data.lang||'es'; return (STR[l]&&STR[l][k])||STR.es[k]||k; }
@@ -778,10 +799,19 @@ function viewMore(){
       <button class="tile" id="expJson" style="margin-top:11px"><span class="ic c-blue">${I.download}</span><span class="tt"><b>${t('m_json')}</b><span>${t('m_json_sub')}</span></span><span class="chev">${I.chev}</span></button>
       <button class="tile" id="impJson" style="margin-top:11px"><span class="ic c-green">${I.upload}</span><span class="tt"><b>${t('m_import')}</b><span>${t('m_import_sub')}</span></span><span class="chev">${I.chev}</span></button>
     </section>
+    <section class="block"><div class="block-title">${t('sec_app')}</div>
+      ${installPrompt?`<button class="tile" id="installApp" style="margin-bottom:11px"><span class="ic c-accent">${I.download}</span><span class="tt"><b>${t('m_install')}</b><span>${t('m_install_sub')}</span></span><span class="chev">${I.chev}</span></button>`:''}
+      <button class="tile" id="notifTile"><span class="ic c-amber">${I.bell}</span><span class="tt"><b>${t('m_notif')}</b><span>${notifSubText()}</span></span><span class="chev">${I.chev}</span></button>
+    </section>
     <section class="block"><div class="block-title">${t('sec_about')}</div>
       <div class="card pad" style="font-size:13px;color:var(--muted)">${t('about_body')}<br><br>${t('disc')}</div>
     </section>
   </div>`;
+}
+function notifSubText(){
+  if(!('Notification' in window)) return t('notif_unsupported');
+  const p = Notification.permission;
+  return p==='granted' ? t('notif_on') : p==='denied' ? t('notif_blocked') : t('notif_off');
 }
 
 /* ---- Vista compartida (solo lectura) ---- */
@@ -1090,6 +1120,8 @@ document.addEventListener('click', e=>{
     else if(k==='peso'){ pet.weights=pet.weights.filter(x=>x.id!==id); const l=pet.weights.slice().sort((a,b)=>a.fecha<b.fecha?1:-1)[0]; pet.info.peso=l?l.kg:pet.info.peso; }
     else if(k==='visita') pet.vetVisits=pet.vetVisits.filter(x=>x.id!==id);
     save(); toast(t('deleted')); render(); return; }
+  if(t0.closest('#installApp')){ doInstall(); return; }
+  if(t0.closest('#notifTile')){ notifTileAction(); return; }
   if(t0.closest('#shareCard')){ shareModal(); return; }
   if(t0.closest('#expIcs')){ exportICS(); return; }
   if(t0.closest('#expPdf')){ exportPDF(); return; }
@@ -1099,14 +1131,86 @@ document.addEventListener('click', e=>{
 document.addEventListener('change', e=>{ if(e.target.id==='remDays'){ data.remDays=Number(e.target.value); save(); toast(t('pref_saved')); } });
 
 /* ======================================================================
-   PWA
+   PWA — service worker, instalación (A2HS) y avisos locales
    ====================================================================== */
-if('serviceWorker' in navigator){ window.addEventListener('load', ()=>navigator.serviceWorker.register('./service-worker.js').catch(()=>{})); }
+let installPrompt = null;   // evento beforeinstallprompt diferido
+
+if('serviceWorker' in navigator){
+  window.addEventListener('load', ()=>navigator.serviceWorker.register('./service-worker.js').catch(()=>{}));
+}
+window.addEventListener('beforeinstallprompt', e=>{
+  e.preventDefault(); installPrompt = e;
+  if(!shared && currentTab==='more') render();   // muestra el tile de instalar
+});
+window.addEventListener('appinstalled', ()=>{ installPrompt=null; toast(t('installed')); if(currentTab==='more') render(); });
+
+async function doInstall(){
+  if(!installPrompt) return;
+  installPrompt.prompt();
+  try{ await installPrompt.userChoice; }catch(_){}
+  installPrompt=null; render();
+}
+
+// Avisos locales: pide permiso y, si hay VAPID, suscribe push (listo para Fase 4).
+async function enableNotifs(){
+  if(!('Notification' in window)){ toast(t('notif_unsupported')); return; }
+  let perm = Notification.permission;
+  if(perm==='default') perm = await Notification.requestPermission();
+  if(perm==='granted'){ data.notifs=true; save(); trySubscribePush(); toast(t('notif_enabled')); }
+  else { toast(t('notif_blocked')); }
+  render();
+}
+async function trySubscribePush(){
+  try{
+    const cfg = window.VACUPET_AI || {};
+    if(!cfg.vapidPublicKey || !('serviceWorker' in navigator)) return; // sin servidor todavía (Fase 4)
+    const reg = await navigator.serviceWorker.ready;
+    let sub = await reg.pushManager.getSubscription();
+    if(!sub) sub = await reg.pushManager.subscribe({ userVisibleOnly:true, applicationServerKey: urlB64ToUint8(cfg.vapidPublicKey) });
+    // En Fase 4 esta suscripción se enviará a Supabase (tabla push_subs). Por ahora se guarda local.
+    localStorage.setItem('vacupet:pushsub', JSON.stringify(sub));
+  }catch(e){ console.warn('push subscribe:', e); }
+}
+async function testNotif(){
+  const pet = activePet(); const s = pet ? petSummary(pet) : null;
+  const body = s && s.next ? `${s.next.nombre} · ${fmt(s.next.fecha)}` : t('notif_test_body');
+  try{
+    if('serviceWorker' in navigator){ const reg = await navigator.serviceWorker.ready; await reg.showNotification('VacuPet', { body, icon:'./icon.svg', badge:'./icon.svg', tag:'vacupet-test' }); }
+    else new Notification('VacuPet', { body });
+    toast(t('notif_test_sent'));
+  }catch(e){ try{ new Notification('VacuPet', { body }); toast(t('notif_test_sent')); }catch(_){ console.warn(e); } }
+}
+function notifTileAction(){
+  if(!('Notification' in window)){ toast(t('notif_unsupported')); return; }
+  if(Notification.permission==='granted') testNotif();
+  else if(Notification.permission==='denied') toast(t('notif_blocked'));
+  else enableNotifs();
+}
+function urlB64ToUint8(b64){
+  const pad='='.repeat((4 - b64.length % 4) % 4);
+  const s=(b64+pad).replace(/-/g,'+').replace(/_/g,'/');
+  const raw=atob(s); const arr=new Uint8Array(raw.length);
+  for(let i=0;i<raw.length;i++) arr[i]=raw.charCodeAt(i);
+  return arr;
+}
 
 /* ---------------------------- Arranque ---------------------------- */
 shared = readShareHash();
+let pendingAdd = null;
+if(!shared){
+  // Accesos directos del manifest / enlaces: #tab=card, #add=vacuna
+  const h = location.hash || '';
+  const mTab = h.match(/[#&]tab=([a-z]+)/);  if(mTab && ['home','card','pet','more'].includes(mTab[1])) currentTab = mTab[1];
+  const mAdd = h.match(/[#&]add=([a-z]+)/);   if(mAdd) pendingAdd = mAdd[1];
+  if(mTab || mAdd) history.replaceState(null,'',location.pathname);
+}
 if(!shared && !data.activeId && data.pets[0]) data.activeId = data.pets[0].info.id;
 render();
+// Tras renderizar, abre el modal del acceso directo si procede y hay mascota.
+if(pendingAdd && data.pets.length){
+  if(pendingAdd==='vacuna') vaccineModal();
+  else if(pendingAdd==='desparasitacion') dewormModal();
+}
 </script>
 </body>
 </html>

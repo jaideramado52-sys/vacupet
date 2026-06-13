@@ -36,15 +36,17 @@ Objetivo: convertirlo en un carné serio y multimascota.
 - [x] **Accesibilidad**: foco visible (`:focus-visible`), roles ARIA (tablist/tab/dialog/status), `aria-label` en iconos, `aria-pressed` en idioma.
 - [x] **i18n** es / en / pt con conmutador en el header, persistencia y cambio en vivo (chrome y pantallas; fichas español-primero).
 
-## Fase 2 — PWA real 🔲
+## Fase 2 — PWA real ✅
 Objetivo: instalable y offline de verdad.
+> Verificado: sintaxis válida + render headless sin errores + manifest JSON válido (2 iconos, maskable, 2 shortcuts) + pruebas de lógica PWA (viewMore, notifSubText, urlB64ToUint8).
 
-- [ ] `manifest.webmanifest` afinado (iconos, theme, categorías `pets`/`lifestyle`).
-- [ ] `service-worker.js`: precache del shell + estrategia offline + actualización.
-- [ ] `icon.svg` · `icon-maskable.svg` · `og-image.svg` (branding mascota).
-- [ ] **Instalación** (prompt A2HS) y verificación en Android/iOS.
-- [ ] **Web Push local** (suscripción del cliente, permiso, prueba sin servidor).
-- [ ] `_headers` (cabeceras de hosting Cloudflare/Netlify) + `index.html` de redirección que conserva el hash de enlaces compartidos.
+- [x] `manifest.webmanifest` afinado: `id`, `display_override`, `shortcuts` (registrar vacuna / ver carné), categorías, iconos any+maskable.
+- [x] `service-worker.js`: precache del shell + estrategia network-first (HTML/config) y cache-first (resto) + actualización (`vacupet-v2`).
+- [x] `icon.svg` · `icon-maskable.svg` (zona segura) · `og-image.svg` (branding patita verde) + meta Open Graph/Twitter + apple-touch-icon.
+- [x] **Instalación** (prompt A2HS): captura `beforeinstallprompt`, tile "Instalar" en Más, `appinstalled`.
+- [x] **Web Push local**: permiso de notificaciones + **notificación de prueba** vía service worker; suscripción `pushManager` lista para Fase 4 (si hay clave VAPID).
+- [x] **Accesos directos** del manifest (`#tab=`, `#add=`) gestionados al arrancar.
+- [x] `_headers` (cabeceras de hosting) + `index.html` de redirección que conserva el hash de enlaces compartidos.
 
 ## Fase 3 — Nube y cuentas (Supabase) 🔲 → ⏳
 Objetivo: tus mascotas en la nube, multidispositivo, seguras.
