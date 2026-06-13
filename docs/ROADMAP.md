@@ -93,12 +93,15 @@ Objetivo: un carné que un veterinario o aduana pueda confiar.
 - [x] **Exportar registro veterinario** en **CSV** (UTF-8 con BOM, legible por clínicas / hojas de cálculo).
 - [ ] **Desplegar firma**: generar claves (`gen-keys.mjs`) y configurar `SIGN_PRIVATE_JWK`/`SIGN_KID` (lo hace el usuario; sin esto, los carnés se comparten sin firmar y la vista muestra “integridad no verificable”).
 
-## Fase 7 — Privacidad, seguridad y cuenta 🔲 → ⏳
-- [ ] **Bloqueo con PIN** + **biométrico (WebAuthn)** opcional al abrir.
-- [ ] **Respaldo cifrado** (AES-GCM + PBKDF2) con passphrase.
-- [ ] **Centro de privacidad**: bloqueo, respaldo cifrado, avisos push, consentimientos, exportar/borrar.
-- [ ] Edge Function `eliminar-cuenta` (borrado de cuenta + datos + fotos).
-- [ ] `docs/PRIVACIDAD.md` · `docs/TERMINOS.md`.
+## Fase 7 — Privacidad, seguridad y cuenta ✅ (código) → ⏳ (desplegar borrado)
+> Verificado: cliente sintaxis + headless sin errores + **8 pruebas criptográficas** (PIN hasheado/roundtrip/rechazo, respaldo AES-GCM roundtrip/clave incorrecta/sin filtración).
+
+- [x] **Bloqueo con PIN** (PBKDF2-SHA256, comparación en tiempo constante) + **biométrico (WebAuthn)** opcional; pantalla de bloqueo al abrir.
+- [x] **Respaldo cifrado** (AES-GCM 256 + PBKDF2) con contraseña: exportar/importar.
+- [x] **Centro de privacidad** en *Más*: bloqueo, respaldo cifrado, borrar datos locales, eliminar cuenta.
+- [x] Edge Function `eliminar-cuenta`: verifica el JWT del usuario y borra `vacupet_state`/`shares`/`push_subs`/Storage + `auth.admin.deleteUser`.
+- [x] `docs/PRIVACIDAD.md` · `docs/TERMINOS.md` (borradores orientativos).
+- [ ] **Desplegar**: la eliminación de cuenta real requiere la función desplegada (lo hace el usuario; sin nube, "Borrar mis datos" funciona en local).
 
 ## Fase 8 — (opcional) Viajero + crecimiento 🔲
 - [ ] **Pasaporte de viaje**: requisitos por destino (certificado de rabia, titulación FAVN/RNATT para UE/países libres de rabia, microchip ISO) y contraste con el carné.

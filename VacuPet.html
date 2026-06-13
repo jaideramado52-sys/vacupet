@@ -249,6 +249,15 @@ nav.tabbar button.on{color:var(--accent)}
 .vbadge.bad{background:color-mix(in srgb,var(--red) 13%,var(--surface));color:var(--red)}
 .vbadge.unk{background:var(--surface-2);color:var(--muted)}
 
+/* ---- Pantalla de bloqueo ---- */
+.lockscreen{position:fixed;inset:0;z-index:90;background:var(--bg);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:16px;padding:32px;text-align:center}
+.lockscreen .lk-logo{width:64px;height:64px;border-radius:18px;background:var(--accent);display:grid;place-items:center;color:#fff}
+.lockscreen .lk-logo svg{width:34px;height:34px}
+.lockscreen h2{font-size:20px}
+.lockscreen input{max-width:240px;text-align:center;letter-spacing:6px;font-size:20px}
+.lockscreen .lk-actions{display:flex;flex-direction:column;gap:10px;width:100%;max-width:240px}
+.lockscreen .lk-err{color:var(--red);font-size:13px;min-height:18px}
+
 .disclaimer{font-size:12px;color:var(--muted);text-align:center;padding:24px 16px 8px;line-height:1.6}
 
 /* ---- Impresión (PDF) ---- */
@@ -277,6 +286,7 @@ nav.tabbar button.on{color:var(--accent)}
 <main id="app"></main>
 <nav class="tabbar" id="tabbar" role="tablist"></nav>
 
+<div id="lockRoot"></div>
 <div id="modalRoot"></div>
 <div id="assistantRoot"></div>
 <button class="fab hide" id="fab" aria-label="Asistente"></button>
@@ -318,6 +328,9 @@ const I = {
   spark:'<svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2.5l1.7 4.6 4.6 1.7-4.6 1.7L12 15.1l-1.7-4.6L5.7 8.8l4.6-1.7L12 2.5z"/><path d="M19 14l.9 2.4 2.4.9-2.4.9L19 21l-.9-2.4-2.4-.9 2.4-.9L19 14z"/></svg>',
   camera:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 8.5A2.5 2.5 0 0 1 5.5 6h1L8 4h8l1.5 2h1A2.5 2.5 0 0 1 21 8.5v9A2.5 2.5 0 0 1 18.5 20h-13A2.5 2.5 0 0 1 3 17.5z"/><circle cx="12" cy="13" r="3.5"/></svg>',
   send:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12l16-7-7 16-2.5-6.5L4 12z"/></svg>',
+  lock:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="11" width="14" height="10" rx="2.5"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/><path d="M12 15v2"/></svg>',
+  shield:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l7 3v5c0 4.5-3 8-7 10-4-2-7-5.5-7-10V6z"/><path d="m9 12 2 2 4-4"/></svg>',
+  finger:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M12 11v3a6 6 0 0 1-1 3.5M7 19a8 8 0 0 1-1-4 6 6 0 0 1 9-5.2M5 9a8 8 0 0 1 13-1M9.5 19.5A10 10 0 0 0 11 14a1 1 0 0 1 2 0c0 1.2-.2 2.4-.5 3.5M16.5 17a14 14 0 0 0 .5-3 5 5 0 0 0-8-4"/></svg>',
   download:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v12m0 0 4-4m-4 4-4-4M5 21h14"/></svg>',
   upload:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 21V9m0 0 4 4m-4-4-4 4M5 3h14"/></svg>',
 };
@@ -384,6 +397,19 @@ const STR = {
     ocr_save:'Guardar seleccionados', ocr_err:'No se pudo escanear. Revisa la conexión o configura la IA.', ocr_saved:'{n} registro(s) añadidos',
     verifying:'Verificando integridad…', verify_ok:'Carné verificado', verify_bad:'Carné alterado', verify_unknown:'Integridad no verificable',
     m_csv:'Exportar registro (CSV)', m_csv_sub:'Para clínicas / hojas de cálculo', signing:'Firmando carné…',
+    sec_privacy:'Privacidad y seguridad',
+    pv_lock:'Bloqueo de la app', pv_lock_on:'Activado', pv_lock_off:'Desactivado',
+    pv_encbak:'Respaldo cifrado', pv_encbak_sub:'Exporta/importa con contraseña',
+    pv_delete:'Borrar mis datos', pv_delete_sub:'Elimina todo en este dispositivo',
+    pv_delacc:'Eliminar cuenta', pv_delacc_sub:'Borra tu cuenta y datos en la nube',
+    lock_title:'Desbloquear', lock_ph:'Tu PIN', lock_unlock:'Desbloquear', lock_bio:'Usar biometría', lock_wrong:'PIN incorrecto',
+    lock_set_title:'Bloqueo de la app', lock_new:'Nuevo PIN (4+ dígitos)', lock_confirm:'Repite el PIN', lock_enable:'Activar bloqueo', lock_disable:'Desactivar bloqueo',
+    lock_bio_enable:'Activar biometría', lock_bio_on:'Biometría activada', lock_mismatch:'Los PIN no coinciden', lock_short:'El PIN es muy corto (mín. 4)',
+    lock_enabled:'Bloqueo activado', lock_disabled:'Bloqueo desactivado', bio_unsupported:'Biometría no disponible aquí', bio_enabled:'Biometría activada',
+    enc_title:'Respaldo cifrado', enc_pass:'Contraseña', enc_export:'Exportar cifrado', enc_import:'Importar cifrado',
+    enc_done:'Respaldo cifrado descargado', enc_bad:'Contraseña incorrecta o archivo inválido', enc_restored:'Respaldo restaurado', enc_working:'Cifrando…',
+    del_confirm:'¿Borrar TODOS los datos de este dispositivo? No se puede deshacer.', del_done:'Datos borrados',
+    delacc_confirm:'¿Eliminar tu cuenta y todos tus datos en la nube? Es permanente.', delacc_done:'Cuenta eliminada', delacc_err:'No se pudo eliminar la cuenta',
   },
   en:{
     tab_home:'Home', tab_card:'Record', tab_pet:'Pet', tab_more:'More',
@@ -441,6 +467,19 @@ const STR = {
     ocr_save:'Save selected', ocr_err:'Could not scan. Check your connection or configure AI.', ocr_saved:'{n} record(s) added',
     verifying:'Verifying integrity…', verify_ok:'Record verified', verify_bad:'Record tampered', verify_unknown:'Integrity not verifiable',
     m_csv:'Export record (CSV)', m_csv_sub:'For clinics / spreadsheets', signing:'Signing record…',
+    sec_privacy:'Privacy & security',
+    pv_lock:'App lock', pv_lock_on:'On', pv_lock_off:'Off',
+    pv_encbak:'Encrypted backup', pv_encbak_sub:'Export/import with a password',
+    pv_delete:'Erase my data', pv_delete_sub:'Removes everything on this device',
+    pv_delacc:'Delete account', pv_delacc_sub:'Deletes your account and cloud data',
+    lock_title:'Unlock', lock_ph:'Your PIN', lock_unlock:'Unlock', lock_bio:'Use biometrics', lock_wrong:'Wrong PIN',
+    lock_set_title:'App lock', lock_new:'New PIN (4+ digits)', lock_confirm:'Repeat PIN', lock_enable:'Enable lock', lock_disable:'Disable lock',
+    lock_bio_enable:'Enable biometrics', lock_bio_on:'Biometrics on', lock_mismatch:"PINs don't match", lock_short:'PIN too short (min 4)',
+    lock_enabled:'Lock enabled', lock_disabled:'Lock disabled', bio_unsupported:'Biometrics not available here', bio_enabled:'Biometrics enabled',
+    enc_title:'Encrypted backup', enc_pass:'Password', enc_export:'Export encrypted', enc_import:'Import encrypted',
+    enc_done:'Encrypted backup downloaded', enc_bad:'Wrong password or invalid file', enc_restored:'Backup restored', enc_working:'Encrypting…',
+    del_confirm:'Erase ALL data on this device? This cannot be undone.', del_done:'Data erased',
+    delacc_confirm:'Delete your account and all your cloud data? This is permanent.', delacc_done:'Account deleted', delacc_err:'Could not delete the account',
   },
   pt:{
     tab_home:'Início', tab_card:'Carteira', tab_pet:'Pet', tab_more:'Mais',
@@ -498,6 +537,19 @@ const STR = {
     ocr_save:'Salvar selecionados', ocr_err:'Não foi possível escanear. Verifique a conexão ou configure a IA.', ocr_saved:'{n} registro(s) adicionados',
     verifying:'Verificando integridade…', verify_ok:'Carteira verificada', verify_bad:'Carteira alterada', verify_unknown:'Integridade não verificável',
     m_csv:'Exportar registro (CSV)', m_csv_sub:'Para clínicas / planilhas', signing:'Assinando carteira…',
+    sec_privacy:'Privacidade e segurança',
+    pv_lock:'Bloqueio do app', pv_lock_on:'Ativado', pv_lock_off:'Desativado',
+    pv_encbak:'Backup criptografado', pv_encbak_sub:'Exporta/importa com senha',
+    pv_delete:'Apagar meus dados', pv_delete_sub:'Remove tudo neste aparelho',
+    pv_delacc:'Excluir conta', pv_delacc_sub:'Apaga sua conta e dados na nuvem',
+    lock_title:'Desbloquear', lock_ph:'Seu PIN', lock_unlock:'Desbloquear', lock_bio:'Usar biometria', lock_wrong:'PIN incorreto',
+    lock_set_title:'Bloqueio do app', lock_new:'Novo PIN (4+ dígitos)', lock_confirm:'Repita o PIN', lock_enable:'Ativar bloqueio', lock_disable:'Desativar bloqueio',
+    lock_bio_enable:'Ativar biometria', lock_bio_on:'Biometria ativada', lock_mismatch:'Os PINs não coincidem', lock_short:'PIN muito curto (mín. 4)',
+    lock_enabled:'Bloqueio ativado', lock_disabled:'Bloqueio desativado', bio_unsupported:'Biometria indisponível aqui', bio_enabled:'Biometria ativada',
+    enc_title:'Backup criptografado', enc_pass:'Senha', enc_export:'Exportar criptografado', enc_import:'Importar criptografado',
+    enc_done:'Backup criptografado baixado', enc_bad:'Senha incorreta ou arquivo inválido', enc_restored:'Backup restaurado', enc_working:'Criptografando…',
+    del_confirm:'Apagar TODOS os dados deste aparelho? Não pode ser desfeito.', del_done:'Dados apagados',
+    delacc_confirm:'Excluir sua conta e todos os seus dados na nuvem? É permanente.', delacc_done:'Conta excluída', delacc_err:'Não foi possível excluir a conta',
   },
 };
 function t(k){ const l=data.lang||'es'; return (STR[l]&&STR[l][k])||STR.es[k]||k; }
@@ -924,6 +976,12 @@ function viewMore(){
     <section class="block"><div class="block-title">${t('sec_app')}</div>
       ${installPrompt?`<button class="tile" id="installApp" style="margin-bottom:11px"><span class="ic c-accent">${I.download}</span><span class="tt"><b>${t('m_install')}</b><span>${t('m_install_sub')}</span></span><span class="chev">${I.chev}</span></button>`:''}
       <button class="tile" id="notifTile"><span class="ic c-amber">${I.bell}</span><span class="tt"><b>${t('m_notif')}</b><span>${notifSubText()}</span></span><span class="chev">${I.chev}</span></button>
+    </section>
+    <section class="block"><div class="block-title">${t('sec_privacy')}</div>
+      <button class="tile" id="pvLock"><span class="ic c-accent">${I.lock}</span><span class="tt"><b>${t('pv_lock')}</b><span>${(data.lock&&data.lock.enabled)?t('pv_lock_on'):t('pv_lock_off')}</span></span><span class="chev">${I.chev}</span></button>
+      <button class="tile" id="pvEnc" style="margin-top:11px"><span class="ic c-blue">${I.shield}</span><span class="tt"><b>${t('pv_encbak')}</b><span>${t('pv_encbak_sub')}</span></span><span class="chev">${I.chev}</span></button>
+      <button class="tile" id="pvWipe" style="margin-top:11px"><span class="ic c-amber">${I.trash}</span><span class="tt"><b>${t('pv_delete')}</b><span>${t('pv_delete_sub')}</span></span><span class="chev">${I.chev}</span></button>
+      ${cloudConfigured()&&session?`<button class="tile" id="pvDelAcc" style="margin-top:11px"><span class="ic c-red">${I.trash}</span><span class="tt"><b>${t('pv_delacc')}</b><span>${t('pv_delacc_sub')}</span></span><span class="chev">${I.chev}</span></button>`:''}
     </section>
     <section class="block"><div class="block-title">${t('sec_about')}</div>
       <div class="card pad" style="font-size:13px;color:var(--muted)">${t('about_body')}<br><br>${t('disc')}</div>
@@ -1557,6 +1615,168 @@ function ocrReview(items){
 }
 
 /* ======================================================================
+   Privacidad y seguridad: PIN, biometría, respaldo cifrado, borrado
+   ====================================================================== */
+let locked = false;
+
+// --- Criptografía base (WebCrypto) ---
+function randBytes(n){ const a=new Uint8Array(n); crypto.getRandomValues(a); return a; }
+function bytesToB64(bytes){ let s=''; for(let i=0;i<bytes.length;i++) s+=String.fromCharCode(bytes[i]); return btoa(s); }
+function b64ToBytes(str){ const bin=atob(str); const a=new Uint8Array(bin.length); for(let i=0;i<bin.length;i++) a[i]=bin.charCodeAt(i); return a; }
+async function pbkdf2Bits(pass, salt, it, len){
+  const km=await crypto.subtle.importKey('raw', new TextEncoder().encode(pass), 'PBKDF2', false, ['deriveBits']);
+  return new Uint8Array(await crypto.subtle.deriveBits({ name:'PBKDF2', salt, iterations:it, hash:'SHA-256' }, km, len));
+}
+async function deriveAesKey(pass, salt, it){
+  const km=await crypto.subtle.importKey('raw', new TextEncoder().encode(pass), 'PBKDF2', false, ['deriveKey']);
+  return crypto.subtle.deriveKey({ name:'PBKDF2', salt, iterations:it, hash:'SHA-256' }, km, { name:'AES-GCM', length:256 }, false, ['encrypt','decrypt']);
+}
+const KDF_IT = 150000;
+
+// --- PIN ---
+async function hashPin(pin, saltBytes, it){ return bytesToB64(await pbkdf2Bits(pin, saltBytes, it||KDF_IT, 256)); }
+async function setPin(pin){
+  const salt=randBytes(16);
+  const hash=await hashPin(pin, salt, KDF_IT);
+  data.lock = Object.assign({}, data.lock, { enabled:true, salt:bytesToB64(salt), hash, it:KDF_IT });
+  save();
+}
+async function checkPin(pin){
+  const l=data.lock; if(!l||!l.enabled) return false;
+  const h=await hashPin(pin, b64ToBytes(l.salt), l.it||KDF_IT);
+  // comparación de longitud constante razonable
+  if(h.length!==l.hash.length) return false;
+  let diff=0; for(let i=0;i<h.length;i++) diff|=h.charCodeAt(i)^l.hash.charCodeAt(i);
+  return diff===0;
+}
+function disableLock(){ if(data.lock){ delete data.lock; save(); } }
+
+// --- Respaldo cifrado (AES-GCM + PBKDF2) ---
+async function encryptBackup(pass){
+  const salt=randBytes(16), iv=randBytes(12);
+  const key=await deriveAesKey(pass, salt, KDF_IT);
+  const pt=new TextEncoder().encode(JSON.stringify(data));
+  const ct=new Uint8Array(await crypto.subtle.encrypt({ name:'AES-GCM', iv }, key, pt));
+  return JSON.stringify({ app:'vacupet', enc:'AES-GCM', kdf:'PBKDF2-SHA256', it:KDF_IT, salt:bytesToB64(salt), iv:bytesToB64(iv), ct:bytesToB64(ct) });
+}
+async function decryptBackup(envStr, pass){
+  const env=JSON.parse(envStr);
+  if(env.app!=='vacupet' || !env.ct) throw new Error('bad');
+  const key=await deriveAesKey(pass, b64ToBytes(env.salt), env.it||KDF_IT);
+  const pt=await crypto.subtle.decrypt({ name:'AES-GCM', iv:b64ToBytes(env.iv) }, key, b64ToBytes(env.ct));
+  return JSON.parse(new TextDecoder().decode(pt));
+}
+
+// --- Biometría (WebAuthn, gate local best-effort) ---
+function bioSupported(){ return typeof window.PublicKeyCredential !== 'undefined' && !!(navigator.credentials); }
+async function bioRegister(){
+  if(!bioSupported()) return false;
+  try{
+    const cred=await navigator.credentials.create({ publicKey:{
+      challenge:randBytes(32), rp:{ name:'VacuPet' },
+      user:{ id:randBytes(16), name:'vacupet', displayName:'VacuPet' },
+      pubKeyCredParams:[{ type:'public-key', alg:-7 }, { type:'public-key', alg:-257 }],
+      authenticatorSelection:{ authenticatorAttachment:'platform', userVerification:'required' }, timeout:60000,
+    }});
+    data.lock = Object.assign({}, data.lock, { bioId:bytesToB64(new Uint8Array(cred.rawId)) }); save();
+    return true;
+  }catch(e){ console.warn('bio register:', e); return false; }
+}
+async function bioUnlock(){
+  const l=data.lock; if(!l||!l.bioId||!bioSupported()) return false;
+  try{
+    await navigator.credentials.get({ publicKey:{ challenge:randBytes(32), allowCredentials:[{ type:'public-key', id:b64ToBytes(l.bioId) }], userVerification:'required', timeout:60000 } });
+    return true;
+  }catch(e){ console.warn('bio unlock:', e); return false; }
+}
+
+// --- Pantalla de bloqueo ---
+function showLock(){
+  locked=true;
+  const root=document.getElementById('lockRoot');
+  const bio = data.lock && data.lock.bioId && bioSupported();
+  root.innerHTML=`<div class="lockscreen">
+    <div class="lk-logo">${I.lock}</div><h2>VacuPet</h2>
+    <input type="password" id="lkPin" inputmode="numeric" autocomplete="off" placeholder="${esc(t('lock_ph'))}" aria-label="${esc(t('lock_ph'))}">
+    <div class="lk-err" id="lkErr"></div>
+    <div class="lk-actions">
+      <button class="btn btn-primary" id="lkGo">${t('lock_unlock')}</button>
+      ${bio?`<button class="btn" id="lkBio">${I.finger} ${t('lock_bio')}</button>`:''}
+    </div></div>`;
+  const tryPin=async()=>{ const ok=await checkPin(document.getElementById('lkPin').value); if(ok) unlock(); else { document.getElementById('lkErr').textContent=t('lock_wrong'); document.getElementById('lkPin').value=''; } };
+  document.getElementById('lkGo').onclick=tryPin;
+  document.getElementById('lkPin').addEventListener('keydown',e=>{ if(e.key==='Enter') tryPin(); });
+  const bb=document.getElementById('lkBio'); if(bb) bb.onclick=async()=>{ if(await bioUnlock()) unlock(); else document.getElementById('lkErr').textContent=t('lock_wrong'); };
+  document.getElementById('lkPin').focus();
+  if(bio) bioUnlock().then(ok=>{ if(ok&&locked) unlock(); }); // intenta biometría automáticamente
+}
+function unlock(){ locked=false; document.getElementById('lockRoot').innerHTML=''; render(); }
+
+// --- Modales del centro de privacidad ---
+function lockModal(){
+  const enabled = !!(data.lock&&data.lock.enabled);
+  const body = enabled
+    ? `<p class="hint">${t('pv_lock')}: <b>${t('pv_lock_on')}</b></p>
+       ${bioSupported()?`<button class="btn btn-block" id="bioToggle" style="margin-top:8px">${I.finger} ${data.lock.bioId?t('lock_bio_on'):t('lock_bio_enable')}</button>`:`<p class="hint">${t('bio_unsupported')}</p>`}
+       <button class="btn btn-danger btn-block" id="lockOff" style="margin-top:10px">${t('lock_disable')}</button>`
+    : `<div class="field" id="f-p1"><label>${t('lock_new')}</label><input type="password" id="lk-p1" inputmode="numeric" autocomplete="new-password"><div class="errmsg">${t('lock_short')}</div></div>
+       <div class="field" id="f-p2"><label>${t('lock_confirm')}</label><input type="password" id="lk-p2" inputmode="numeric" autocomplete="new-password"><div class="errmsg">${t('lock_mismatch')}</div></div>`;
+  const foot = enabled ? `<button class="btn btn-block" data-close>${t('close')}</button>`
+    : `<button class="btn btn-ghost" data-close style="flex:none">${t('cancel')}</button><button class="btn btn-primary btn-block" id="lockOn">${t('lock_enable')}</button>`;
+  openModal(modalShell(t('lock_set_title'), body, foot));
+  if(enabled){
+    document.getElementById('lockOff').onclick=()=>{ disableLock(); closeModal(); toast(t('lock_disabled')); if(currentTab==='more') render(); };
+    const bt=document.getElementById('bioToggle'); if(bt) bt.onclick=async()=>{ if(data.lock.bioId){ delete data.lock.bioId; save(); toast('OK'); } else { const ok=await bioRegister(); toast(ok?t('bio_enabled'):t('bio_unsupported')); } closeModal(); };
+  } else {
+    document.getElementById('lockOn').onclick=async()=>{
+      const p1=val('lk-p1'), p2=val('lk-p2');
+      document.getElementById('f-p1').classList.toggle('err', p1.length<4);
+      document.getElementById('f-p2').classList.toggle('err', p1!==p2);
+      if(p1.length<4 || p1!==p2) return;
+      await setPin(p1); closeModal(); toast(t('lock_enabled')); if(currentTab==='more') render();
+    };
+  }
+}
+function encBackupModal(){
+  const body=`<div class="field"><label>${t('enc_pass')}</label><input type="password" id="enc-pass" autocomplete="off" placeholder="••••••••"></div>
+    <div class="row-actions"><button class="btn btn-primary" style="flex:1" id="encExp">${t('enc_export')}</button><button class="btn" id="encImp">${t('enc_import')}</button></div>`;
+  openModal(modalShell(t('enc_title'), body, `<button class="btn btn-block" data-close>${t('close')}</button>`));
+  document.getElementById('encExp').onclick=async()=>{
+    const pass=val('enc-pass'); if(pass.length<4){ toast(t('lock_short')); return; }
+    toast(t('enc_working'));
+    try{ const env=await encryptBackup(pass); download(`vacupet-cifrado-${todayISO()}.json`, env, 'application/json'); toast(t('enc_done')); }
+    catch(e){ console.warn(e); toast(t('enc_bad')); }
+  };
+  document.getElementById('encImp').onclick=()=>{
+    const pass=val('enc-pass'); if(pass.length<1){ toast(t('enc_pass')); return; }
+    const inp=document.getElementById('importInput'); inp.value='';
+    inp.onchange=()=>{ const f=inp.files[0]; if(!f) return; const r=new FileReader();
+      r.onload=async()=>{ try{ const d=await decryptBackup(r.result, pass); if(!d||!Array.isArray(d.pets)) throw new Error('bad');
+        if(!confirm(t('del_confirm').replace('Borrar','Reemplazar').replace('Erase','Replace').replace('Apagar','Substituir'))) return;
+        data=migrate(d); if(!data.activeId&&data.pets[0]) data.activeId=data.pets[0].info.id; save(); closeModal(); toast(t('enc_restored')); go('home');
+      }catch(err){ console.warn(err); toast(t('enc_bad')); } }; r.readAsText(f); };
+    inp.click();
+  };
+}
+function wipeLocal(){
+  if(!confirm(t('del_confirm'))) return;
+  try{ localStorage.removeItem(KEY); localStorage.removeItem('vacupet:pushsub'); }catch(_){}
+  data=defaults(); locked=false; closeModal&&closeModal(); toast(t('del_done')); go('home');
+}
+async function deleteAccount(){
+  if(!session){ wipeLocal(); return; }
+  if(!confirm(t('delacc_confirm'))) return;
+  try{
+    const c=await ensureSupabase(); const tok=session.access_token || (await c.auth.getSession()).data.session.access_token;
+    const url=(SB.url||'').replace(/\/$/,'')+'/functions/v1/eliminar-cuenta';
+    const r=await fetch(url,{ method:'POST', headers:{ 'Authorization':'Bearer '+tok, 'Content-Type':'application/json' } });
+    if(!r.ok) throw new Error('http '+r.status);
+    try{ await c.auth.signOut(); }catch(_){}
+    session=null; localStorage.removeItem(KEY); data=defaults(); toast(t('delacc_done')); go('home');
+  }catch(e){ console.warn('delete account:', e); toast(t('delacc_err')); }
+}
+
+/* ======================================================================
    Eventos (delegación)
    ====================================================================== */
 document.addEventListener('click', e=>{
@@ -1585,6 +1805,10 @@ document.addEventListener('click', e=>{
     else if(k==='peso'){ pet.weights=pet.weights.filter(x=>x.id!==id); const l=pet.weights.slice().sort((a,b)=>a.fecha<b.fecha?1:-1)[0]; pet.info.peso=l?l.kg:pet.info.peso; }
     else if(k==='visita') pet.vetVisits=pet.vetVisits.filter(x=>x.id!==id);
     save(); toast(t('deleted')); render(); return; }
+  if(t0.closest('#pvLock')){ lockModal(); return; }
+  if(t0.closest('#pvEnc')){ encBackupModal(); return; }
+  if(t0.closest('#pvWipe')){ wipeLocal(); return; }
+  if(t0.closest('#pvDelAcc')){ deleteAccount(); return; }
   if(t0.closest('#fab')||t0.closest('[data-asst]')){ openAssistant(); return; }
   if(t0.closest('#ocrScan')){ ocrStart(); return; }
   if(t0.closest('#signIn')){ authModal(); return; }
@@ -1689,6 +1913,8 @@ if(tokenMatch){
   }
   if(!shared && !data.activeId && data.pets[0]) data.activeId = data.pets[0].info.id;
   render();
+  // Bloqueo: si está activado, cubre la app hasta desbloquear.
+  if(!shared && data.lock && data.lock.enabled) showLock();
   // Tras renderizar, abre el modal del acceso directo si procede y hay mascota.
   if(pendingAdd && data.pets.length){
     if(pendingAdd==='vacuna') vaccineModal();
