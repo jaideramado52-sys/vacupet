@@ -360,6 +360,7 @@ const I = {
   lock:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="11" width="14" height="10" rx="2.5"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/><path d="M12 15v2"/></svg>',
   shield:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l7 3v5c0 4.5-3 8-7 10-4-2-7-5.5-7-10V6z"/><path d="m9 12 2 2 4-4"/></svg>',
   finger:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M12 11v3a6 6 0 0 1-1 3.5M7 19a8 8 0 0 1-1-4 6 6 0 0 1 9-5.2M5 9a8 8 0 0 1 13-1M9.5 19.5A10 10 0 0 0 11 14a1 1 0 0 1 2 0c0 1.2-.2 2.4-.5 3.5M16.5 17a14 14 0 0 0 .5-3 5 5 0 0 0-8-4"/></svg>',
+  heart:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20s-7-4.5-9.2-8.6C1.2 8.3 2.6 5 6 5c2 0 3.2 1.2 4 2.3C10.8 6.2 12 5 14 5c3.4 0 4.8 3.3 3.2 6.4C19 15.5 12 20 12 20z"/></svg>',
   download:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v12m0 0 4-4m-4 4-4-4M5 21h14"/></svg>',
   upload:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 21V9m0 0 4 4m-4-4-4 4M5 3h14"/></svg>',
 };
@@ -448,6 +449,9 @@ const STR = {
     dest_ue:'Unión Europea', dest_uk:'Reino Unido', dest_us:'Estados Unidos', dest_rabiesfree:'Países libres de rabia', dest_latam:'Latinoamérica (general)',
     a11y_big:'Texto grande', a11y_big_sub:'Aumenta el tamaño de la interfaz', update_ready:'Nueva versión disponible. Recarga la app.',
     demo_view:'Ver ejemplo', demo_loaded:'Mascota de ejemplo creada · explórala y bórrala cuando quieras',
+    sec_cares:'Cuidados', tile_care:'Cuidado', tile_care_sub:'Baño, uñas, medicación…', add_care:'Añadir cuidado', no_cares:'Sin cuidados programados', reg_care:'Registrar cuidado', saved_care:'Cuidado guardado',
+    care_kind:'Tipo', care_title:'Título', care_last:'Última vez / fecha', care_freq:'Frecuencia', care_freq_none:'Una vez', care_every:'Cada {n} días', care_yearly:'Cada año', care_notes:'Notas',
+    care_bano:'Baño', care_unas:'Corte de uñas', care_medic:'Medicación', care_grooming:'Peluquería', care_cumple:'Cumpleaños', care_otro:'Otro',
   },
   en:{
     tab_home:'Home', tab_card:'Record', tab_pet:'Pet', tab_more:'More',
@@ -527,6 +531,9 @@ const STR = {
     dest_ue:'European Union', dest_uk:'United Kingdom', dest_us:'United States', dest_rabiesfree:'Rabies-free countries', dest_latam:'Latin America (general)',
     a11y_big:'Large text', a11y_big_sub:'Increase the interface size', update_ready:'New version available. Reload the app.',
     demo_view:'View example', demo_loaded:'Example pet created · explore it and delete it anytime',
+    sec_cares:'Care', tile_care:'Care', tile_care_sub:'Bath, nails, medication…', add_care:'Add care', no_cares:'No care scheduled', reg_care:'Add care task', saved_care:'Care saved',
+    care_kind:'Type', care_title:'Title', care_last:'Last done / date', care_freq:'Frequency', care_freq_none:'Once', care_every:'Every {n} days', care_yearly:'Yearly', care_notes:'Notes',
+    care_bano:'Bath', care_unas:'Nail trim', care_medic:'Medication', care_grooming:'Grooming', care_cumple:'Birthday', care_otro:'Other',
   },
   pt:{
     tab_home:'Início', tab_card:'Carteira', tab_pet:'Pet', tab_more:'Mais',
@@ -606,6 +613,9 @@ const STR = {
     dest_ue:'União Europeia', dest_uk:'Reino Unido', dest_us:'Estados Unidos', dest_rabiesfree:'Países livres de raiva', dest_latam:'América Latina (geral)',
     a11y_big:'Texto grande', a11y_big_sub:'Aumenta o tamanho da interface', update_ready:'Nova versão disponível. Recarregue o app.',
     demo_view:'Ver exemplo', demo_loaded:'Pet de exemplo criado · explore e exclua quando quiser',
+    sec_cares:'Cuidados', tile_care:'Cuidado', tile_care_sub:'Banho, unhas, medicação…', add_care:'Adicionar cuidado', no_cares:'Sem cuidados agendados', reg_care:'Registrar cuidado', saved_care:'Cuidado salvo',
+    care_kind:'Tipo', care_title:'Título', care_last:'Última vez / data', care_freq:'Frequência', care_freq_none:'Uma vez', care_every:'A cada {n} dias', care_yearly:'A cada ano', care_notes:'Notas',
+    care_bano:'Banho', care_unas:'Corte de unhas', care_medic:'Medicação', care_grooming:'Banho e tosa', care_cumple:'Aniversário', care_otro:'Outro',
   },
 };
 function t(k){ const l=data.lang||'es'; return (STR[l]&&STR[l][k])||STR.es[k]||k; }
@@ -685,6 +695,7 @@ function migrate(d){
     p.dewormings = p.dewormings || [];
     p.weights = p.weights || [];
     p.vetVisits = p.vetVisits || [];
+    p.cares = p.cares || [];
   });
   return d;
 }
@@ -738,7 +749,8 @@ function suggestDeworm(tipo, fechaISO){
 function reminders(pet){
   const out=[];
   (pet.vaccines||[]).forEach(v=>{ if(v.proxima) out.push({kind:'vacuna',nombre:v.nombre,fecha:v.proxima}); });
-  (pet.dewormings||[]).forEach(d=>{ if(d.proxima) out.push({kind:'desparasitación',nombre:d.producto||(d.tipo==='externa'?t('tile_dew'):t('tile_dew')),fecha:d.proxima}); });
+  (pet.dewormings||[]).forEach(d=>{ if(d.proxima) out.push({kind:'desparasitación',nombre:d.producto||(d.tipo==='externa'?'Antipulgas':'Interna'),fecha:d.proxima}); });
+  (pet.cares||[]).forEach(c=>{ if(c.proxima) out.push({kind:'cuidado',nombre:c.titulo,fecha:c.proxima}); });
   out.sort((a,b)=>a.fecha<b.fecha?-1:1);
   return out;
 }
@@ -750,7 +762,7 @@ function statusOf(fecha){
 }
 function petSummary(pet){
   const rem = reminders(pet);
-  const aplicadas = (pet.vaccines||[]).length + (pet.dewormings||[]).length;
+  const aplicadas = (pet.vaccines||[]).length + (pet.dewormings||[]).length + (pet.cares||[]).length;
   let vencidas=0, proximas=0, next=null;
   rem.forEach(r=>{ const s=statusOf(r.fecha); if(s==='vencida') vencidas++; else if(s==='proxima') proximas++; if(r.fecha>=todayISO()&&!next) next=r; });
   let estado='aldia'; if(vencidas>0) estado='vencidas'; else if(proximas>0) estado='proximas';
@@ -865,8 +877,9 @@ function viewHome(){
     const when = s.next.fecha<todayISO()
       ? tf('overdue_ago',{n:Math.abs(daysBetween(s.next.fecha,todayISO()))})
       : `${tf('in_days',{n:daysBetween(todayISO(),s.next.fecha)})} · ${fmt(s.next.fecha)}`;
+    const nicon = s.next.kind==='vacuna'?I.syringe:s.next.kind==='cuidado'?I.heart:I.bug;
     return `<div class="banner ${cls}">
-      <span class="ic ${cls}">${s.next.kind==='vacuna'?I.syringe:I.bug}</span>
+      <span class="ic ${cls}">${nicon}</span>
       <div class="bb"><b>${t('next')}: ${esc(s.next.nombre)}</b><span>${when}</span></div>
       <button class="iconbtn" data-go="card" aria-label="${t('tool_card')}">${I.chev}</button></div>`;
   })() : '';
@@ -916,6 +929,7 @@ function viewHome(){
         <button class="tile" data-add="vacuna"><span class="ic c-accent">${I.syringe}</span><span class="tt"><b>${t('tile_vac')}</b><span>${t('tile_vac_sub')}</span></span></button>
         <button class="tile" data-add="desparasitacion"><span class="ic c-blue">${I.bug}</span><span class="tt"><b>${t('tile_dew')}</b><span>${t('tile_dew_sub')}</span></span></button>
       </div>
+      <button class="tile" data-add="cuidado" style="margin-top:11px"><span class="ic c-violet">${I.heart}</span><span class="tt"><b>${t('tile_care')}</b><span>${t('tile_care_sub')}</span></span></button>
     </section>
 
     <section class="block">
@@ -978,6 +992,9 @@ function viewCard(){
     <section class="block"><div class="block-title">${t('sec_visits')}</div>
       ${vis.length?`<div class="card">${vis.map(v=>visitRow(v,false)).join('')}</div>`:`<div class="card pad empty">${I.stetho}<div>${t('no_visit')}</div></div>`}
       <button class="btn btn-block" data-add="visita" style="margin-top:11px">${I.plus} ${t('add_visit')}</button></section>
+    <section class="block"><div class="block-title">${t('sec_cares')}</div>
+      ${(()=>{ const car=(pet.cares||[]).slice().sort((a,b)=>(a.proxima||'9')<(b.proxima||'9')?-1:1); return car.length?`<div class="card">${car.map(c=>careRow(c,false)).join('')}</div>`:`<div class="card pad empty">${I.heart}<div>${t('no_cares')}</div></div>`; })()}
+      <button class="btn btn-block" data-add="cuidado" style="margin-top:11px">${I.plus} ${t('add_care')}</button></section>
     <p class="disclaimer">${t('disc_scheme')}</p>
   </div>`;
 }
@@ -1929,6 +1946,67 @@ function achievementsHTML(pet){
 }
 
 /* ======================================================================
+   Cuidados y recordatorios propios (baño, uñas, medicación, cumpleaños…)
+   ====================================================================== */
+const CARE_KINDS = [
+  { key:'bano', icon:'🛁', cada:30 },
+  { key:'unas', icon:'✂️', cada:30 },
+  { key:'medic', icon:'💊', cada:0 },
+  { key:'grooming', icon:'🧼', cada:60 },
+  { key:'cumple', icon:'🎂', cada:365 },
+  { key:'otro', icon:'⭐', cada:0 },
+];
+function freqLabel(n){ if(!n) return t('care_freq_none'); if(n===365) return t('care_yearly'); return tf('care_every',{n}); }
+function nextAnniversary(nac){
+  const d=parseISO(nac); if(!d) return '';
+  const today=new Date(); today.setHours(0,0,0,0);
+  let cand=new Date(today.getFullYear(), d.getMonth(), d.getDate()); cand.setHours(0,0,0,0);
+  if(cand<today) cand=new Date(today.getFullYear()+1, d.getMonth(), d.getDate());
+  return toISO(cand);
+}
+function dueTagFor(fecha){
+  if(!fecha) return '';
+  const st=statusOf(fecha); const cls=st==='vencida'?'c-red':st==='proxima'?'c-amber':'c-green';
+  const txt=st==='vencida'?t('tag_overdue'):st==='proxima'?tf('due_in',{n:daysBetween(todayISO(),fecha)}):t('tag_next');
+  return `<span class="tagdue ${cls}">${txt}</span>`;
+}
+function careRow(c, ro){
+  const k=CARE_KINDS.find(x=>x.key===c.kind)||{icon:'⭐'};
+  const sub=[c.fecha?fmt(c.fecha):'', c.cada?freqLabel(c.cada):''].filter(Boolean).join(' · ');
+  return `<div class="rec"><span class="ic c-violet">${I.heart}</span>
+    <div class="rr"><b>${k.icon} ${esc(c.titulo)}</b><span>${esc(sub)}${c.proxima?` · ${t('next').toLowerCase()} ${fmt(c.proxima)}`:''}</span></div>
+    <div class="meta">${dueTagFor(c.proxima)}</div>
+    ${ro?'':`<button class="iconmini" data-del="cuidado" data-id="${c.id}" aria-label="${t('delete')}">${I.trash}</button>`}</div>`;
+}
+function careModal(){
+  const pet=activePet(); let kind='bano';
+  const body=`
+    <div class="field"><label>${t('care_kind')}</label><select id="c-kind">${CARE_KINDS.map(k=>`<option value="${k.key}">${k.icon} ${esc(t('care_'+k.key))}</option>`).join('')}</select></div>
+    <div class="field"><label>${t('care_title')}</label><input id="c-title"></div>
+    <div class="two"><div class="field" id="f-cfecha"><label>${t('care_last')} *</label><input type="date" id="c-fecha" value="${todayISO()}"><div class="errmsg">—</div></div>
+      <div class="field"><label>${t('care_freq')}</label><select id="c-freq"><option value="0">${t('care_freq_none')}</option>${[7,15,30,60,90,180,365].map(n=>`<option value="${n}">${esc(freqLabel(n))}</option>`).join('')}</select></div></div>
+    <div class="field"><label>${t('next')}</label><input type="date" id="c-proxima"><div class="hint" id="c-sug"></div></div>
+    <div class="field"><label>${t('care_notes')}</label><textarea id="c-notas"></textarea></div>`;
+  openModal(modalShell(t('reg_care'), body, FOOT('saveCare')));
+  const kindSel=document.getElementById('c-kind'), titleEl=document.getElementById('c-title'), freqEl=document.getElementById('c-freq');
+  function recalc(){ const f=Number(freqEl.value), base=val('c-fecha'); let px='';
+    if(kind==='cumple' && pet.info.nacimiento) px=nextAnniversary(pet.info.nacimiento);
+    else if(f>0 && base) px=toISO(addDays(parseISO(base),f));
+    const sug=document.getElementById('c-sug'), pe=document.getElementById('c-proxima');
+    if(px){ sug.textContent=`${{es:'Sugerencia',en:'Suggestion',pt:'Sugestão'}[data.lang||'es']}: ${fmt(px)}`; if(!pe.value) pe.value=px; } else sug.textContent=''; }
+  function applyKind(){ const k=CARE_KINDS.find(x=>x.key===kindSel.value); kind=kindSel.value;
+    if(titleEl.dataset.auto!=='0'){ titleEl.value=t('care_'+kind); titleEl.dataset.auto='1'; }
+    freqEl.value=String(k.cada||0); document.getElementById('c-proxima').value=''; recalc(); }
+  titleEl.dataset.auto='1'; titleEl.addEventListener('input',()=>titleEl.dataset.auto='0');
+  kindSel.onchange=applyKind; freqEl.onchange=()=>{document.getElementById('c-proxima').value='';recalc();};
+  document.getElementById('c-fecha').onchange=()=>{document.getElementById('c-proxima').value='';recalc();};
+  applyKind();
+  document.getElementById('saveCare').onclick=()=>{ const fecha=val('c-fecha'); if(!fecha){document.getElementById('f-cfecha').classList.add('err');return;}
+    pet.cares.push({ id:uid(), kind, titulo:val('c-title').trim()||t('care_'+kind), fecha, cada:Number(val('c-freq')), proxima:val('c-proxima'), notas:val('c-notas').trim() });
+    save(); closeModal(); toast(t('saved_care')); render(); };
+}
+
+/* ======================================================================
    Mascota de ejemplo (para explorar sin teclear)
    ====================================================================== */
 function demoFoto(){
@@ -1947,6 +2025,8 @@ function loadDemoPet(){
     dewormings:[ { id:uid(), tipo:'externa', producto:'Pipeta antipulgas', fecha:d(-5), proxima:d(25) } ],
     weights:[ { id:uid(), fecha:d(-100), kg:25 }, { id:uid(), fecha:d(-50), kg:27 }, { id:uid(), fecha:d(-8), kg:28 } ],
     vetVisits:[ { id:uid(), fecha:d(-20), motivo:'Revisión anual', clinica:'Clínica Patitas', diagnostico:'Sano', notas:'' } ],
+    cares:[ { id:uid(), kind:'bano', titulo:'Baño', fecha:d(-12), cada:30, proxima:d(18), notas:'' },
+            { id:uid(), kind:'cumple', titulo:'Cumpleaños', fecha:'2022-03-10', cada:365, proxima:nextAnniversary('2022-03-10'), notas:'' } ],
   };
   data.pets.push(pet); data.activeId = pet.info.id; save(); toast(t('demo_loaded')); go('home');
 }
@@ -1970,7 +2050,7 @@ document.addEventListener('click', e=>{
   const pa=t0.closest('[data-pet]'); if(pa){ data.activeId=pa.dataset.pet; save(); render(); return; }
   const sw=t0.closest('[data-switch]'); if(sw){ data.activeId=sw.dataset.switch; save(); closeModal(); go('home'); return; }
   if(t0.closest('#switchPet')){ switchModal(); return; }
-  const add=t0.closest('[data-add]'); if(add){ const k=add.dataset.add; k==='vacuna'?vaccineModal():k==='desparasitacion'?dewormModal():visitModal(); return; }
+  const add=t0.closest('[data-add]'); if(add){ const k=add.dataset.add; k==='vacuna'?vaccineModal():k==='desparasitacion'?dewormModal():k==='cuidado'?careModal():visitModal(); return; }
   if(t0.closest('#addWeight')){ weightModal(); return; }
   const inf=t0.closest('[data-info]'); if(inf){ infoModal(inf.dataset.info); return; }
   if(t0.closest('#editPet')){ petModal(activePet().info); return; }
@@ -1980,6 +2060,7 @@ document.addEventListener('click', e=>{
     else if(k==='desparasitacion') pet.dewormings=pet.dewormings.filter(x=>x.id!==id);
     else if(k==='peso'){ pet.weights=pet.weights.filter(x=>x.id!==id); const l=pet.weights.slice().sort((a,b)=>a.fecha<b.fecha?1:-1)[0]; pet.info.peso=l?l.kg:pet.info.peso; }
     else if(k==='visita') pet.vetVisits=pet.vetVisits.filter(x=>x.id!==id);
+    else if(k==='cuidado') pet.cares=pet.cares.filter(x=>x.id!==id);
     save(); toast(t('deleted')); render(); return; }
   if(t0.closest('#pvLock')){ lockModal(); return; }
   if(t0.closest('#pvEnc')){ encBackupModal(); return; }
