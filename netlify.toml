@@ -1,0 +1,30 @@
+# VacuPet — configuración de Netlify.
+# El sitio es estático; el "build" solo copia los archivos del frontend a dist/
+# (deja fuera docs/, tests/, supabase/, .env.deploy, etc.).
+
+[build]
+  publish = "dist"
+  command = "bash netlify-build.sh"
+
+# Cabeceras (además del archivo _headers que se copia a dist/).
+[[headers]]
+  for = "/service-worker.js"
+  [headers.values]
+    Cache-Control = "public, max-age=0, must-revalidate"
+    Service-Worker-Allowed = "/"
+
+[[headers]]
+  for = "/supabase-config.js"
+  [headers.values]
+    Cache-Control = "public, max-age=0, must-revalidate"
+
+[[headers]]
+  for = "/manifest.webmanifest"
+  [headers.values]
+    Content-Type = "application/manifest+json; charset=utf-8"
+
+# Servir la app en la raíz sin el salto de index.html (conserva el hash de los enlaces).
+[[redirects]]
+  from = "/"
+  to = "/VacuPet.html"
+  status = 200

@@ -11,6 +11,10 @@ desktop.ini
 # Node (por si más adelante usas CLI de Supabase)
 node_modules/
 
+# Build de Netlify
+dist/
+.netlify/
+
 # Supabase CLI
 supabase/.temp/
 
