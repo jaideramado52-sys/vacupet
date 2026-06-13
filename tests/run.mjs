@@ -30,7 +30,7 @@ code += `;globalThis.__VP = {
   setPin, checkPin, encryptBackup, decryptBackup,
   hasValidRabies, recentDeworm, checkReq, achievements, DESTINOS,
   nextAnniversary, freqLabel, CARE_KINDS,
-  ACCENTS, accentColor, SPECIES_COLOR,
+  ACCENTS, accentColor, SPECIES_COLOR, albumHTML, docsHTML,
   getData:()=>data, setData:d=>{data=d}
 };`;
 (0, eval)(code);
@@ -166,6 +166,17 @@ VP.setData({ v:1, activeId:'1', remDays:30, lang:'es', pets:[{info:{id:'1',nombr
   const rem = VP.reminders(VP.getData().pets[0]);
   ok('reminders incluye el cuidado', rem.some(r=>r.kind==='cuidado' && r.nombre==='Baño'));
   ok('petSummary cuenta el cuidado', VP.petSummary(VP.getData().pets[0]).aplicadas===1);
+}
+
+section('Álbum y documentos');
+{
+  const pet = { info:{id:'1',nombre:'R',especie:'perro'}, album:[{id:'a',img:'data:img',fecha:iso(-10)}], docs:[{id:'d',name:'analitica.pdf',mime:'application/pdf',data:'data:pdf',fecha:iso(-5)}] };
+  VP.setData({ v:1, activeId:'1', remDays:30, lang:'es', pets:[pet] });
+  const al = VP.albumHTML(pet);
+  ok('álbum muestra thumb + botón añadir', al.includes('data-photo="a"') && al.includes('albumAdd'));
+  const dc = VP.docsHTML(pet);
+  ok('documentos lista el archivo', dc.includes('analitica.pdf') && dc.includes('data-opendoc="d"'));
+  ok('documentos vacío sigue ofreciendo adjuntar', VP.docsHTML({docs:[]}).includes('docAdd'));
 }
 
 section('Personalización (acento + especie)');
