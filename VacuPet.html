@@ -277,6 +277,13 @@ nav.tabbar button.on{color:var(--accent)}
 .vbadge.bad{background:color-mix(in srgb,var(--red) 13%,var(--surface));color:var(--red)}
 .vbadge.unk{background:var(--surface-2);color:var(--muted)}
 
+/* ---- Confeti (celebración) ---- */
+.confetti{position:fixed;inset:0;z-index:95;pointer-events:none;overflow:hidden}
+.confetti i{position:absolute;top:-16px;width:9px;height:14px;border-radius:2px;animation:confFall linear forwards}
+.confetti i:nth-child(3n){width:7px;height:7px;border-radius:50%}
+.confetti i:nth-child(4n){width:12px;height:8px}
+@keyframes confFall{0%{transform:translateY(0) rotate(0);opacity:1}100%{transform:translateY(104vh) rotate(620deg);opacity:.85}}
+
 /* ---- Logros ---- */
 .ach{display:grid;grid-template-columns:repeat(4,1fr);gap:9px}
 .ach .a{background:var(--surface);border:1px solid var(--line);border-radius:13px;padding:12px 6px;text-align:center;box-shadow:var(--shadow);opacity:.42}
@@ -856,7 +863,24 @@ function tabs(){ return [
   {id:'pet',   label:t('tab_pet'),  icon:I.pet},
   {id:'more',  label:t('tab_more'), icon:I.more},
 ];}
-function go(tab){ currentTab=tab; render(); window.scrollTo({top:0,behavior:'instant'}); }
+function reduceMotion(){ return !!(window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches); }
+function go(tab){
+  currentTab=tab;
+  const run=()=>{ render(); window.scrollTo({top:0,behavior:'instant'}); };
+  if(document.startViewTransition && !reduceMotion()) document.startViewTransition(run); else run();
+}
+// Confeti de celebración (al desbloquear un logro). Respeta reduced-motion.
+function celebrate(){
+  if(reduceMotion()) return;
+  const box=document.createElement('div'); box.className='confetti';
+  const colors=['#16A34A','#2563EB','#7C3AED','#DB2777','#EA580C','#F59E0B'];
+  let html='';
+  for(let i=0;i<28;i++){ const x=Math.random()*100, delay=Math.random()*0.25, dur=1.1+Math.random()*0.9, c=colors[i%colors.length];
+    html+=`<i style="left:${x}%;background:${c};animation-delay:${delay}s;animation-duration:${dur}s"></i>`; }
+  box.innerHTML=html; document.body.appendChild(box);
+  setTimeout(()=>box.remove(), 2400);
+}
+function achCount(pet){ return achievements(pet).filter(a=>a.got).length; }
 
 function renderChrome(){
   applyAccent();
@@ -1214,9 +1238,11 @@ function petModal(existing){
     const info = { id: existing?existing.id:uid(), nombre, especie:val('m-especie'), raza:val('m-raza').trim(), sexo:val('m-sexo'),
       nacimiento:val('m-nac'), adopcion:val('m-adop'), color:val('m-color').trim(), peso:val('m-peso'), microchip:val('m-chip').trim(),
       esterilizado: esterVal==='si'?true:esterVal==='no'?false:null, veterinario:val('m-vet').trim(), notas:val('m-notas').trim(), foto:photoTmp||null };
+    const _a0 = existing ? achCount(data.pets.find(x=>x.info.id===existing.id)) : 0;
     if(existing){ data.pets.find(x=>x.info.id===existing.id).info=info; }
-    else { data.pets.push({info, vaccines:[], dewormings:[], weights:[], vetVisits:[]}); data.activeId=info.id; }
+    else { data.pets.push({info, vaccines:[], dewormings:[], weights:[], vetVisits:[], cares:[]}); data.activeId=info.id; }
     save(); closeModal(); toast(t('saved_pet')); go('home');
+    const _p=activePet(); if(_p && achCount(_p)>_a0) celebrate();
   });
 }
 
@@ -1246,9 +1272,10 @@ function vaccineModal(){
   refreshSug();
   document.getElementById('saveVac').addEventListener('click', ()=>{ let ok=true; const nombre=val('v-nombre').trim(), fecha=val('v-fecha');
     if(!nombre){ document.getElementById('f-vnombre').classList.add('err'); ok=false; } if(!fecha){ document.getElementById('f-vfecha').classList.add('err'); ok=false; } if(!ok) return;
+    const _a0=achCount(pet);
     pet.vaccines.push({ id:uid(), nombre, fecha, dosis:val('v-dosis').trim(), proxima:val('v-proxima'), marca:val('v-marca').trim(),
       lote:val('v-lote').trim(), lugar:val('v-lugar').trim(), via:val('v-via'), aplicada_por:val('v-por').trim(), notas:val('v-notas').trim(), source:'manual' });
-    save(); closeModal(); toast(t('saved_vac')); render(); });
+    save(); closeModal(); toast(t('saved_vac')); render(); if(achCount(pet)>_a0) celebrate(); });
 }
 
 /* ---- Desparasitación ---- */
@@ -1268,8 +1295,9 @@ function dewormModal(){
   document.getElementById('d-fecha').addEventListener('change', ()=>{ document.getElementById('d-proxima').value=''; refreshSug(); });
   refreshSug();
   document.getElementById('saveDew').addEventListener('click', ()=>{ const fecha=val('d-fecha'); if(!fecha){ document.getElementById('f-dfecha').classList.add('err'); return; }
+    const _a0=achCount(pet);
     pet.dewormings.push({ id:uid(), tipo, producto:val('d-prod').trim(), fecha, peso:val('d-peso'), proxima:val('d-proxima'), notas:val('d-notas').trim() });
-    save(); closeModal(); toast(t('saved_dew')); render(); });
+    save(); closeModal(); toast(t('saved_dew')); render(); if(achCount(pet)>_a0) celebrate(); });
 }
 
 /* ---- Peso ---- */
@@ -1280,10 +1308,11 @@ function weightModal(){
   openModal(modalShell(t('reg_weight'), body, FOOT('saveW')));
   document.getElementById('saveW').addEventListener('click', ()=>{ let ok=true; const fecha=val('w-fecha'), kg=val('w-kg');
     if(!fecha){document.getElementById('f-wfecha').classList.add('err');ok=false;} if(!kg||Number(kg)<=0){document.getElementById('f-wkg').classList.add('err');ok=false;} if(!ok) return;
+    const _a0=achCount(pet);
     pet.weights.push({id:uid(), fecha, kg:Number(kg)});
     // el peso del perfil pasa a ser el más reciente
     const latest=pet.weights.slice().sort((a,b)=>a.fecha<b.fecha?1:-1)[0]; if(latest) pet.info.peso=latest.kg;
-    save(); closeModal(); toast(t('saved_weight')); render(); });
+    save(); closeModal(); toast(t('saved_weight')); render(); if(achCount(pet)>_a0) celebrate(); });
 }
 
 /* ---- Visita vet ---- */
@@ -2066,7 +2095,7 @@ function loadDemoPet(){
     cares:[ { id:uid(), kind:'bano', titulo:'Baño', fecha:d(-12), cada:30, proxima:d(18), notas:'' },
             { id:uid(), kind:'cumple', titulo:'Cumpleaños', fecha:'2022-03-10', cada:365, proxima:nextAnniversary('2022-03-10'), notas:'' } ],
   };
-  data.pets.push(pet); data.activeId = pet.info.id; save(); toast(t('demo_loaded')); go('home');
+  data.pets.push(pet); data.activeId = pet.info.id; save(); toast(t('demo_loaded')); go('home'); celebrate();
 }
 
 /* ======================================================================
