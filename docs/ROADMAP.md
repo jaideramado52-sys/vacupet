@@ -112,11 +112,20 @@ Objetivo: un carné que un veterinario o aduana pueda confiar.
 - [~] **Más países afinados**: 5 destinos base (UE, Reino Unido, EE.UU., países libres de rabia, Latinoamérica). Ampliar al país objetivo es ajuste de datos.
 - [ ] **Campañas/recordatorios estacionales**: diferido (se solapa con el sistema de recordatorios; bajo valor por ahora).
 
-## Fase 9 — Calidad / producción 🔲
-- [ ] **Tests**: motor de esquema por especie, i18n, crypto del QR.
-- [ ] **Accesibilidad** (modo dueño mayor, lector de pantalla).
-- [ ] **Pulido PWA** (Lighthouse, offline, actualización).
-- [ ] **Publicación**: `docs/PUBLICAR.md`, hosting, dominio, OG.
+## Fase 9 — Calidad / producción ✅
+> Verificado: `node tests/run.mjs` → **63 OK, 0 fallos** + headless sin errores.
+
+- [x] **Tests**: suite consolidada `tests/run.mjs` (esquema por especie, recordatorios, gráfico de peso, i18n es/en/pt, base64url, sync/conflictos, asistente, **cripto del QR firmado**, **PIN + respaldo cifrado**, viajero/logros, spec de las Edge Functions).
+- [x] **Accesibilidad**: **Texto grande** (zoom 1.15), respeto a `prefers-reduced-motion`, foco visible, roles ARIA, `aria-pressed`/`aria-label` (heredado de fases previas).
+- [x] **Pulido PWA**: aviso de **nueva versión** (detección de `updatefound` en el service worker), offline (network-first del shell), iconos/manifest listos.
+- [x] **Publicación**: `docs/PUBLICAR.md` (checklist, hosting HTTPS, PWA, SEO/OG, Lighthouse).
+
+---
+
+## ✅ Proyecto completo
+**Fases 0–9 implementadas y verificadas.** La PWA funciona offline en local; el backend
+(nube, push/email, IA, firma) es opcional y degrada con elegancia. Para activarlo, el usuario
+sigue `docs/DESPLIEGUE.md` y `docs/PUBLICAR.md`. Regresión: `node tests/run.mjs`.
 
 ---
 

@@ -34,6 +34,8 @@
 }
 *{box-sizing:border-box}
 html,body{margin:0;padding:0}
+html.bigtext{zoom:1.15}
+@media (prefers-reduced-motion: reduce){ *{animation-duration:.001ms !important;animation-iteration-count:1 !important;transition-duration:.001ms !important} }
 body{
   background:var(--bg);color:var(--ink);font-family:var(--font);line-height:1.5;
   -webkit-font-smoothing:antialiased;min-height:100dvh;
@@ -425,6 +427,7 @@ const STR = {
     vets_open:'Veterinarias cercanas', vets_open_sub:'Buscar en el mapa', vets_nogeo:'No se pudo obtener tu ubicación',
     sec_achievements:'Logros', ach_uptodate:'Carné al día', ach_microchip:'Microchip', ach_complete:'Esquema completo', ach_tracker:'Control de peso',
     dest_ue:'Unión Europea', dest_uk:'Reino Unido', dest_us:'Estados Unidos', dest_rabiesfree:'Países libres de rabia', dest_latam:'Latinoamérica (general)',
+    a11y_big:'Texto grande', a11y_big_sub:'Aumenta el tamaño de la interfaz', update_ready:'Nueva versión disponible. Recarga la app.',
   },
   en:{
     tab_home:'Home', tab_card:'Record', tab_pet:'Pet', tab_more:'More',
@@ -502,6 +505,7 @@ const STR = {
     vets_open:'Nearby vets', vets_open_sub:'Search on the map', vets_nogeo:'Could not get your location',
     sec_achievements:'Achievements', ach_uptodate:'Record up to date', ach_microchip:'Microchip', ach_complete:'Schedule complete', ach_tracker:'Weight tracking',
     dest_ue:'European Union', dest_uk:'United Kingdom', dest_us:'United States', dest_rabiesfree:'Rabies-free countries', dest_latam:'Latin America (general)',
+    a11y_big:'Large text', a11y_big_sub:'Increase the interface size', update_ready:'New version available. Reload the app.',
   },
   pt:{
     tab_home:'Início', tab_card:'Carteira', tab_pet:'Pet', tab_more:'Mais',
@@ -579,6 +583,7 @@ const STR = {
     vets_open:'Veterinários próximos', vets_open_sub:'Buscar no mapa', vets_nogeo:'Não foi possível obter sua localização',
     sec_achievements:'Conquistas', ach_uptodate:'Carteira em dia', ach_microchip:'Microchip', ach_complete:'Esquema completo', ach_tracker:'Controle de peso',
     dest_ue:'União Europeia', dest_uk:'Reino Unido', dest_us:'Estados Unidos', dest_rabiesfree:'Países livres de raiva', dest_latam:'América Latina (geral)',
+    a11y_big:'Texto grande', a11y_big_sub:'Aumenta o tamanho da interface', update_ready:'Nova versão disponível. Recarregue o app.',
   },
 };
 function t(k){ const l=data.lang||'es'; return (STR[l]&&STR[l][k])||STR.es[k]||k; }
@@ -780,6 +785,7 @@ function tabs(){ return [
 function go(tab){ currentTab=tab; render(); window.scrollTo({top:0,behavior:'instant'}); }
 
 function renderChrome(){
+  document.documentElement.classList.toggle('bigtext', !!data.bigText);
   document.getElementById('brandLogo').innerHTML = I.paw;
   document.getElementById('btnBackup').innerHTML = I.settings;
   document.getElementById('langsw').innerHTML = ['es','en','pt'].map(l=>
@@ -1009,6 +1015,7 @@ function viewMore(){
     <section class="block"><div class="block-title">${t('sec_app')}</div>
       ${installPrompt?`<button class="tile" id="installApp" style="margin-bottom:11px"><span class="ic c-accent">${I.download}</span><span class="tt"><b>${t('m_install')}</b><span>${t('m_install_sub')}</span></span><span class="chev">${I.chev}</span></button>`:''}
       <button class="tile" id="notifTile"><span class="ic c-amber">${I.bell}</span><span class="tt"><b>${t('m_notif')}</b><span>${notifSubText()}</span></span><span class="chev">${I.chev}</span></button>
+      <button class="tile" id="a11yBig" style="margin-top:11px" aria-pressed="${!!data.bigText}"><span class="ic c-violet">${I.spark}</span><span class="tt"><b>${t('a11y_big')}</b><span>${data.bigText?t('pv_lock_on'):t('a11y_big_sub')}</span></span><span class="chev">${I.chev}</span></button>
     </section>
     <section class="block"><div class="block-title">${t('sec_privacy')}</div>
       <button class="tile" id="pvLock"><span class="ic c-accent">${I.lock}</span><span class="tt"><b>${t('pv_lock')}</b><span>${(data.lock&&data.lock.enabled)?t('pv_lock_on'):t('pv_lock_off')}</span></span><span class="chev">${I.chev}</span></button>
@@ -1925,6 +1932,7 @@ document.addEventListener('click', e=>{
   if(t0.closest('#signOut')){ signOut(); return; }
   if(t0.closest('#installApp')){ doInstall(); return; }
   if(t0.closest('#notifTile')){ notifTileAction(); return; }
+  if(t0.closest('#a11yBig')){ data.bigText=!data.bigText; save(); render(); return; }
   if(t0.closest('#shareCard')){ shareModal(); return; }
   if(t0.closest('#expIcs')){ exportICS(); return; }
   if(t0.closest('#expPdf')){ exportPDF(); return; }
@@ -1940,7 +1948,15 @@ document.addEventListener('change', e=>{ if(e.target.id==='remDays'){ data.remDa
 let installPrompt = null;   // evento beforeinstallprompt diferido
 
 if('serviceWorker' in navigator){
-  window.addEventListener('load', ()=>navigator.serviceWorker.register('./service-worker.js').catch(()=>{}));
+  window.addEventListener('load', ()=>{
+    navigator.serviceWorker.register('./service-worker.js').then(reg=>{
+      // Aviso de nueva versión: cuando un worker nuevo queda instalado y ya había uno activo.
+      reg.addEventListener('updatefound', ()=>{
+        const nw=reg.installing; if(!nw) return;
+        nw.addEventListener('statechange', ()=>{ if(nw.state==='installed' && navigator.serviceWorker.controller) toast(t('update_ready')); });
+      });
+    }).catch(()=>{});
+  });
 }
 window.addEventListener('beforeinstallprompt', e=>{
   e.preventDefault(); installPrompt = e;

@@ -36,6 +36,9 @@ VacuPet/
 │       ├─ recordatorios/  ← recordatorios por email
 │       └─ eliminar-cuenta/← borrado de cuenta/datos
 │
+├─ tests/
+│   └─ run.mjs             ← suite de tests (node tests/run.mjs)
+│
 └─ docs/
     ├─ SPEC.md             ← especificación del producto
     ├─ ROADMAP.md          ← plan por fases de todo lo que se va a implementar
@@ -49,8 +52,8 @@ VacuPet/
 
 ## Estado
 
-Proyecto recién iniciado: **docs + estructura completa**. La app (`VacuPet.html`) se construye
-siguiendo `docs/ROADMAP.md`, empezando por la **Fase 0 (MVP personal, offline)**.
+**Fases 0–9 completas** (ver `docs/ROADMAP.md`). PWA offline funcional; backend opcional
+(nube, push/email, IA, firma) que degrada con elegancia. Tests: `node tests/run.mjs` (63 OK).
 
 ## Empezar
 
