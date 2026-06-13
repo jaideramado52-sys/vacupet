@@ -36,6 +36,6 @@ window.VACUPET_AI = (function () {
     signEndpoint: base ? base + "/functions/v1/vacupet-sign" : null,
     // Recordatorios push reales (Web Push). Pega aquí tu clave PÚBLICA VAPID
     // (ver docs/DESPLIEGUE.md, Fase 4). Si es null, sólo hay avisos locales/.ics.
-    vapidPublicKey: null
+    vapidPublicKey: "BPdlURsf3iIFB5sjb6PSC5IxwlXX4p4fVMlXQE76TaOcIuzXWQ-U2l6_tpUzpa8juH8zYHqU39MhMGgTG-FP5aw"
   };
 })();

@@ -1,0 +1,25 @@
+# VacuPet — configuración del proyecto para la CLI de Supabase.
+# project_id es un identificador local; el enlace real lo hace `supabase link --project-ref <REF>`.
+project_id = "vacupet"
+
+# --- Edge Functions ---
+# Públicas (la app las llama sin sesión); su seguridad la dan los secrets/CORS.
+[functions.vacupet-faq]
+verify_jwt = false
+
+[functions.vacupet-ocr]
+verify_jwt = false
+
+[functions.vacupet-sign]
+verify_jwt = false
+
+# Cron: protegidas con CRON_SECRET (no por JWT), para que pg_cron pueda invocarlas.
+[functions.vacupet-push]
+verify_jwt = false
+
+[functions.recordatorios]
+verify_jwt = false
+
+# Borrado de cuenta: requiere el JWT del usuario (lo verifica el gateway y la función).
+[functions.eliminar-cuenta]
+verify_jwt = true
