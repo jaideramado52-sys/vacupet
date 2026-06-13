@@ -48,15 +48,17 @@ Objetivo: instalable y offline de verdad.
 - [x] **Accesos directos** del manifest (`#tab=`, `#add=`) gestionados al arrancar.
 - [x] `_headers` (cabeceras de hosting) + `index.html` de redirección que conserva el hash de enlaces compartidos.
 
-## Fase 3 — Nube y cuentas (Supabase) 🔲 → ⏳
+## Fase 3 — Nube y cuentas (Supabase) ✅ (código) → ⏳ (desplegar)
 Objetivo: tus mascotas en la nube, multidispositivo, seguras.
+> Verificado (cliente): sintaxis válida + render headless en modo local sin errores + 12 pruebas (resolución de conflictos, `cloudConfigured`, UI de cuenta, degradación). El backend real lo despliega el usuario (SQL + claves).
 
-- [ ] **Auth** (email/OTP) + UI de cuenta; modo invitado (solo local) sigue funcionando.
-- [ ] `supabase/schema.sql`: tablas + **RLS** + RPC `get_share` + bucket privado `mascotas`.
-- [ ] `vacupet_state` (espejo del JSON) — **sync multidispositivo** con resolución de conflictos por `updated_at`.
-- [ ] **Storage** de fotos del carné/mascota (carpeta = user_id, RLS).
-- [ ] `supabase-config.js` (url + anon key públicas; vacío = modo local).
-- [ ] **Degradación elegante**: si no hay backend, todo sigue funcionando local.
+- [x] **Auth** (email/OTP por código, sin redirección) + UI de cuenta en *Más*; modo invitado (solo local) sigue funcionando.
+- [x] `supabase/schema.sql`: tablas + **RLS** + RPC `get_share` + bucket privado `mascotas` (del scaffold).
+- [x] `vacupet_state` (espejo del JSON) — **sync multidispositivo**: pull al iniciar/login, push con debounce al guardar, resolución de conflictos por `updated_at` (`shouldAdoptRemote`).
+- [x] `supabase-config.js` (url + anon key públicas; vacío = modo local).
+- [x] **Degradación elegante**: sin config no se carga el cliente ni se muestra la cuenta; todo funciona local.
+- [~] **Storage** de fotos: por ahora las fotos viajan dentro de `vacupet_state` (jsonb, comprimidas). El bucket `mascotas` queda listo para mover a Storage dedicado si crecen (optimización futura).
+- [ ] **Desplegar**: ejecutar `supabase/schema.sql` y pegar `url`+`anonKey` en `supabase-config.js` (lo hace el usuario).
 
 ## Fase 4 — Recordatorios server (email/push programados) 🔲 → ⏳
 Objetivo: que el aviso llegue aunque la app esté cerrada.

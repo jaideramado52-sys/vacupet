@@ -325,6 +325,11 @@ const STR = {
     notif_blocked:'Bloqueados — actívalos en los ajustes del navegador', notif_unsupported:'No disponible en este navegador',
     notif_enabled:'Avisos activados', notif_test_body:'Así se verán tus recordatorios de VacuPet.',
     notif_test_sent:'Aviso de prueba enviado', installed:'App instalada',
+    sec_account:'Cuenta y nube', acc_signin:'Iniciar sesión / sincronizar', acc_signin_sub:'Guarda y sincroniza en la nube (opcional)',
+    acc_synced:'Sesión iniciada', acc_sync_now:'Sincronizar ahora', acc_signout:'Cerrar sesión',
+    auth_title:'Iniciar sesión', auth_email:'Tu correo', auth_send:'Enviar código', auth_code:'Código de 6 dígitos', auth_verify:'Verificar',
+    auth_sent:'Te enviamos un código a tu correo', cloud_off:'La nube no está configurada (modo local).',
+    sync_done:'Sincronizado', sync_pulled:'Datos actualizados desde la nube', sync_err:'No se pudo sincronizar', signed_out:'Sesión cerrada', loading:'Cargando…',
   },
   en:{
     tab_home:'Home', tab_card:'Record', tab_pet:'Pet', tab_more:'More',
@@ -358,6 +363,11 @@ const STR = {
     notif_blocked:'Blocked — enable them in your browser settings', notif_unsupported:'Not available in this browser',
     notif_enabled:'Alerts enabled', notif_test_body:'This is how your VacuPet reminders will look.',
     notif_test_sent:'Test alert sent', installed:'App installed',
+    sec_account:'Account & cloud', acc_signin:'Sign in / sync', acc_signin_sub:'Save and sync to the cloud (optional)',
+    acc_synced:'Signed in', acc_sync_now:'Sync now', acc_signout:'Sign out',
+    auth_title:'Sign in', auth_email:'Your email', auth_send:'Send code', auth_code:'6-digit code', auth_verify:'Verify',
+    auth_sent:'We sent a code to your email', cloud_off:'Cloud is not configured (local mode).',
+    sync_done:'Synced', sync_pulled:'Updated from the cloud', sync_err:'Could not sync', signed_out:'Signed out', loading:'Loading…',
   },
   pt:{
     tab_home:'Início', tab_card:'Carteira', tab_pet:'Pet', tab_more:'Mais',
@@ -391,6 +401,11 @@ const STR = {
     notif_blocked:'Bloqueados — ative nas configurações do navegador', notif_unsupported:'Indisponível neste navegador',
     notif_enabled:'Avisos ativados', notif_test_body:'É assim que seus lembretes do VacuPet vão aparecer.',
     notif_test_sent:'Aviso de teste enviado', installed:'App instalado',
+    sec_account:'Conta e nuvem', acc_signin:'Entrar / sincronizar', acc_signin_sub:'Salve e sincronize na nuvem (opcional)',
+    acc_synced:'Sessão iniciada', acc_sync_now:'Sincronizar agora', acc_signout:'Sair',
+    auth_title:'Entrar', auth_email:'Seu e-mail', auth_send:'Enviar código', auth_code:'Código de 6 dígitos', auth_verify:'Verificar',
+    auth_sent:'Enviamos um código para seu e-mail', cloud_off:'A nuvem não está configurada (modo local).',
+    sync_done:'Sincronizado', sync_pulled:'Atualizado da nuvem', sync_err:'Não foi possível sincronizar', signed_out:'Sessão encerrada', loading:'Carregando…',
   },
 };
 function t(k){ const l=data.lang||'es'; return (STR[l]&&STR[l][k])||STR.es[k]||k; }
@@ -473,9 +488,11 @@ function migrate(d){
   });
   return d;
 }
-function save(){
+function save(doSync=true){
+  if(doSync) data.updatedAt = new Date().toISOString();
   try{ localStorage.setItem(KEY, JSON.stringify(data)); }
   catch(e){ toast('No se pudo guardar (almacenamiento lleno).'); console.error(e); }
+  if(doSync) scheduleSync();
 }
 function activePet(){ return data.pets.find(p=>p.info.id===data.activeId) || data.pets[0] || null; }
 
@@ -799,6 +816,14 @@ function viewMore(){
       <button class="tile" id="expJson" style="margin-top:11px"><span class="ic c-blue">${I.download}</span><span class="tt"><b>${t('m_json')}</b><span>${t('m_json_sub')}</span></span><span class="chev">${I.chev}</span></button>
       <button class="tile" id="impJson" style="margin-top:11px"><span class="ic c-green">${I.upload}</span><span class="tt"><b>${t('m_import')}</b><span>${t('m_import_sub')}</span></span><span class="chev">${I.chev}</span></button>
     </section>
+    ${cloudConfigured()?`<section class="block"><div class="block-title">${t('sec_account')}</div>
+      ${session?`<div class="card pad">
+          <div style="display:flex;align-items:center;gap:12px"><span class="ic c-green" style="width:38px;height:38px;border-radius:11px;display:grid;place-items:center">${I.check}</span>
+            <div style="flex:1;min-width:0"><b style="font-size:14.5px">${t('acc_synced')}</b><div class="hint" style="margin-top:1px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${esc(session.user&&session.user.email||'')}</div></div></div>
+          <div class="row-actions"><button class="btn btn-primary" style="flex:1" id="syncNow">${t('acc_sync_now')}</button><button class="btn" id="signOut">${t('acc_signout')}</button></div>
+        </div>`
+       :`<button class="tile" id="signIn"><span class="ic c-accent">${I.upload}</span><span class="tt"><b>${t('acc_signin')}</b><span>${t('acc_signin_sub')}</span></span><span class="chev">${I.chev}</span></button>`}
+    </section>`:''}
     <section class="block"><div class="block-title">${t('sec_app')}</div>
       ${installPrompt?`<button class="tile" id="installApp" style="margin-bottom:11px"><span class="ic c-accent">${I.download}</span><span class="tt"><b>${t('m_install')}</b><span>${t('m_install_sub')}</span></span><span class="chev">${I.chev}</span></button>`:''}
       <button class="tile" id="notifTile"><span class="ic c-amber">${I.bell}</span><span class="tt"><b>${t('m_notif')}</b><span>${notifSubText()}</span></span><span class="chev">${I.chev}</span></button>
@@ -1092,6 +1117,113 @@ let toastT=null;
 function toast(msg){ const el=document.getElementById('toast'); el.textContent=msg; el.classList.add('show'); clearTimeout(toastT); toastT=setTimeout(()=>el.classList.remove('show'),2200); }
 
 /* ======================================================================
+   Nube (Supabase) — auth por email/OTP + sync de vacupet_state.
+   Degradación: si no hay config, todo funciona en local.
+   ====================================================================== */
+const SB = window.VACUPET_SUPABASE || {};
+function cloudConfigured(){ return !!(SB.url && SB.anonKey); }
+let supa = null;     // cliente
+let session = null;  // sesión actual
+let syncT = null;    // debounce del push
+
+function loadScript(src){ return new Promise((res,rej)=>{ const s=document.createElement('script'); s.src=src; s.onload=res; s.onerror=rej; document.head.appendChild(s); }); }
+
+async function ensureSupabase(){
+  if(supa) return supa;
+  if(!cloudConfigured()) return null;
+  try{
+    if(!window.supabase) await loadScript('https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js');
+    if(!window.supabase) return null;
+    supa = window.supabase.createClient(SB.url, SB.anonKey, {
+      auth:{ persistSession:true, autoRefreshToken:true, detectSessionInUrl:false } // usamos OTP por código (sin redirección)
+    });
+    const { data:{ session:s } } = await supa.auth.getSession();
+    session = s || null;
+    supa.auth.onAuthStateChange((_e, s2)=>{ session=s2; if(!shared && currentTab==='more') render(); });
+    return supa;
+  }catch(e){ console.warn('supabase init:', e); return null; }
+}
+
+// Decide si adoptar el estado remoto (puro, testeable).
+function shouldAdoptRemote(remoteUpdatedAt, localUpdatedAt, remoteData){
+  if(!remoteData || !Array.isArray(remoteData.pets)) return false;
+  const r = remoteUpdatedAt ? Date.parse(remoteUpdatedAt) : 0;
+  const l = localUpdatedAt ? Date.parse(localUpdatedAt) : 0;
+  return r > l;
+}
+
+async function pullState(){
+  const c = await ensureSupabase(); if(!c || !session) return;
+  try{
+    const { data:row, error } = await c.from('vacupet_state').select('data,updated_at').eq('user_id', session.user.id).maybeSingle();
+    if(error){ console.warn(error); return; }
+    if(!row){ await pushState(true); return; }                 // no hay remoto: sube el local
+    if(shouldAdoptRemote(row.updated_at, data.updatedAt, row.data)){
+      data = migrate(row.data); data.updatedAt = row.updated_at;
+      if(!data.activeId && data.pets[0]) data.activeId = data.pets[0].info.id;
+      save(false);                                             // persiste sin re-empujar
+      render(); toast(t('sync_pulled'));
+    } else {
+      await pushState(true);                                   // local más nuevo o igual: sube
+    }
+  }catch(e){ console.warn('pull:', e); }
+}
+
+async function pushState(silent){
+  const c = await ensureSupabase(); if(!c || !session) return;
+  try{
+    const ts = data.updatedAt || new Date().toISOString(); data.updatedAt = ts;
+    const { error } = await c.from('vacupet_state').upsert({ user_id:session.user.id, data, updated_at:ts });
+    if(error){ console.warn(error); if(!silent) toast(t('sync_err')); }
+    else if(!silent) toast(t('sync_done'));
+  }catch(e){ console.warn('push:', e); if(!silent) toast(t('sync_err')); }
+}
+function scheduleSync(){ if(!session) return; clearTimeout(syncT); syncT=setTimeout(()=>pushState(true), 1500); }
+
+/* ---- Auth UI ---- */
+function authModal(){
+  const body = `
+    <div class="field" id="f-email"><label>${t('auth_email')}</label><input type="email" id="au-email" placeholder="tu@correo.com" autocomplete="email"><div class="errmsg">—</div></div>
+    <div id="codeStep" class="hide">
+      <div class="field"><label>${t('auth_code')}</label><input id="au-code" inputmode="numeric" autocomplete="one-time-code" placeholder="000000"></div>
+      <p class="hint" id="sentHint"></p>
+    </div>`;
+  const footer = `<button class="btn btn-ghost" data-close style="flex:none">${t('cancel')}</button>
+    <button class="btn btn-primary btn-block" id="auAction">${t('auth_send')}</button>`;
+  openModal(modalShell(t('auth_title'), body, footer));
+  let step = 1, email='';
+  const action = document.getElementById('auAction');
+  action.addEventListener('click', async ()=>{
+    if(step===1){
+      email = val('au-email').trim();
+      if(!/.+@.+\..+/.test(email)){ document.getElementById('f-email').classList.add('err'); document.querySelector('#f-email .errmsg').textContent='Correo no válido'; return; }
+      action.disabled=true; action.textContent=t('loading');
+      const c = await ensureSupabase();
+      if(!c){ toast(t('cloud_off')); action.disabled=false; action.textContent=t('auth_send'); return; }
+      const { error } = await c.auth.signInWithOtp({ email });
+      action.disabled=false;
+      if(error){ toast(error.message); action.textContent=t('auth_send'); return; }
+      step=2; document.getElementById('codeStep').classList.remove('hide');
+      document.getElementById('sentHint').textContent=t('auth_sent');
+      action.textContent=t('auth_verify'); toast(t('auth_sent'));
+    } else {
+      const token = val('au-code').trim();
+      if(!token){ return; }
+      action.disabled=true; action.textContent=t('loading');
+      const c = await ensureSupabase();
+      const { data:res, error } = await c.auth.verifyOtp({ email, token, type:'email' });
+      action.disabled=false; action.textContent=t('auth_verify');
+      if(error){ toast(error.message); return; }
+      session = res.session;
+      closeModal(); toast(t('acc_synced'));
+      await pullState(); render();
+    }
+  });
+}
+async function syncNow(){ toast(t('loading')); await pullState(); await pushState(false); }
+async function signOut(){ const c=await ensureSupabase(); if(c){ try{ await c.auth.signOut(); }catch(_){} } session=null; toast(t('signed_out')); render(); }
+
+/* ======================================================================
    Eventos (delegación)
    ====================================================================== */
 document.addEventListener('click', e=>{
@@ -1120,6 +1252,9 @@ document.addEventListener('click', e=>{
     else if(k==='peso'){ pet.weights=pet.weights.filter(x=>x.id!==id); const l=pet.weights.slice().sort((a,b)=>a.fecha<b.fecha?1:-1)[0]; pet.info.peso=l?l.kg:pet.info.peso; }
     else if(k==='visita') pet.vetVisits=pet.vetVisits.filter(x=>x.id!==id);
     save(); toast(t('deleted')); render(); return; }
+  if(t0.closest('#signIn')){ authModal(); return; }
+  if(t0.closest('#syncNow')){ syncNow(); return; }
+  if(t0.closest('#signOut')){ signOut(); return; }
   if(t0.closest('#installApp')){ doInstall(); return; }
   if(t0.closest('#notifTile')){ notifTileAction(); return; }
   if(t0.closest('#shareCard')){ shareModal(); return; }
@@ -1210,6 +1345,10 @@ render();
 if(pendingAdd && data.pets.length){
   if(pendingAdd==='vacuna') vaccineModal();
   else if(pendingAdd==='desparasitacion') dewormModal();
+}
+// Nube: restaura sesión y sincroniza (si está configurada). No bloquea el arranque local.
+if(!shared && cloudConfigured()){
+  ensureSupabase().then(c=>{ if(c && session) pullState(); }).catch(()=>{});
 }
 </script>
 </body>
