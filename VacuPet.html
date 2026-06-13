@@ -1022,12 +1022,24 @@ function switchModal(){
 }
 
 /* ---- Compartir ---- */
-function shareModal(){
+async function shareModal(){
   const pet=activePet();
   const payload = { app:'vacupet', v:1, pet:{ info:{...pet.info, foto:undefined}, vaccines:pet.vaccines, dewormings:pet.dewormings } };
-  let link;
-  try{ const enc=b64urlEncode(JSON.stringify(payload)); link=location.origin+location.pathname+'#v='+enc; }
-  catch(e){ toast('No se pudo generar el enlace'); return; }
+  let link = null;
+  // Con sesión: crea un enlace con TOKEN que caduca (30 días), sin datos en la URL.
+  if(session){
+    try{
+      const c = await ensureSupabase();
+      if(c){
+        const expires = new Date(Date.now()+30*86400000).toISOString();
+        const { data:row, error } = await c.from('shares').insert({ user_id:session.user.id, data:payload, expires_at:expires }).select('id').single();
+        if(!error && row) link = location.origin+location.pathname+'#s='+row.id;
+      }
+    }catch(e){ console.warn('share token:', e); }
+  }
+  // Sin sesión (o si falló): el carné viaja codificado en el propio enlace (#v=).
+  if(!link){ try{ link = location.origin+location.pathname+'#v='+b64urlEncode(JSON.stringify(payload)); }catch(e){ toast('No se pudo generar el enlace'); return; } }
+
   const body=`<p class="hint">${t('m_share_sub')}</p>
     <div class="qrbox" id="qrbox"><span class="hint">QR…</span></div>
     <div class="linkbox"><input id="shareLink" readonly value="${esc(link)}"><button class="btn" id="copyLink" aria-label="${t('copied')}">${I.copy}</button></div>`;
@@ -1036,6 +1048,19 @@ function shareModal(){
   ensureQR(ok=>{ const box=document.getElementById('qrbox'); if(!box) return;
     if(ok && window.qrcode){ try{ const qr=window.qrcode(0,'M'); qr.addData(link); qr.make(); box.innerHTML=qr.createImgTag(4,0); }catch(e){ box.innerHTML='<span class="hint">QR no disponible offline</span>'; } }
     else box.innerHTML='<span class="hint">QR no disponible offline</span>'; });
+}
+
+// Carga un carné compartido por TOKEN (#s=<uuid>) vía RPC get_share (lectura pública si no ha caducado).
+async function loadSharedToken(token){
+  renderChrome();
+  document.getElementById('app').innerHTML = `<div class="view"><div class="card pad empty">${t('loading')}</div></div>`;
+  const c = await ensureSupabase();
+  if(!c){ document.getElementById('app').innerHTML = `<div class="view"><div class="card pad empty">${t('shared_bad')}</div></div>`; return; }
+  try{
+    const { data:payload, error } = await c.rpc('get_share', { p_token: token });
+    if(error || !payload || !payload.pet) throw new Error('bad');
+    shared = payload.pet; render();
+  }catch(e){ console.warn('get_share:', e); document.getElementById('app').innerHTML = `<div class="view"><div class="card pad empty">${t('shared_bad')}</div></div>`; }
 }
 let qrLoading=false;
 function ensureQR(cb){
@@ -1216,7 +1241,9 @@ function authModal(){
       if(error){ toast(error.message); return; }
       session = res.session;
       closeModal(); toast(t('acc_synced'));
-      await pullState(); render();
+      await pullState();
+      if(window.Notification && Notification.permission==='granted') trySubscribePush();
+      render();
     }
   });
 }
@@ -1302,8 +1329,13 @@ async function trySubscribePush(){
     const reg = await navigator.serviceWorker.ready;
     let sub = await reg.pushManager.getSubscription();
     if(!sub) sub = await reg.pushManager.subscribe({ userVisibleOnly:true, applicationServerKey: urlB64ToUint8(cfg.vapidPublicKey) });
-    // En Fase 4 esta suscripción se enviará a Supabase (tabla push_subs). Por ahora se guarda local.
-    localStorage.setItem('vacupet:pushsub', JSON.stringify(sub));
+    const subJSON = sub.toJSON ? sub.toJSON() : sub;
+    localStorage.setItem('vacupet:pushsub', JSON.stringify(subJSON));
+    // Si hay sesión, registra la suscripción en Supabase (la usa la función vacupet-push).
+    const c = await ensureSupabase();
+    if(c && session){
+      await c.from('push_subs').upsert({ endpoint: subJSON.endpoint, user_id: session.user.id, sub: subJSON, lang: data.lang||'es' });
+    }
   }catch(e){ console.warn('push subscribe:', e); }
 }
 async function testNotif(){
@@ -1330,25 +1362,33 @@ function urlB64ToUint8(b64){
 }
 
 /* ---------------------------- Arranque ---------------------------- */
-shared = readShareHash();
+const hash0 = location.hash || '';
+const tokenMatch = hash0.match(/^#s=([0-9a-fA-F-]{8,})/);   // carné compartido por token
+shared = readShareHash();                                   // carné compartido en el hash (#v=)
 let pendingAdd = null;
-if(!shared){
-  // Accesos directos del manifest / enlaces: #tab=card, #add=vacuna
-  const h = location.hash || '';
-  const mTab = h.match(/[#&]tab=([a-z]+)/);  if(mTab && ['home','card','pet','more'].includes(mTab[1])) currentTab = mTab[1];
-  const mAdd = h.match(/[#&]add=([a-z]+)/);   if(mAdd) pendingAdd = mAdd[1];
-  if(mTab || mAdd) history.replaceState(null,'',location.pathname);
-}
-if(!shared && !data.activeId && data.pets[0]) data.activeId = data.pets[0].info.id;
-render();
-// Tras renderizar, abre el modal del acceso directo si procede y hay mascota.
-if(pendingAdd && data.pets.length){
-  if(pendingAdd==='vacuna') vaccineModal();
-  else if(pendingAdd==='desparasitacion') dewormModal();
-}
-// Nube: restaura sesión y sincroniza (si está configurada). No bloquea el arranque local.
-if(!shared && cloudConfigured()){
-  ensureSupabase().then(c=>{ if(c && session) pullState(); }).catch(()=>{});
+
+if(tokenMatch){
+  // Vista de solo lectura cargada de forma asíncrona vía RPC.
+  if(!data.activeId && data.pets[0]) data.activeId = data.pets[0].info.id;
+  loadSharedToken(tokenMatch[1]);
+} else {
+  if(!shared){
+    // Accesos directos del manifest / enlaces: #tab=card, #add=vacuna
+    const mTab = hash0.match(/[#&]tab=([a-z]+)/);  if(mTab && ['home','card','pet','more'].includes(mTab[1])) currentTab = mTab[1];
+    const mAdd = hash0.match(/[#&]add=([a-z]+)/);   if(mAdd) pendingAdd = mAdd[1];
+    if(mTab || mAdd) history.replaceState(null,'',location.pathname);
+  }
+  if(!shared && !data.activeId && data.pets[0]) data.activeId = data.pets[0].info.id;
+  render();
+  // Tras renderizar, abre el modal del acceso directo si procede y hay mascota.
+  if(pendingAdd && data.pets.length){
+    if(pendingAdd==='vacuna') vaccineModal();
+    else if(pendingAdd==='desparasitacion') dewormModal();
+  }
+  // Nube: restaura sesión y sincroniza (si está configurada). No bloquea el arranque local.
+  if(!shared && cloudConfigured()){
+    ensureSupabase().then(c=>{ if(c && session) pullState(); }).catch(()=>{});
+  }
 }
 </script>
 </body>

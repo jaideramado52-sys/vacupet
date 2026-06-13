@@ -60,16 +60,17 @@ Objetivo: tus mascotas en la nube, multidispositivo, seguras.
 - [~] **Storage** de fotos: por ahora las fotos viajan dentro de `vacupet_state` (jsonb, comprimidas). El bucket `mascotas` queda listo para mover a Storage dedicado si crecen (optimización futura).
 - [ ] **Desplegar**: ejecutar `supabase/schema.sql` y pegar `url`+`anonKey` en `supabase-config.js` (lo hace el usuario).
 
-## Fase 4 — Recordatorios server (email/push programados) 🔲 → ⏳
+## Fase 4 — Recordatorios server (email/push programados) ✅ (código) → ⏳ (desplegar)
 Objetivo: que el aviso llegue aunque la app esté cerrada.
+> Verificado: cliente con sintaxis válida + headless (local y enlace `#s=`) sin errores + 9 pruebas de la lógica de vencimientos de las funciones (`dueItems`/ventana `remDays`). Las funciones Deno se ejecutan al desplegar (no hay runtime Deno local).
 
-- [ ] `scripts/gen-keys.mjs`: genera claves **VAPID** (push) y **ES256** (firma QR).
-- [ ] Edge Function `vacupet-push`: recorre `vacupet_state`, calcula vencimientos (vacunas + **desparasitación** + antipulgas) y envía Web Push. Antiduplicado `last_pushed`.
-- [ ] Edge Function `recordatorios`: mismos vencimientos por **email** (Resend). Antiduplicado `last_notified`.
-- [ ] Tabla `push_subs` + suscripción desde el cliente.
-- [ ] **Cron** (Supabase Scheduled / pg_cron) diario.
-- [ ] **Compartir por link con permisos** (token que caduca, vía RPC, sin datos en la URL).
-- [ ] `deploy.sh` + `.env.deploy.example` + `docs/DESPLIEGUE.md` (checklist punta a punta).
+- [x] `scripts/gen-keys.mjs`: genera claves **VAPID** (push) y **ES256** (firma QR) — del scaffold.
+- [x] Edge Function `vacupet-push`: recorre `vacupet_state`, calcula vencimientos (vacunas + **desparasitación**) dentro de `remDays` y envía Web Push (VAPID vía `web-push`). Antiduplicado `last_pushed`; limpia suscripciones 404/410.
+- [x] Edge Function `recordatorios`: mismos vencimientos por **email** (Resend), email del usuario vía Admin API. Antiduplicado `last_notified`.
+- [x] Tabla `push_subs` + **suscripción desde el cliente** (`trySubscribePush` hace upsert al iniciar sesión).
+- [x] **Compartir por link con permisos**: con sesión crea un `shares` con **token que caduca (30 días)**, enlace `#s=<uuid>` sin datos en la URL; lectura vía RPC `get_share`. Sin sesión, cae al `#v=` (hash).
+- [x] `docs/DESPLIEGUE.md` (checklist punta a punta) + `deploy.sh` + `.env.deploy.example` (del scaffold).
+- [ ] **Cron diario** y **secrets**: lo configura el usuario al desplegar (SQL `cron.schedule` + `bash deploy.sh`).
 
 ## Fase 5 — IA por reglas + asistente 🔲 → ⏳
 Objetivo: que la app responda "¿qué le falta a mi mascota?".
