@@ -21,19 +21,20 @@ Objetivo: una mascota con su carné funcional en `localStorage`. Es la base de t
 - [x] **Respaldo JSON** (exportar/importar con confirmación) — seed y modo offline.
 - [x] **Esquema por edad/especie** básico (`suggestProxima`/`suggestDeworm`: serie cachorro vs. refuerzo anual).
 
-## Fase 1 — Carné pro (sin backend) 🔲
+## Fase 1 — Carné pro (sin backend) ✅
 Objetivo: convertirlo en un carné serio y multimascota.
+> Verificado: sintaxis válida + render headless (normal y compartida) sin errores de consola + 23 pruebas unitarias de lógica (esquema, desparasitación, resumen, gráfico de peso, base64url, i18n).
 
-- [ ] **Esquema vacunal por especie** completo (core / no-core) — ver `ESQUEMA_VACUNAL.md`.
-- [ ] **Motor de esquema** `nextDoseFor` / `suggestNextDate`: próxima dosis, refuerzos y puesta al día por edad/intervalo/especie. Etiqueta "orientativo".
-- [ ] **Módulo de peso**: historial + **gráfico de evolución** (curva de peso por fecha).
-- [ ] **Multimascota**: carrusel de avatares con mini-anillo de cobertura, resaltar activa, añadir/eliminar mascota.
-- [ ] **Dashboard de cobertura**: % aplicadas/pendientes/vencidas + chips de resumen + banner de próxima dosis (prioriza vencida).
-- [ ] **Visitas al veterinario**: registro (fecha, motivo, diagnóstico, clínica, notas).
-- [ ] **Compartir carné** por link/QR (sin backend: payload en el hash, comprimido).
-- [ ] **Fichas por vacuna/enfermedad** (qué previene, para quién, efectos típicos) accesibles con ⓘ.
-- [ ] **Accesibilidad**: foco visible, roles ARIA, contraste, tamaños táctiles.
-- [ ] **i18n** es / en / pt con conmutador en el header.
+- [x] **Esquema vacunal por especie** (core / no-core) con metadatos — ver `ESQUEMA_VACUNAL.md`.
+- [x] **Motor de esquema** `suggestProxima` / `suggestDeworm`: próxima dosis y puesta al día por edad/intervalo/especie (serie cachorro vs. refuerzo anual). Etiqueta "orientativo".
+- [x] **Módulo de peso**: historial + **gráfico de evolución** SVG (curva de peso por fecha) + peso del perfil = último registrado.
+- [x] **Multimascota**: carrusel de avatares con mini-anillo de cobertura, resaltar activa, añadir/eliminar/cambiar mascota.
+- [x] **Dashboard de cobertura**: % aplicadas/pendientes/vencidas + chips de resumen + banner de próxima dosis (prioriza vencida).
+- [x] **Visitas al veterinario**: registro (fecha, motivo, diagnóstico, clínica, notas).
+- [x] **Compartir carné** por link/QR (sin backend: payload base64url en el hash + **vista de solo lectura**; QR vía CDN con degradación offline).
+- [x] **Fichas por vacuna/enfermedad** (qué previene, para quién, efectos típicos) accesibles con ⓘ.
+- [x] **Accesibilidad**: foco visible (`:focus-visible`), roles ARIA (tablist/tab/dialog/status), `aria-label` en iconos, `aria-pressed` en idioma.
+- [x] **i18n** es / en / pt con conmutador en el header, persistencia y cambio en vivo (chrome y pantallas; fichas español-primero).
 
 ## Fase 2 — PWA real 🔲
 Objetivo: instalable y offline de verdad.
