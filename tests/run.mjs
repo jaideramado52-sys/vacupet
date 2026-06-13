@@ -30,6 +30,7 @@ code += `;globalThis.__VP = {
   setPin, checkPin, encryptBackup, decryptBackup,
   hasValidRabies, recentDeworm, checkReq, achievements, DESTINOS,
   nextAnniversary, freqLabel, CARE_KINDS,
+  ACCENTS, accentColor, SPECIES_COLOR,
   getData:()=>data, setData:d=>{data=d}
 };`;
 (0, eval)(code);
@@ -166,6 +167,12 @@ VP.setData({ v:1, activeId:'1', remDays:30, lang:'es', pets:[{info:{id:'1',nombr
   ok('reminders incluye el cuidado', rem.some(r=>r.kind==='cuidado' && r.nombre==='Baño'));
   ok('petSummary cuenta el cuidado', VP.petSummary(VP.getData().pets[0]).aplicadas===1);
 }
+
+section('Personalización (acento + especie)');
+ok('6 acentos', VP.ACCENTS.length===6);
+VP.getData().accent='morado'; ok('accentColor morado', VP.accentColor()==='#7C3AED');
+VP.getData().accent=undefined; ok('accentColor por defecto null', VP.accentColor()===null);
+ok('color por especie (gato)', VP.SPECIES_COLOR.gato==='#7C3AED');
 
 // =========================================================================
 // Spec de las Edge Functions (lógica replicada idéntica a vacupet-push/recordatorios)

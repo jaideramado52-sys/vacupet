@@ -19,7 +19,7 @@
 /* ============================ Sistema de diseño ============================ */
 :root{
   --bg:#F4F8F4; --surface:#FFFFFF; --surface-2:#FAFCFA; --ink:#10291A; --muted:#5B6B60;
-  --accent:#16A34A; --accent-ink:#0B6B33; --line:#E3ECE5; --line-2:#EEF3EF;
+  --accent:#16A34A; --accent-ink:color-mix(in srgb,var(--accent) 72%,#000); --line:#E3ECE5; --line-2:#EEF3EF;
   --green:#16A34A; --amber:#D97706; --red:#DC2626; --blue:#2563EB;
   --radius:16px; --radius-sm:11px; --shadow:0 1px 2px rgba(16,41,26,.05),0 1px 3px rgba(16,41,26,.04);
   --shadow-lg:0 10px 30px rgba(16,41,26,.14);
@@ -28,7 +28,7 @@
 @media (prefers-color-scheme: dark){
   :root{
     --bg:#0B130E; --surface:#121C15; --surface-2:#16221A; --ink:#EAF2EC; --muted:#9FB3A6;
-    --accent:#22C55E; --accent-ink:#86EFAC; --line:#1E2A22; --line-2:#1A251E;
+    --accent:#22C55E; --accent-ink:color-mix(in srgb,var(--accent) 55%,#fff); --line:#1E2A22; --line-2:#1A251E;
     --shadow:0 1px 2px rgba(0,0,0,.3); --shadow-lg:0 12px 34px rgba(0,0,0,.5);
   }
 }
@@ -157,8 +157,15 @@ section.block{margin:22px 0 0}
 .tagdue{display:inline-block;font-size:11px;font-weight:650;padding:2px 8px;border-radius:999px}
 .rec .iconmini{color:var(--muted);background:none;border:0;padding:6px;border-radius:8px}
 .rec .iconmini svg{width:16px;height:16px;display:block}
-.empty{text-align:center;color:var(--muted);padding:34px 20px}
-.empty svg{width:40px;height:40px;opacity:.4;margin-bottom:10px}
+.empty{text-align:center;color:var(--muted);padding:30px 20px;font-size:13.5px}
+.empty svg{width:26px;height:26px}
+.empty .eicon{width:58px;height:58px;border-radius:18px;margin:0 auto 12px;display:grid;place-items:center;background:color-mix(in srgb,var(--accent) 12%,var(--surface));color:var(--accent)}
+
+/* ---- Selector de color de acento ---- */
+.swatches{display:flex;gap:12px;flex-wrap:wrap;justify-content:center;padding:4px 0}
+.swatch{width:38px;height:38px;border-radius:50%;border:2px solid var(--surface);box-shadow:0 0 0 1px var(--line);cursor:pointer;position:relative}
+.swatch.on{box-shadow:0 0 0 2px var(--bg),0 0 0 4px currentColor}
+.swatch.on::after{content:"";position:absolute;inset:0;display:grid;place-items:center;color:#fff;background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='white' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m5 12 5 5 9-10'/%3E%3C/svg%3E") center/16px no-repeat}
 
 /* ---- Botones ---- */
 .btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;height:46px;padding:0 18px;border-radius:13px;
@@ -452,6 +459,7 @@ const STR = {
     sec_cares:'Cuidados', tile_care:'Cuidado', tile_care_sub:'Baño, uñas, medicación…', add_care:'Añadir cuidado', no_cares:'Sin cuidados programados', reg_care:'Registrar cuidado', saved_care:'Cuidado guardado',
     care_kind:'Tipo', care_title:'Título', care_last:'Última vez / fecha', care_freq:'Frecuencia', care_freq_none:'Una vez', care_every:'Cada {n} días', care_yearly:'Cada año', care_notes:'Notas',
     care_bano:'Baño', care_unas:'Corte de uñas', care_medic:'Medicación', care_grooming:'Peluquería', care_cumple:'Cumpleaños', care_otro:'Otro',
+    sec_appearance:'Apariencia', accent_color:'Color de acento',
   },
   en:{
     tab_home:'Home', tab_card:'Record', tab_pet:'Pet', tab_more:'More',
@@ -534,6 +542,7 @@ const STR = {
     sec_cares:'Care', tile_care:'Care', tile_care_sub:'Bath, nails, medication…', add_care:'Add care', no_cares:'No care scheduled', reg_care:'Add care task', saved_care:'Care saved',
     care_kind:'Type', care_title:'Title', care_last:'Last done / date', care_freq:'Frequency', care_freq_none:'Once', care_every:'Every {n} days', care_yearly:'Yearly', care_notes:'Notes',
     care_bano:'Bath', care_unas:'Nail trim', care_medic:'Medication', care_grooming:'Grooming', care_cumple:'Birthday', care_otro:'Other',
+    sec_appearance:'Appearance', accent_color:'Accent color',
   },
   pt:{
     tab_home:'Início', tab_card:'Carteira', tab_pet:'Pet', tab_more:'Mais',
@@ -616,8 +625,29 @@ const STR = {
     sec_cares:'Cuidados', tile_care:'Cuidado', tile_care_sub:'Banho, unhas, medicação…', add_care:'Adicionar cuidado', no_cares:'Sem cuidados agendados', reg_care:'Registrar cuidado', saved_care:'Cuidado salvo',
     care_kind:'Tipo', care_title:'Título', care_last:'Última vez / data', care_freq:'Frequência', care_freq_none:'Uma vez', care_every:'A cada {n} dias', care_yearly:'A cada ano', care_notes:'Notas',
     care_bano:'Banho', care_unas:'Corte de unhas', care_medic:'Medicação', care_grooming:'Banho e tosa', care_cumple:'Aniversário', care_otro:'Outro',
+    sec_appearance:'Aparência', accent_color:'Cor de destaque',
   },
 };
+// Paleta de acentos y color por especie (personalización visual)
+const ACCENTS = [
+  { key:'verde',    c:'#16A34A' },
+  { key:'azul',     c:'#2563EB' },
+  { key:'morado',   c:'#7C3AED' },
+  { key:'rosa',     c:'#DB2777' },
+  { key:'naranja',  c:'#EA580C' },
+  { key:'turquesa', c:'#0D9488' },
+];
+const SPECIES_COLOR = { perro:'#D97706', gato:'#7C3AED', conejo:'#DB2777', huron:'#0D9488', ave:'#2563EB', otro:'#16A34A' };
+function accentColor(){ const a=ACCENTS.find(x=>x.key===data.accent); return a?a.c:null; }
+function applyAccent(){
+  const c=accentColor();
+  document.documentElement.style.setProperty('--accent', c || '');
+  const meta=document.querySelector('meta[name=theme-color]'); if(meta && c) meta.setAttribute('content', c);
+}
+function speciesGrad(especie){
+  const c=SPECIES_COLOR[especie]||SPECIES_COLOR.otro;
+  return `linear-gradient(150deg, color-mix(in srgb,${c} 80%,#000) 0%, color-mix(in srgb,${c} 35%,var(--surface)) 100%)`;
+}
 function t(k){ const l=data.lang||'es'; return (STR[l]&&STR[l][k])||STR.es[k]||k; }
 function tf(k,vars){ let s=t(k); for(const key in vars) s=s.replace('{'+key+'}', vars[key]); return s; }
 
@@ -729,6 +759,7 @@ function ageText(nac){
 }
 function esc(s){ return String(s??'').replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c])); }
 function cap(s){ return s?s.charAt(0).toUpperCase()+s.slice(1):''; }
+function emptyBox(icon, txt){ return `<div class="card pad empty"><div class="eicon">${icon}</div><div>${esc(txt)}</div></div>`; }
 
 /* ---------------------------- Esquema: sugerir próxima ---------------------------- */
 function suggestProxima(especie, nombre, fechaISO, nacimientoISO){
@@ -828,6 +859,7 @@ function tabs(){ return [
 function go(tab){ currentTab=tab; render(); window.scrollTo({top:0,behavior:'instant'}); }
 
 function renderChrome(){
+  applyAccent();
   document.documentElement.classList.toggle('bigtext', !!data.bigText);
   document.getElementById('brandLogo').innerHTML = I.paw;
   document.getElementById('btnBackup').innerHTML = I.settings;
@@ -896,9 +928,10 @@ function viewHome(){
   const heroMedia = pet.info.foto
     ? `<img src="${pet.info.foto}" alt="${esc(pet.info.nombre)}">`
     : `<div class="noimg">${SPECIES_EMOJI[pet.info.especie]||'🐾'}</div>`;
+  const heroBg = pet.info.foto ? '' : ` style="background:${speciesGrad(pet.info.especie)}"`;
 
   return `<div class="view">
-    <div class="phero" data-go="pet" role="button" tabindex="0" aria-label="${esc(pet.info.nombre)}">
+    <div class="phero" data-go="pet" role="button" tabindex="0" aria-label="${esc(pet.info.nombre)}"${heroBg}>
       ${heroMedia}
       <div class="grad"></div>
       <div class="ringchip">${heroRing(s.pct, 58, 5)}<span class="pct">${s.pct}%</span></div>
@@ -984,16 +1017,16 @@ function viewCard(){
   return `<div class="view">
     <h1 style="font-size:22px">${t('card_of')} ${esc(pet.info.nombre)}</h1>
     <section class="block" style="margin-top:14px"><div class="block-title">${t('sec_vaccines')}</div>
-      ${vac.length?`<div class="card">${vac.map(v=>vacRow(v,false)).join('')}</div>`:`<div class="card pad empty">${I.syringe}<div>${t('no_vac')}</div></div>`}
+      ${vac.length?`<div class="card">${vac.map(v=>vacRow(v,false)).join('')}</div>`:emptyBox(I.syringe, t('no_vac'))}
       <div class="row-actions"><button class="btn" style="flex:1" data-add="vacuna">${I.plus} ${t('add_vac')}</button><button class="btn" id="ocrScan">${I.camera} ${t('ocr_scan')}</button></div></section>
     <section class="block"><div class="block-title">${t('sec_deworm')}</div>
-      ${dew.length?`<div class="card">${dew.map(d=>dewRow(d,false)).join('')}</div>`:`<div class="card pad empty">${I.bug}<div>${t('no_dew')}</div></div>`}
+      ${dew.length?`<div class="card">${dew.map(d=>dewRow(d,false)).join('')}</div>`:emptyBox(I.bug, t('no_dew'))}
       <button class="btn btn-block" data-add="desparasitacion" style="margin-top:11px">${I.plus} ${t('add_dew')}</button></section>
     <section class="block"><div class="block-title">${t('sec_visits')}</div>
-      ${vis.length?`<div class="card">${vis.map(v=>visitRow(v,false)).join('')}</div>`:`<div class="card pad empty">${I.stetho}<div>${t('no_visit')}</div></div>`}
+      ${vis.length?`<div class="card">${vis.map(v=>visitRow(v,false)).join('')}</div>`:emptyBox(I.stetho, t('no_visit'))}
       <button class="btn btn-block" data-add="visita" style="margin-top:11px">${I.plus} ${t('add_visit')}</button></section>
     <section class="block"><div class="block-title">${t('sec_cares')}</div>
-      ${(()=>{ const car=(pet.cares||[]).slice().sort((a,b)=>(a.proxima||'9')<(b.proxima||'9')?-1:1); return car.length?`<div class="card">${car.map(c=>careRow(c,false)).join('')}</div>`:`<div class="card pad empty">${I.heart}<div>${t('no_cares')}</div></div>`; })()}
+      ${(()=>{ const car=(pet.cares||[]).slice().sort((a,b)=>(a.proxima||'9')<(b.proxima||'9')?-1:1); return car.length?`<div class="card">${car.map(c=>careRow(c,false)).join('')}</div>`:emptyBox(I.heart, t('no_cares')); })()}
       <button class="btn btn-block" data-add="cuidado" style="margin-top:11px">${I.plus} ${t('add_care')}</button></section>
     <p class="disclaimer">${t('disc_scheme')}</p>
   </div>`;
@@ -1025,7 +1058,7 @@ function viewPet(){
 
     <section class="block"><div class="block-title"><span>${t('sec_weight')}</span>${weights.length?`<span style="text-transform:none;font-weight:600;color:var(--ink)">${t('latest_weight')}: ${weights[0].kg} kg</span>`:''}</div>
       <div class="card">
-        ${weights.length?weightChart(pet.weights):`<div class="pad empty">${I.scale}<div>${t('no_weight')}</div></div>`}
+        ${weights.length?weightChart(pet.weights):`<div class="pad empty"><div class="eicon">${I.scale}</div><div>${t('no_weight')}</div></div>`}
         ${weights.length?`<div style="border-top:1px solid var(--line-2)">${weights.slice(0,6).map(w=>`<div class="rec"><span class="ic c-accent">${I.scale}</span><div class="rr"><b>${w.kg} kg</b><span>${fmt(w.fecha)}</span></div><button class="iconmini" data-del="peso" data-id="${w.id}" aria-label="${t('delete')}">${I.trash}</button></div>`).join('')}</div>`:''}
       </div>
       <button class="btn btn-block" id="addWeight" style="margin-top:11px">${I.plus} ${t('add_weight')}</button>
@@ -1058,6 +1091,11 @@ function viewMore(){
       <button class="tile" id="expCsv" style="margin-top:11px"><span class="ic c-violet">${I.download}</span><span class="tt"><b>${t('m_csv')}</b><span>${t('m_csv_sub')}</span></span><span class="chev">${I.chev}</span></button>
       <button class="tile" id="expJson" style="margin-top:11px"><span class="ic c-blue">${I.download}</span><span class="tt"><b>${t('m_json')}</b><span>${t('m_json_sub')}</span></span><span class="chev">${I.chev}</span></button>
       <button class="tile" id="impJson" style="margin-top:11px"><span class="ic c-green">${I.upload}</span><span class="tt"><b>${t('m_import')}</b><span>${t('m_import_sub')}</span></span><span class="chev">${I.chev}</span></button>
+    </section>
+    <section class="block"><div class="block-title">${t('sec_appearance')}</div>
+      <div class="card pad"><div class="hint" style="margin-bottom:10px">${t('accent_color')}</div>
+        <div class="swatches">${ACCENTS.map(a=>`<button class="swatch ${(data.accent||'verde')===a.key?'on':''}" data-accent="${a.key}" aria-label="${a.key}" style="background:${a.c};color:${a.c}"></button>`).join('')}</div>
+      </div>
     </section>
     ${cloudConfigured()?`<section class="block"><div class="block-title">${t('sec_account')}</div>
       ${session?`<div class="card pad">
@@ -2076,6 +2114,7 @@ document.addEventListener('click', e=>{
   if(t0.closest('#installApp')){ doInstall(); return; }
   if(t0.closest('#notifTile')){ notifTileAction(); return; }
   if(t0.closest('#a11yBig')){ data.bigText=!data.bigText; save(); render(); return; }
+  const sw0=t0.closest('[data-accent]'); if(sw0){ data.accent=sw0.dataset.accent; save(); render(); return; }
   if(t0.closest('#shareCard')){ shareModal(); return; }
   if(t0.closest('#expIcs')){ exportICS(); return; }
   if(t0.closest('#expPdf')){ exportPDF(); return; }
