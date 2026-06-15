@@ -937,6 +937,7 @@ function viewOnboarding(){
       <button class="btn btn-primary btn-block" id="onbAdd">${I.plus} ${t('onb_add')}</button>
       <button class="btn btn-ghost btn-block" id="onbDemo" style="margin-top:8px">${I.paw} ${t('demo_view')}</button>
     </div>
+    ${cloudConfigured()&&!session?`<button class="tile" id="signIn" style="margin-top:14px"><span class="ic c-accent">${I.upload}</span><span class="tt"><b>${t('acc_signin')}</b><span>${t('acc_signin_sub')}</span></span><span class="chev">${I.chev}</span></button>`:''}
     <p class="disclaimer">${t('disc_full')}</p>
   </div>`;
 }
