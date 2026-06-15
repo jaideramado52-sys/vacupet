@@ -428,8 +428,8 @@ const STR = {
     notif_test_sent:'Aviso de prueba enviado', installed:'App instalada',
     sec_account:'Cuenta y nube', acc_signin:'Iniciar sesión / sincronizar', acc_signin_sub:'Guarda y sincroniza en la nube (opcional)',
     acc_synced:'Sesión iniciada', acc_sync_now:'Sincronizar ahora', acc_signout:'Cerrar sesión',
-    auth_title:'Iniciar sesión', auth_email:'Tu correo', auth_send:'Enviar código', auth_code:'Código de 6 dígitos', auth_verify:'Verificar',
-    auth_sent:'Te enviamos un código a tu correo', cloud_off:'La nube no está configurada (modo local).',
+    auth_title:'Iniciar sesión', auth_email:'Tu correo', auth_send:'Enviar código', auth_code:'Código del correo (si lo recibes)', auth_verify:'Verificar',
+    auth_sent:'Te enviamos un código a tu correo', auth_link:'Te enviamos un correo. Ábrelo y toca el enlace para entrar (o pega aquí el código si lo recibes).', cloud_off:'La nube no está configurada (modo local).',
     sync_done:'Sincronizado', sync_pulled:'Datos actualizados desde la nube', sync_err:'No se pudo sincronizar', signed_out:'Sesión cerrada', loading:'Cargando…',
     asst_title:'Asistente VacuPet', asst_open:'Asistente', asst_open_sub:'¿Qué le falta? Próximas dosis, dudas…',
     asst_ph:'Escribe tu pregunta…', asst_disc:'Información general. No reemplaza al veterinario.',
@@ -513,8 +513,8 @@ const STR = {
     notif_test_sent:'Test alert sent', installed:'App installed',
     sec_account:'Account & cloud', acc_signin:'Sign in / sync', acc_signin_sub:'Save and sync to the cloud (optional)',
     acc_synced:'Signed in', acc_sync_now:'Sync now', acc_signout:'Sign out',
-    auth_title:'Sign in', auth_email:'Your email', auth_send:'Send code', auth_code:'6-digit code', auth_verify:'Verify',
-    auth_sent:'We sent a code to your email', cloud_off:'Cloud is not configured (local mode).',
+    auth_title:'Sign in', auth_email:'Your email', auth_send:'Send code', auth_code:'Email code (if you got one)', auth_verify:'Verify',
+    auth_sent:'We sent a code to your email', auth_link:'We sent you an email. Open it and tap the link to sign in (or paste the code here if you got one).', cloud_off:'Cloud is not configured (local mode).',
     sync_done:'Synced', sync_pulled:'Updated from the cloud', sync_err:'Could not sync', signed_out:'Signed out', loading:'Loading…',
     asst_title:'VacuPet assistant', asst_open:'Assistant', asst_open_sub:"What's missing? Next doses, questions…",
     asst_ph:'Type your question…', asst_disc:'General info. Does not replace your vet.',
@@ -598,8 +598,8 @@ const STR = {
     notif_test_sent:'Aviso de teste enviado', installed:'App instalado',
     sec_account:'Conta e nuvem', acc_signin:'Entrar / sincronizar', acc_signin_sub:'Salve e sincronize na nuvem (opcional)',
     acc_synced:'Sessão iniciada', acc_sync_now:'Sincronizar agora', acc_signout:'Sair',
-    auth_title:'Entrar', auth_email:'Seu e-mail', auth_send:'Enviar código', auth_code:'Código de 6 dígitos', auth_verify:'Verificar',
-    auth_sent:'Enviamos um código para seu e-mail', cloud_off:'A nuvem não está configurada (modo local).',
+    auth_title:'Entrar', auth_email:'Seu e-mail', auth_send:'Enviar código', auth_code:'Código do e-mail (se receber)', auth_verify:'Verificar',
+    auth_sent:'Enviamos um código para seu e-mail', auth_link:'Enviamos um e-mail. Abra e toque no link para entrar (ou cole o código aqui se receber um).', cloud_off:'A nuvem não está configurada (modo local).',
     sync_done:'Sincronizado', sync_pulled:'Atualizado da nuvem', sync_err:'Não foi possível sincronizar', signed_out:'Sessão encerrada', loading:'Carregando…',
     asst_title:'Assistente VacuPet', asst_open:'Assistente', asst_open_sub:'O que falta? Próximas doses, dúvidas…',
     asst_ph:'Digite sua pergunta…', asst_disc:'Informação geral. Não substitui o veterinário.',
@@ -1590,11 +1590,16 @@ async function ensureSupabase(){
     if(!window.supabase) await loadScript('https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js');
     if(!window.supabase) return null;
     supa = window.supabase.createClient(SB.url, SB.anonKey, {
-      auth:{ persistSession:true, autoRefreshToken:true, detectSessionInUrl:false } // usamos OTP por código (sin redirección)
+      // detectSessionInUrl: procesa el enlace mágico (#access_token=…) al volver del correo.
+      auth:{ persistSession:true, autoRefreshToken:true, detectSessionInUrl:true, flowType:'implicit' }
     });
     const { data:{ session:s } } = await supa.auth.getSession();
     session = s || null;
-    supa.auth.onAuthStateChange((_e, s2)=>{ session=s2; if(!shared && currentTab==='more') render(); });
+    supa.auth.onAuthStateChange((evt, s2)=>{
+      session = s2;
+      if(evt==='SIGNED_IN'){ closeModal(); if(window.Notification && Notification.permission==='granted') trySubscribePush(); pullState().then(()=>render()); }
+      else if(!shared) render();
+    });
     return supa;
   }catch(e){ console.warn('supabase init:', e); return null; }
 }
@@ -1683,11 +1688,11 @@ function authModal(){
       action.disabled=true; action.textContent=t('loading');
       const c = await ensureSupabase();
       if(!c){ toast(t('cloud_off')); action.disabled=false; action.textContent=t('auth_send'); return; }
-      const { error } = await c.auth.signInWithOtp({ email });
+      const { error } = await c.auth.signInWithOtp({ email, options:{ emailRedirectTo: location.origin + location.pathname } });
       action.disabled=false;
       if(error){ toast(error.message); action.textContent=t('auth_send'); return; }
       step=2; document.getElementById('codeStep').classList.remove('hide');
-      document.getElementById('sentHint').textContent=t('auth_sent');
+      document.getElementById('sentHint').textContent=t('auth_link');
       action.textContent=t('auth_verify'); toast(t('auth_sent'));
     } else {
       const token = val('au-code').trim();
