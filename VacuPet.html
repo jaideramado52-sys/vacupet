@@ -1716,7 +1716,8 @@ let chatMsgs = [];
 // --- Motor de reglas (en el dispositivo, sin enviar datos) ---
 function missingVaccines(pet){
   const have = new Set((pet.vaccines||[]).map(v=>(v.nombre||'').trim().toLowerCase()));
-  return vaccineOptions(pet.info.especie).filter(n=>!have.has(n.toLowerCase()));
+  // Solo el esquema real (no las sugerencias comerciales, que son duplicados).
+  return Object.keys(SCHEME[pet.info.especie]||SCHEME.otro).filter(n=>!have.has(n.toLowerCase()));
 }
 function aWhatsMissing(){
   const pet=activePet(); if(!pet) return t('a_none_pet');
