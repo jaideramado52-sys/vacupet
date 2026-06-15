@@ -486,7 +486,7 @@ const STR = {
     sec_achievements:'Logros', ach_uptodate:'Carné al día', ach_microchip:'Microchip', ach_complete:'Esquema completo', ach_tracker:'Control de peso',
     dest_ue:'Unión Europea', dest_uk:'Reino Unido', dest_us:'Estados Unidos', dest_rabiesfree:'Países libres de rabia', dest_latam:'Latinoamérica (general)',
     a11y_big:'Texto grande', a11y_big_sub:'Aumenta el tamaño de la interfaz', update_ready:'Nueva versión disponible. Recarga la app.',
-    demo_view:'Ver ejemplo', demo_loaded:'Mascota de ejemplo creada · explórala y bórrala cuando quieras',
+    demo_view:'Ver ejemplo', demo_loaded:'4 mascotas de ejemplo creadas · cámbialas en el carrusel y bórralas cuando quieras',
     sec_cares:'Cuidados', tile_care:'Cuidado', tile_care_sub:'Baño, uñas, medicación…', add_care:'Añadir cuidado', no_cares:'Sin cuidados programados', reg_care:'Registrar cuidado', saved_care:'Cuidado guardado',
     care_kind:'Tipo', care_title:'Título', care_last:'Última vez / fecha', care_freq:'Frecuencia', care_freq_none:'Una vez', care_every:'Cada {n} días', care_yearly:'Cada año', care_notes:'Notas',
     care_bano:'Baño', care_unas:'Corte de uñas', care_medic:'Medicación', care_grooming:'Peluquería', care_cumple:'Cumpleaños', care_otro:'Otro',
@@ -568,10 +568,13 @@ const STR = {
     st_met:'Met', st_warn:'Pending', st_manual:'Needs paperwork',
     req_microchip:'ISO microchip', req_rabia:'Valid rabies vaccine', req_titulacion:'Antibody titration (FAVN/RNATT)', req_desparasitacion:'Recent deworming', req_certificado:'Official vet certificate',
     vets_open:'Nearby vets', vets_open_sub:'Search on the map', vets_nogeo:'Could not get your location',
+    news_open:'News & alerts', news_open_sub:'Animal health · official sources',
+    news_intro:'Check up-to-date information on the official pages. Links open each official site.',
+    news_note:'Third-party content (official sources). VacuPet does not edit it or take responsibility for it; it does not replace veterinary advice.',
     sec_achievements:'Achievements', ach_uptodate:'Record up to date', ach_microchip:'Microchip', ach_complete:'Schedule complete', ach_tracker:'Weight tracking',
     dest_ue:'European Union', dest_uk:'United Kingdom', dest_us:'United States', dest_rabiesfree:'Rabies-free countries', dest_latam:'Latin America (general)',
     a11y_big:'Large text', a11y_big_sub:'Increase the interface size', update_ready:'New version available. Reload the app.',
-    demo_view:'View example', demo_loaded:'Example pet created · explore it and delete it anytime',
+    demo_view:'View example', demo_loaded:'4 example pets created · switch in the carousel and delete anytime',
     sec_cares:'Care', tile_care:'Care', tile_care_sub:'Bath, nails, medication…', add_care:'Add care', no_cares:'No care scheduled', reg_care:'Add care task', saved_care:'Care saved',
     care_kind:'Type', care_title:'Title', care_last:'Last done / date', care_freq:'Frequency', care_freq_none:'Once', care_every:'Every {n} days', care_yearly:'Yearly', care_notes:'Notes',
     care_bano:'Bath', care_unas:'Nail trim', care_medic:'Medication', care_grooming:'Grooming', care_cumple:'Birthday', care_otro:'Other',
@@ -653,10 +656,13 @@ const STR = {
     st_met:'Cumprido', st_warn:'Pendente', st_manual:'Requer trâmite',
     req_microchip:'Microchip ISO', req_rabia:'Vacina de raiva vigente', req_titulacion:'Titulação de anticorpos (FAVN/RNATT)', req_desparasitacion:'Vermífugo recente', req_certificado:'Certificado veterinário oficial',
     vets_open:'Veterinários próximos', vets_open_sub:'Buscar no mapa', vets_nogeo:'Não foi possível obter sua localização',
+    news_open:'Notícias e alertas', news_open_sub:'Sanidade animal · fontes oficiais',
+    news_intro:'Consulte informação atualizada nas páginas oficiais. Os links abrem o site de cada organismo.',
+    news_note:'Conteúdo de terceiros (fontes oficiais). O VacuPet não edita nem se responsabiliza por isso; não substitui a consulta veterinária.',
     sec_achievements:'Conquistas', ach_uptodate:'Carteira em dia', ach_microchip:'Microchip', ach_complete:'Esquema completo', ach_tracker:'Controle de peso',
     dest_ue:'União Europeia', dest_uk:'Reino Unido', dest_us:'Estados Unidos', dest_rabiesfree:'Países livres de raiva', dest_latam:'América Latina (geral)',
     a11y_big:'Texto grande', a11y_big_sub:'Aumenta o tamanho da interface', update_ready:'Nova versão disponível. Recarregue o app.',
-    demo_view:'Ver exemplo', demo_loaded:'Pet de exemplo criado · explore e exclua quando quiser',
+    demo_view:'Ver exemplo', demo_loaded:'4 pets de exemplo criados · troque no carrossel e exclua quando quiser',
     sec_cares:'Cuidados', tile_care:'Cuidado', tile_care_sub:'Banho, unhas, medicação…', add_care:'Adicionar cuidado', no_cares:'Sem cuidados agendados', reg_care:'Registrar cuidado', saved_care:'Cuidado salvo',
     care_kind:'Tipo', care_title:'Título', care_last:'Última vez / data', care_freq:'Frequência', care_freq_none:'Uma vez', care_every:'A cada {n} dias', care_yearly:'A cada ano', care_notes:'Notas',
     care_bano:'Banho', care_unas:'Corte de unhas', care_medic:'Medicação', care_grooming:'Banho e tosa', care_cumple:'Aniversário', care_otro:'Outro',
@@ -1046,6 +1052,7 @@ function viewHome(){
       <button class="tile" data-go="card" style="margin-bottom:11px"><span class="ic c-green">${I.card}</span><span class="tt"><b>${t('tool_card')}</b><span>${t('tool_card_sub')}</span></span><span class="chev">${I.chev}</span></button>
       <button class="tile" id="travelOpen" style="margin-bottom:11px"><span class="ic c-blue">${I.shield}</span><span class="tt"><b>${t('travel_open')}</b><span>${t('travel_open_sub')}</span></span><span class="chev">${I.chev}</span></button>
       <button class="tile" id="vetsOpen" style="margin-bottom:11px"><span class="ic c-red">${I.stetho}</span><span class="tt"><b>${t('vets_open')}</b><span>${t('vets_open_sub')}</span></span><span class="chev">${I.chev}</span></button>
+      <button class="tile" id="newsOpen" style="margin-bottom:11px"><span class="ic c-amber">${I.info}</span><span class="tt"><b>${t('news_open')}</b><span>${t('news_open_sub')}</span></span><span class="chev">${I.chev}</span></button>
       <button class="tile" data-go="more"><span class="ic c-amber">${I.bell}</span><span class="tt"><b>${t('tool_more')}</b><span>${t('tool_more_sub')}</span></span><span class="chev">${I.chev}</span></button>
     </section>
     <p class="disclaimer">${t('disc')}</p>
@@ -2118,6 +2125,16 @@ function travelBody(destKey){
     <div class="card" style="margin-top:12px">${dest.reqs.map(k=>reqRow(pet,k)).join('')}</div>
     <p class="hint" style="margin-top:12px">${esc(t('travel_disc'))}</p>`;
 }
+function newsModal(){
+  const link=(href,title,sub)=>`<a class="tile" href="${href}" target="_blank" rel="noopener noreferrer" style="text-decoration:none;margin-bottom:9px"><span class="ic c-amber">${I.info}</span><span class="tt"><b>${title}</b><span>${sub}</span></span><span class="chev">↗</span></a>`;
+  const body=`<p class="hint" style="margin-bottom:12px">${t('news_intro')}</p>`
+    + link('https://www.woah.org/es/inicio/','OMSA / WOAH','Sanidad animal mundial · alertas')
+    + link('https://www.maga.gob.gt/','MAGA Guatemala','Sanidad animal (oficial)')
+    + link('https://wsava.org/global-guidelines/vaccination-guidelines/','WSAVA','Guías de vacunación de mascotas (inglés)')
+    + link('https://www.avma.org/resources-tools/pet-owners','AVMA','Salud de mascotas para dueños (inglés)')
+    + `<p class="hint" style="margin-top:12px">${t('news_note')}</p>`;
+  openModal(modalShell(t('news_open'), body, `<button class="btn btn-block" data-close>${t('close')}</button>`));
+}
 function travelModal(){
   if(!activePet()) return;
   const bind=()=>{ const sel=document.getElementById('travelDest'); if(sel) sel.onchange=()=>{ document.getElementById('travelWrap').innerHTML=travelBody(sel.value); bind(); }; };
@@ -2279,28 +2296,60 @@ async function openDoc(id){
 /* ======================================================================
    Mascota de ejemplo (para explorar sin teclear)
    ====================================================================== */
-function demoFoto(){
-  const svg = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 400"><defs><linearGradient id="g" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#f59e0b"/><stop offset="1" stop-color="#b45309"/></linearGradient></defs><rect width="400" height="400" fill="url(#g)"/><g fill="#fff" opacity="0.92" transform="translate(96,150) scale(9)"><circle cx="6" cy="10" r="2.1"/><circle cx="10.5" cy="6.5" r="2.1"/><circle cx="15.5" cy="6.5" r="2.1"/><circle cx="19" cy="10.5" r="2"/><path d="M12.5 11c-2.4 0-4.3 1.7-5.2 3.4-.9 1.7-1.6 3.6.2 4.6 1.2.7 2.6-.2 4-.2s2.8.9 4 .2c1.8-1 .9-2.9 0-4.6C14.8 12.7 14.9 11 12.5 11z"/></g></svg>';
+function demoFoto(c1, c2){
+  c1=c1||'#f59e0b'; c2=c2||'#b45309';
+  const svg = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 400"><defs><linearGradient id="g" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="'+c1+'"/><stop offset="1" stop-color="'+c2+'"/></linearGradient></defs><rect width="400" height="400" fill="url(#g)"/><g fill="#fff" opacity="0.92" transform="translate(96,150) scale(9)"><circle cx="6" cy="10" r="2.1"/><circle cx="10.5" cy="6.5" r="2.1"/><circle cx="15.5" cy="6.5" r="2.1"/><circle cx="19" cy="10.5" r="2"/><path d="M12.5 11c-2.4 0-4.3 1.7-5.2 3.4-.9 1.7-1.6 3.6.2 4.6 1.2.7 2.6-.2 4-.2s2.8.9 4 .2c1.8-1 .9-2.9 0-4.6C14.8 12.7 14.9 11 12.5 11z"/></g></svg>';
   return 'data:image/svg+xml;base64,' + btoa(svg);
 }
 function loadDemoPet(){
   const d = n => toISO(addDays(new Date(), n));
-  const pet = {
-    info:{ id:uid(), nombre:'Rocky', especie:'perro', raza:'Labrador', sexo:'m', nacimiento:'2022-03-10',
-           microchip:'941000012345678', esterilizado:true, peso:28, foto:demoFoto(), veterinario:'Clínica Patitas', notas:'Mascota de ejemplo', demo:true },
-    vaccines:[
-      { id:uid(), nombre:'Rabia', fecha:d(-190), proxima:d(5),  source:'manual' },
-      { id:uid(), nombre:'Polivalente (quíntuple/séxtuple)', fecha:d(-220), proxima:d(40), source:'manual' },
-    ],
-    dewormings:[ { id:uid(), tipo:'externa', producto:'Pipeta antipulgas', fecha:d(-5), proxima:d(25) } ],
+  const P = []; // helper para crear cada mascota con valores por defecto seguros
+  const add = (info, x) => P.push(Object.assign({ vaccines:[], dewormings:[], weights:[], vetVisits:[], cares:[], album:[], docs:[] }, x, { info: Object.assign({ id:uid(), demo:true }, info) }));
+
+  // 🐶 Rocky — perro, con DOSIS PRÓXIMA (estado ámbar) + datos completos
+  add({ nombre:'Rocky', especie:'perro', raza:'Labrador', sexo:'m', nacimiento:'2022-03-10', microchip:'941000012345678', esterilizado:true, peso:28, foto:demoFoto('#f59e0b','#b45309'), veterinario:'Clínica Patitas' }, {
+    vaccines:[ { id:uid(), nombre:'Rabia', fecha:d(-190), proxima:d(5), source:'manual' },
+               { id:uid(), nombre:'Polivalente (quíntuple/séxtuple)', fecha:d(-220), proxima:d(40), source:'manual' },
+               { id:uid(), nombre:'Leptospirosis', fecha:d(-220), proxima:d(140), source:'manual' } ],
+    dewormings:[ { id:uid(), tipo:'externa', producto:'Pipeta antipulgas', fecha:d(-5), proxima:d(25) },
+                 { id:uid(), tipo:'interna', producto:'Drontal', fecha:d(-30), proxima:d(60) } ],
     weights:[ { id:uid(), fecha:d(-100), kg:25 }, { id:uid(), fecha:d(-50), kg:27 }, { id:uid(), fecha:d(-8), kg:28 } ],
     vetVisits:[ { id:uid(), fecha:d(-20), motivo:'Revisión anual', clinica:'Clínica Patitas', diagnostico:'Sano', notas:'' } ],
     cares:[ { id:uid(), kind:'bano', titulo:'Baño', fecha:d(-12), cada:30, proxima:d(18), notas:'' },
             { id:uid(), kind:'cumple', titulo:'Cumpleaños', fecha:'2022-03-10', cada:365, proxima:nextAnniversary('2022-03-10'), notas:'' } ],
-    album:[ { id:uid(), img:demoFoto(), fecha:d(-120) }, { id:uid(), img:demoFoto(), fecha:d(-60) }, { id:uid(), img:demoFoto(), fecha:d(-5) } ],
-    docs:[],
-  };
-  data.pets.push(pet); data.activeId = pet.info.id; save(); toast(t('demo_loaded')); go('home'); celebrate();
+    album:[ { id:uid(), img:demoFoto('#f59e0b','#b45309'), fecha:d(-120) }, { id:uid(), img:demoFoto('#fbbf24','#92400e'), fecha:d(-30) } ],
+  });
+
+  // 🐱 Luna — gata, AL DÍA (estado verde): refuerzos lejanos
+  add({ nombre:'Luna', especie:'gato', raza:'Siamés', sexo:'h', nacimiento:'2023-05-01', microchip:'900012345678901', esterilizado:true, peso:4.2, foto:demoFoto('#a78bfa','#6d28d9'), veterinario:'VetFelino' }, {
+    vaccines:[ { id:uid(), nombre:'Trivalente felina (FVRCP)', fecha:d(-60), proxima:d(305), source:'manual' },
+               { id:uid(), nombre:'Rabia', fecha:d(-60), proxima:d(305), source:'manual' },
+               { id:uid(), nombre:'Leucemia felina (FeLV)', fecha:d(-60), proxima:d(305), source:'manual' } ],
+    dewormings:[ { id:uid(), tipo:'interna', producto:'Milbemax', fecha:d(-20), proxima:d(70) } ],
+    weights:[ { id:uid(), fecha:d(-120), kg:3.6 }, { id:uid(), fecha:d(-60), kg:4.0 }, { id:uid(), fecha:d(-10), kg:4.2 } ],
+    vetVisits:[ { id:uid(), fecha:d(-60), motivo:'Esterilización', clinica:'VetFelino', diagnostico:'Recuperada', notas:'' } ],
+    cares:[ { id:uid(), kind:'unas', titulo:'Corte de uñas', fecha:d(-15), cada:30, proxima:d(15), notas:'' } ],
+    album:[ { id:uid(), img:demoFoto('#a78bfa','#6d28d9'), fecha:d(-40) } ],
+  });
+
+  // 🐰 Copo — conejo, con algo VENCIDO (estado rojo)
+  add({ nombre:'Copo', especie:'conejo', raza:'Belier', sexo:'m', nacimiento:'2024-02-15', esterilizado:false, peso:1.8, foto:demoFoto('#f472b6','#be185d') }, {
+    vaccines:[ { id:uid(), nombre:'Mixomatosis + RHD', fecha:d(-200), proxima:d(-3), source:'manual' } ],
+    dewormings:[ { id:uid(), tipo:'externa', producto:'Antiparasitario', fecha:d(-40), proxima:d(-10) } ],
+    weights:[ { id:uid(), fecha:d(-90), kg:1.5 }, { id:uid(), fecha:d(-30), kg:1.7 }, { id:uid(), fecha:d(-5), kg:1.8 } ],
+    cares:[ { id:uid(), kind:'unas', titulo:'Corte de uñas', fecha:d(-50), cada:30, proxima:d(-20), notas:'' } ],
+  });
+
+  // 🦦 Pixel — hurón, sencillo (estado al día)
+  add({ nombre:'Pixel', especie:'huron', raza:'Estándar', sexo:'h', nacimiento:'2023-09-01', esterilizado:true, peso:0.9, foto:demoFoto('#2dd4bf','#0f766e') }, {
+    vaccines:[ { id:uid(), nombre:'Rabia', fecha:d(-90), proxima:d(275), source:'manual' } ],
+    dewormings:[ { id:uid(), tipo:'externa', producto:'Pipeta', fecha:d(-25), proxima:d(35) } ],
+    weights:[ { id:uid(), fecha:d(-60), kg:0.8 }, { id:uid(), fecha:d(-10), kg:0.9 } ],
+  });
+
+  P.forEach(p => data.pets.push(p));
+  data.activeId = P[0].info.id;
+  save(); toast(t('demo_loaded')); go('home'); celebrate();
 }
 
 /* ======================================================================
@@ -2348,6 +2397,7 @@ document.addEventListener('click', e=>{
   if(t0.closest('#fab')||t0.closest('[data-asst]')){ openAssistant(); return; }
   if(t0.closest('#travelOpen')){ travelModal(); return; }
   if(t0.closest('#vetsOpen')){ openVets(); return; }
+  if(t0.closest('#newsOpen')){ newsModal(); return; }
   if(t0.closest('#ocrScan')){ ocrStart(); return; }
   if(t0.closest('#signIn')){ authModal(); return; }
   if(t0.closest('#syncNow')){ syncNow(); return; }
