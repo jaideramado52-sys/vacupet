@@ -416,7 +416,7 @@ const STR = {
     m_pdf:'Carné en PDF', m_pdf_sub:'Imprimir o guardar como PDF', m_share:'Compartir carné', m_share_sub:'Enlace y código QR (solo lectura)',
     m_json:'Respaldo (JSON)', m_json_sub:'Descarga una copia de todo', m_import:'Restaurar respaldo', m_import_sub:'Importa un archivo JSON',
     about_body:'VacuPet · Fases 0–1 (carné local). Tus datos viven solo en este dispositivo (localStorage). Haz respaldos con regularidad.',
-    save:'Guardar', cancel:'Cancelar', close:'Cerrar', delete:'Eliminar',
+    save:'Guardar', cancel:'Cancelar', close:'Cerrar', delete:'Eliminar', edit:'Editar',
     shared_title:'Carné compartido (solo lectura)', open_mine:'Abrir mi VacuPet', shared_bad:'Enlace de carné no válido.',
     copied:'Enlace copiado', saved_pet:'Mascota guardada', saved_vac:'Vacuna registrada', saved_dew:'Desparasitación registrada',
     saved_weight:'Peso registrado', saved_visit:'Visita registrada', deleted:'Registro eliminado', pref_saved:'Preferencia guardada',
@@ -501,7 +501,7 @@ const STR = {
     m_pdf:'Record as PDF', m_pdf_sub:'Print or save as PDF', m_share:'Share record', m_share_sub:'Link and QR code (read-only)',
     m_json:'Backup (JSON)', m_json_sub:'Download a copy of everything', m_import:'Restore backup', m_import_sub:'Import a JSON file',
     about_body:'VacuPet · Phases 0–1 (local record). Your data lives only on this device (localStorage). Back up regularly.',
-    save:'Save', cancel:'Cancel', close:'Close', delete:'Delete',
+    save:'Save', cancel:'Cancel', close:'Close', delete:'Delete', edit:'Edit',
     shared_title:'Shared record (read-only)', open_mine:'Open my VacuPet', shared_bad:'Invalid record link.',
     copied:'Link copied', saved_pet:'Pet saved', saved_vac:'Vaccine saved', saved_dew:'Deworming saved',
     saved_weight:'Weight saved', saved_visit:'Visit saved', deleted:'Record deleted', pref_saved:'Preference saved',
@@ -586,7 +586,7 @@ const STR = {
     m_pdf:'Carteira em PDF', m_pdf_sub:'Imprimir ou salvar como PDF', m_share:'Compartilhar carteira', m_share_sub:'Link e QR code (somente leitura)',
     m_json:'Backup (JSON)', m_json_sub:'Baixe uma cópia de tudo', m_import:'Restaurar backup', m_import_sub:'Importe um arquivo JSON',
     about_body:'VacuPet · Fases 0–1 (registro local). Seus dados ficam só neste aparelho (localStorage). Faça backups com frequência.',
-    save:'Salvar', cancel:'Cancelar', close:'Fechar', delete:'Excluir',
+    save:'Salvar', cancel:'Cancelar', close:'Fechar', delete:'Excluir', edit:'Editar',
     shared_title:'Carteira compartilhada (somente leitura)', open_mine:'Abrir meu VacuPet', shared_bad:'Link de carteira inválido.',
     copied:'Link copiado', saved_pet:'Pet salvo', saved_vac:'Vacina registrada', saved_dew:'Vermífugo registrado',
     saved_weight:'Peso registrado', saved_visit:'Visita registrada', deleted:'Registro excluído', pref_saved:'Preferência salva',
@@ -1029,7 +1029,7 @@ function vacRow(v, ro){
   const hasInfo = !ro && ap && !!schemeRule(ap.info.especie, v.nombre);
   return `<div class="rec">
     <span class="ic c-accent">${I.syringe}</span>
-    <div class="rr"><b>${esc(v.nombre)}</b><span>${esc(sub)}${v.proxima?` · ${t('next').toLowerCase()} ${fmt(v.proxima)}`:''}</span></div>
+    <div class="rr"${ro?'':` data-edit="vacuna" data-id="${v.id}" style="cursor:pointer"`}><b>${esc(v.nombre)}</b><span>${esc(sub)}${v.proxima?` · ${t('next').toLowerCase()} ${fmt(v.proxima)}`:''}</span></div>
     <div class="meta">${dueTag}</div>
     ${ro?'':`${hasInfo?`<button class="iconmini" data-info="${esc(v.nombre)}" aria-label="info">${I.info}</button>`:''}<button class="iconmini" data-del="vacuna" data-id="${v.id}" aria-label="${t('delete')}">${I.trash}</button>`}
   </div>`;
@@ -1041,14 +1041,14 @@ function dewRow(d, ro){
   const title=d.producto||(d.tipo==='externa'?'Externa':'Interna');
   const sub=[fmt(d.fecha), d.tipo==='externa'?'externa':'interna', d.peso?d.peso+' kg':''].filter(Boolean).join(' · ');
   return `<div class="rec"><span class="ic c-blue">${I.bug}</span>
-    <div class="rr"><b>${esc(title)}</b><span>${esc(sub)}${d.proxima?` · ${t('next').toLowerCase()} ${fmt(d.proxima)}`:''}</span></div>
+    <div class="rr"${ro?'':` data-edit="desparasitacion" data-id="${d.id}" style="cursor:pointer"`}><b>${esc(title)}</b><span>${esc(sub)}${d.proxima?` · ${t('next').toLowerCase()} ${fmt(d.proxima)}`:''}</span></div>
     <div class="meta">${dueTag}</div>
     ${ro?'':`<button class="iconmini" data-del="desparasitacion" data-id="${d.id}" aria-label="${t('delete')}">${I.trash}</button>`}</div>`;
 }
 function visitRow(v, ro){
   const sub=[fmt(v.fecha), v.clinica].filter(Boolean).join(' · ');
   return `<div class="rec"><span class="ic c-violet">${I.stetho}</span>
-    <div class="rr"><b>${esc(v.motivo||'Visita')}</b><span>${esc(sub)}${v.diagnostico?` · ${esc(v.diagnostico)}`:''}</span></div>
+    <div class="rr"${ro?'':` data-edit="visita" data-id="${v.id}" style="cursor:pointer"`}><b>${esc(v.motivo||'Visita')}</b><span>${esc(sub)}${v.diagnostico?` · ${esc(v.diagnostico)}`:''}</span></div>
     ${ro?'':`<button class="iconmini" data-del="visita" data-id="${v.id}" aria-label="${t('delete')}">${I.trash}</button>`}</div>`;
 }
 function viewCard(){
@@ -1101,7 +1101,7 @@ function viewPet(){
     <section class="block"><div class="block-title"><span>${t('sec_weight')}</span>${weights.length?`<span style="text-transform:none;font-weight:600;color:var(--ink)">${t('latest_weight')}: ${weights[0].kg} kg</span>`:''}</div>
       <div class="card">
         ${weights.length?weightChart(pet.weights):`<div class="pad empty"><div class="eicon">${I.scale}</div><div>${t('no_weight')}</div></div>`}
-        ${weights.length?`<div style="border-top:1px solid var(--line-2)">${weights.slice(0,6).map(w=>`<div class="rec"><span class="ic c-accent">${I.scale}</span><div class="rr"><b>${w.kg} kg</b><span>${fmt(w.fecha)}</span></div><button class="iconmini" data-del="peso" data-id="${w.id}" aria-label="${t('delete')}">${I.trash}</button></div>`).join('')}</div>`:''}
+        ${weights.length?`<div style="border-top:1px solid var(--line-2)">${weights.slice(0,6).map(w=>`<div class="rec"><span class="ic c-accent">${I.scale}</span><div class="rr" data-edit="peso" data-id="${w.id}" style="cursor:pointer"><b>${w.kg} kg</b><span>${fmt(w.fecha)}</span></div><button class="iconmini" data-del="peso" data-id="${w.id}" aria-label="${t('delete')}">${I.trash}</button></div>`).join('')}</div>`:''}
       </div>
       <button class="btn btn-block" id="addWeight" style="margin-top:11px">${I.plus} ${t('add_weight')}</button>
     </section>
@@ -1269,21 +1269,22 @@ function petModal(existing){
 }
 
 /* ---- Vacuna ---- */
-function vaccineModal(){
-  const pet = activePet(); const opts = vaccineOptions(pet.info.especie);
+function vaccineModal(existing){
+  const pet = activePet(); const opts = vaccineOptions(pet.info.especie); const e = existing || {};
+  const via = e.via||'';
   const body = `
     <div class="field" id="f-vnombre"><label>${t('tile_vac')} *</label>
-      <input list="vacList" id="v-nombre" placeholder="Selecciona o escribe"><datalist id="vacList">${opts.map(o=>`<option value="${esc(o)}">`).join('')}</datalist>
+      <input list="vacList" id="v-nombre" placeholder="Selecciona o escribe" value="${esc(e.nombre||'')}"><datalist id="vacList">${opts.map(o=>`<option value="${esc(o)}">`).join('')}</datalist>
       <div class="errmsg">Indica la vacuna</div></div>
-    <div class="two"><div class="field" id="f-vfecha"><label>Fecha de aplicación *</label><input type="date" id="v-fecha" value="${todayISO()}" max="${todayISO()}"><div class="errmsg">Fecha requerida</div></div>
-      <div class="field"><label>Dosis</label><input id="v-dosis" placeholder="1.ª, 2.ª, refuerzo"></div></div>
-    <div class="field"><label>Próxima dosis (orientativa)</label><input type="date" id="v-proxima"><div class="hint" id="v-sug"></div></div>
-    <div class="two"><div class="field"><label>Marca</label><input id="v-marca" placeholder="Laboratorio"></div><div class="field"><label>Lote</label><input id="v-lote"></div></div>
-    <div class="two"><div class="field"><label>Lugar</label><input id="v-lugar" placeholder="Clínica"></div>
-      <div class="field"><label>Vía</label><select id="v-via"><option value="">—</option><option>Subcutánea</option><option>Intramuscular</option><option>Intranasal</option><option>Oral</option></select></div></div>
-    <div class="field"><label>Aplicada por</label><input id="v-por" placeholder="Veterinario/a"></div>
-    <div class="field"><label>Notas</label><textarea id="v-notas"></textarea></div>`;
-  openModal(modalShell(t('reg_vac'), body, FOOT('saveVac')));
+    <div class="two"><div class="field" id="f-vfecha"><label>Fecha de aplicación *</label><input type="date" id="v-fecha" value="${esc(e.fecha||todayISO())}" max="${todayISO()}"><div class="errmsg">Fecha requerida</div></div>
+      <div class="field"><label>Dosis</label><input id="v-dosis" placeholder="1.ª, 2.ª, refuerzo" value="${esc(e.dosis||'')}"></div></div>
+    <div class="field"><label>Próxima dosis (orientativa)</label><input type="date" id="v-proxima" value="${esc(e.proxima||'')}"><div class="hint" id="v-sug"></div></div>
+    <div class="two"><div class="field"><label>Marca</label><input id="v-marca" placeholder="Laboratorio" value="${esc(e.marca||'')}"></div><div class="field"><label>Lote</label><input id="v-lote" value="${esc(e.lote||'')}"></div></div>
+    <div class="two"><div class="field"><label>Lugar</label><input id="v-lugar" placeholder="Clínica" value="${esc(e.lugar||'')}"></div>
+      <div class="field"><label>Vía</label><select id="v-via">${['','Subcutánea','Intramuscular','Intranasal','Oral'].map(o=>`<option value="${o}" ${via===o?'selected':''}>${o||'—'}</option>`).join('')}</select></div></div>
+    <div class="field"><label>Aplicada por</label><input id="v-por" placeholder="Veterinario/a" value="${esc(e.aplicada_por||'')}"></div>
+    <div class="field"><label>Notas</label><textarea id="v-notas">${esc(e.notas||'')}</textarea></div>`;
+  openModal(modalShell(existing?t('edit'):t('reg_vac'), body, FOOT('saveVac')));
   function refreshSug(){ const nombre=val('v-nombre'), fecha=val('v-fecha'); const sug=suggestProxima(pet.info.especie,nombre,fecha,pet.info.nacimiento);
     const el=document.getElementById('v-sug');
     if(sug){ el.textContent=`${{es:'Sugerencia del esquema',en:'Schedule suggestion',pt:'Sugestão do esquema'}[data.lang||'es']}: ${fmt(sug)}`; if(!val('v-proxima')) document.getElementById('v-proxima').value=sug; }
@@ -1295,61 +1296,74 @@ function vaccineModal(){
   document.getElementById('saveVac').addEventListener('click', ()=>{ let ok=true; const nombre=val('v-nombre').trim(), fecha=val('v-fecha');
     if(!nombre){ document.getElementById('f-vnombre').classList.add('err'); ok=false; } if(!fecha){ document.getElementById('f-vfecha').classList.add('err'); ok=false; } if(!ok) return;
     const _a0=achCount(pet);
-    pet.vaccines.push({ id:uid(), nombre, fecha, dosis:val('v-dosis').trim(), proxima:val('v-proxima'), marca:val('v-marca').trim(),
-      lote:val('v-lote').trim(), lugar:val('v-lugar').trim(), via:val('v-via'), aplicada_por:val('v-por').trim(), notas:val('v-notas').trim(), source:'manual' });
+    const rec={ nombre, fecha, dosis:val('v-dosis').trim(), proxima:val('v-proxima'), marca:val('v-marca').trim(),
+      lote:val('v-lote').trim(), lugar:val('v-lugar').trim(), via:val('v-via'), aplicada_por:val('v-por').trim(), notas:val('v-notas').trim() };
+    if(existing){ Object.assign(existing, rec); } else { pet.vaccines.push({ id:uid(), source:'manual', ...rec }); }
     save(); closeModal(); toast(t('saved_vac')); render(); if(achCount(pet)>_a0) celebrate(); });
 }
 
 /* ---- Desparasitación ---- */
-function dewormModal(){
-  const pet = activePet(); let tipo='interna';
+function dewormModal(existing){
+  const pet = activePet(); const e = existing || {}; let tipo=e.tipo||'interna';
   const body = `
     <div class="field"><label>Tipo</label><div class="seg" id="d-tipo">
-      <button type="button" data-v="interna" class="on">Interna</button><button type="button" data-v="externa">Externa (antipulgas)</button></div></div>
-    <div class="field"><label>Producto</label><input id="d-prod" placeholder="Nombre del antiparasitario"></div>
-    <div class="two"><div class="field" id="f-dfecha"><label>Fecha *</label><input type="date" id="d-fecha" value="${todayISO()}" max="${todayISO()}"><div class="errmsg">Fecha requerida</div></div>
-      <div class="field"><label>Peso (kg)</label><input type="number" step="0.1" min="0" id="d-peso" value="${esc(pet.info.peso||'')}"></div></div>
-    <div class="field"><label>Próxima (orientativa)</label><input type="date" id="d-proxima"><div class="hint" id="d-sug"></div></div>
-    <div class="field"><label>Notas</label><textarea id="d-notas"></textarea></div>`;
-  openModal(modalShell(t('reg_dew'), body, FOOT('saveDew')));
+      <button type="button" data-v="interna" class="${tipo==='interna'?'on':''}">Interna</button><button type="button" data-v="externa" class="${tipo==='externa'?'on':''}">Externa (antipulgas)</button></div></div>
+    <div class="field"><label>Producto</label><input id="d-prod" placeholder="Nombre del antiparasitario" value="${esc(e.producto||'')}"></div>
+    <div class="two"><div class="field" id="f-dfecha"><label>Fecha *</label><input type="date" id="d-fecha" value="${esc(e.fecha||todayISO())}" max="${todayISO()}"><div class="errmsg">Fecha requerida</div></div>
+      <div class="field"><label>Peso (kg)</label><input type="number" step="0.1" min="0" id="d-peso" value="${esc(e.peso||pet.info.peso||'')}"></div></div>
+    <div class="field"><label>Próxima (orientativa)</label><input type="date" id="d-proxima" value="${esc(e.proxima||'')}"><div class="hint" id="d-sug"></div></div>
+    <div class="field"><label>Notas</label><textarea id="d-notas">${esc(e.notas||'')}</textarea></div>`;
+  openModal(modalShell(existing?t('edit'):t('reg_dew'), body, FOOT('saveDew')));
   function refreshSug(){ const sug=suggestDeworm(tipo,val('d-fecha')); document.getElementById('d-sug').textContent=sug?`${{es:'Sugerencia',en:'Suggestion',pt:'Sugestão'}[data.lang||'es']}: ${fmt(sug)}`:''; if(sug&&!val('d-proxima')) document.getElementById('d-proxima').value=sug; }
   document.getElementById('d-tipo').addEventListener('click', e=>{ const b=e.target.closest('button'); if(!b) return; tipo=b.dataset.v; [...e.currentTarget.children].forEach(c=>c.classList.toggle('on',c===b)); document.getElementById('d-proxima').value=''; refreshSug(); });
   document.getElementById('d-fecha').addEventListener('change', ()=>{ document.getElementById('d-proxima').value=''; refreshSug(); });
   refreshSug();
   document.getElementById('saveDew').addEventListener('click', ()=>{ const fecha=val('d-fecha'); if(!fecha){ document.getElementById('f-dfecha').classList.add('err'); return; }
     const _a0=achCount(pet);
-    pet.dewormings.push({ id:uid(), tipo, producto:val('d-prod').trim(), fecha, peso:val('d-peso'), proxima:val('d-proxima'), notas:val('d-notas').trim() });
+    const rec={ tipo, producto:val('d-prod').trim(), fecha, peso:val('d-peso'), proxima:val('d-proxima'), notas:val('d-notas').trim() };
+    if(existing){ Object.assign(existing, rec); } else { pet.dewormings.push({ id:uid(), ...rec }); }
     save(); closeModal(); toast(t('saved_dew')); render(); if(achCount(pet)>_a0) celebrate(); });
 }
 
 /* ---- Peso ---- */
-function weightModal(){
-  const pet=activePet();
-  const body=`<div class="two"><div class="field" id="f-wfecha"><label>Fecha *</label><input type="date" id="w-fecha" value="${todayISO()}" max="${todayISO()}"><div class="errmsg">Fecha requerida</div></div>
-    <div class="field" id="f-wkg"><label>Peso (kg) *</label><input type="number" step="0.01" min="0" id="w-kg" placeholder="0.0" value="${esc(pet.info.peso||'')}"><div class="errmsg">Peso requerido</div></div></div>`;
-  openModal(modalShell(t('reg_weight'), body, FOOT('saveW')));
+function weightModal(existing){
+  const pet=activePet(); const e=existing||{};
+  const body=`<div class="two"><div class="field" id="f-wfecha"><label>Fecha *</label><input type="date" id="w-fecha" value="${esc(e.fecha||todayISO())}" max="${todayISO()}"><div class="errmsg">Fecha requerida</div></div>
+    <div class="field" id="f-wkg"><label>Peso (kg) *</label><input type="number" step="0.01" min="0" id="w-kg" placeholder="0.0" value="${esc(e.kg||pet.info.peso||'')}"><div class="errmsg">Peso requerido</div></div></div>`;
+  openModal(modalShell(existing?t('edit'):t('reg_weight'), body, FOOT('saveW')));
   document.getElementById('saveW').addEventListener('click', ()=>{ let ok=true; const fecha=val('w-fecha'), kg=val('w-kg');
     if(!fecha){document.getElementById('f-wfecha').classList.add('err');ok=false;} if(!kg||Number(kg)<=0){document.getElementById('f-wkg').classList.add('err');ok=false;} if(!ok) return;
     const _a0=achCount(pet);
-    pet.weights.push({id:uid(), fecha, kg:Number(kg)});
+    if(existing){ existing.fecha=fecha; existing.kg=Number(kg); } else { pet.weights.push({id:uid(), fecha, kg:Number(kg)}); }
     // el peso del perfil pasa a ser el más reciente
     const latest=pet.weights.slice().sort((a,b)=>a.fecha<b.fecha?1:-1)[0]; if(latest) pet.info.peso=latest.kg;
     save(); closeModal(); toast(t('saved_weight')); render(); if(achCount(pet)>_a0) celebrate(); });
 }
 
 /* ---- Visita vet ---- */
-function visitModal(){
-  const pet=activePet();
-  const body=`<div class="field" id="f-vmotivo"><label>Motivo *</label><input id="vt-motivo" placeholder="Revisión, urgencia, cirugía…"><div class="errmsg">Indica el motivo</div></div>
-    <div class="two"><div class="field" id="f-vfecha2"><label>Fecha *</label><input type="date" id="vt-fecha" value="${todayISO()}" max="${todayISO()}"><div class="errmsg">Fecha requerida</div></div>
-      <div class="field"><label>Clínica</label><input id="vt-clinica"></div></div>
-    <div class="field"><label>Diagnóstico</label><input id="vt-diag"></div>
-    <div class="field"><label>Notas</label><textarea id="vt-notas"></textarea></div>`;
-  openModal(modalShell(t('reg_visit'), body, FOOT('saveVi')));
+function visitModal(existing){
+  const pet=activePet(); const e=existing||{};
+  const body=`<div class="field" id="f-vmotivo"><label>Motivo *</label><input id="vt-motivo" placeholder="Revisión, urgencia, cirugía…" value="${esc(e.motivo||'')}"><div class="errmsg">Indica el motivo</div></div>
+    <div class="two"><div class="field" id="f-vfecha2"><label>Fecha *</label><input type="date" id="vt-fecha" value="${esc(e.fecha||todayISO())}" max="${todayISO()}"><div class="errmsg">Fecha requerida</div></div>
+      <div class="field"><label>Clínica</label><input id="vt-clinica" value="${esc(e.clinica||'')}"></div></div>
+    <div class="field"><label>Diagnóstico</label><input id="vt-diag" value="${esc(e.diagnostico||'')}"></div>
+    <div class="field"><label>Notas</label><textarea id="vt-notas">${esc(e.notas||'')}</textarea></div>`;
+  openModal(modalShell(existing?t('edit'):t('reg_visit'), body, FOOT('saveVi')));
   document.getElementById('saveVi').addEventListener('click', ()=>{ let ok=true; const motivo=val('vt-motivo').trim(), fecha=val('vt-fecha');
     if(!motivo){document.getElementById('f-vmotivo').classList.add('err');ok=false;} if(!fecha){document.getElementById('f-vfecha2').classList.add('err');ok=false;} if(!ok) return;
-    pet.vetVisits.push({id:uid(), fecha, motivo, clinica:val('vt-clinica').trim(), diagnostico:val('vt-diag').trim(), notas:val('vt-notas').trim()});
+    const rec={ fecha, motivo, clinica:val('vt-clinica').trim(), diagnostico:val('vt-diag').trim(), notas:val('vt-notas').trim() };
+    if(existing){ Object.assign(existing, rec); } else { pet.vetVisits.push({id:uid(), ...rec}); }
     save(); closeModal(); toast(t('saved_visit')); render(); });
+}
+
+/* ---- Abrir el editor del registro tocado ---- */
+function openEdit(kind, id){
+  const pet=activePet(); if(!pet) return;
+  if(kind==='vacuna'){ const r=(pet.vaccines||[]).find(x=>x.id===id); if(r) vaccineModal(r); }
+  else if(kind==='desparasitacion'){ const r=(pet.dewormings||[]).find(x=>x.id===id); if(r) dewormModal(r); }
+  else if(kind==='cuidado'){ const r=(pet.cares||[]).find(x=>x.id===id); if(r) careModal(r); }
+  else if(kind==='visita'){ const r=(pet.vetVisits||[]).find(x=>x.id===id); if(r) visitModal(r); }
+  else if(kind==='peso'){ const r=(pet.weights||[]).find(x=>x.id===id); if(r) weightModal(r); }
 }
 
 /* ---- Cambiar mascota ---- */
@@ -2063,20 +2077,20 @@ function careRow(c, ro){
   const k=CARE_KINDS.find(x=>x.key===c.kind)||{icon:'⭐'};
   const sub=[c.fecha?fmt(c.fecha):'', c.cada?freqLabel(c.cada):''].filter(Boolean).join(' · ');
   return `<div class="rec"><span class="ic c-violet">${I.heart}</span>
-    <div class="rr"><b>${k.icon} ${esc(c.titulo)}</b><span>${esc(sub)}${c.proxima?` · ${t('next').toLowerCase()} ${fmt(c.proxima)}`:''}</span></div>
+    <div class="rr"${ro?'':` data-edit="cuidado" data-id="${c.id}" style="cursor:pointer"`}><b>${k.icon} ${esc(c.titulo)}</b><span>${esc(sub)}${c.proxima?` · ${t('next').toLowerCase()} ${fmt(c.proxima)}`:''}</span></div>
     <div class="meta">${dueTagFor(c.proxima)}</div>
     ${ro?'':`<button class="iconmini" data-del="cuidado" data-id="${c.id}" aria-label="${t('delete')}">${I.trash}</button>`}</div>`;
 }
-function careModal(){
-  const pet=activePet(); let kind='bano';
+function careModal(existing){
+  const pet=activePet(); const e=existing||{}; let kind=e.kind||'bano';
   const body=`
-    <div class="field"><label>${t('care_kind')}</label><select id="c-kind">${CARE_KINDS.map(k=>`<option value="${k.key}">${k.icon} ${esc(t('care_'+k.key))}</option>`).join('')}</select></div>
-    <div class="field"><label>${t('care_title')}</label><input id="c-title"></div>
-    <div class="two"><div class="field" id="f-cfecha"><label>${t('care_last')} *</label><input type="date" id="c-fecha" value="${todayISO()}"><div class="errmsg">—</div></div>
-      <div class="field"><label>${t('care_freq')}</label><select id="c-freq"><option value="0">${t('care_freq_none')}</option>${[7,15,30,60,90,180,365].map(n=>`<option value="${n}">${esc(freqLabel(n))}</option>`).join('')}</select></div></div>
-    <div class="field"><label>${t('next')}</label><input type="date" id="c-proxima"><div class="hint" id="c-sug"></div></div>
-    <div class="field"><label>${t('care_notes')}</label><textarea id="c-notas"></textarea></div>`;
-  openModal(modalShell(t('reg_care'), body, FOOT('saveCare')));
+    <div class="field"><label>${t('care_kind')}</label><select id="c-kind">${CARE_KINDS.map(k=>`<option value="${k.key}" ${kind===k.key?'selected':''}>${k.icon} ${esc(t('care_'+k.key))}</option>`).join('')}</select></div>
+    <div class="field"><label>${t('care_title')}</label><input id="c-title" value="${esc(e.titulo||'')}"></div>
+    <div class="two"><div class="field" id="f-cfecha"><label>${t('care_last')} *</label><input type="date" id="c-fecha" value="${esc(e.fecha||todayISO())}"><div class="errmsg">—</div></div>
+      <div class="field"><label>${t('care_freq')}</label><select id="c-freq"><option value="0">${t('care_freq_none')}</option>${[7,15,30,60,90,180,365].map(n=>`<option value="${n}" ${Number(e.cada)===n?'selected':''}>${esc(freqLabel(n))}</option>`).join('')}</select></div></div>
+    <div class="field"><label>${t('next')}</label><input type="date" id="c-proxima" value="${esc(e.proxima||'')}"><div class="hint" id="c-sug"></div></div>
+    <div class="field"><label>${t('care_notes')}</label><textarea id="c-notas">${esc(e.notas||'')}</textarea></div>`;
+  openModal(modalShell(existing?t('edit'):t('reg_care'), body, FOOT('saveCare')));
   const kindSel=document.getElementById('c-kind'), titleEl=document.getElementById('c-title'), freqEl=document.getElementById('c-freq');
   function recalc(){ const f=Number(freqEl.value), base=val('c-fecha'); let px='';
     if(kind==='cumple' && pet.info.nacimiento) px=nextAnniversary(pet.info.nacimiento);
@@ -2086,12 +2100,14 @@ function careModal(){
   function applyKind(){ const k=CARE_KINDS.find(x=>x.key===kindSel.value); kind=kindSel.value;
     if(titleEl.dataset.auto!=='0'){ titleEl.value=t('care_'+kind); titleEl.dataset.auto='1'; }
     freqEl.value=String(k.cada||0); document.getElementById('c-proxima').value=''; recalc(); }
-  titleEl.dataset.auto='1'; titleEl.addEventListener('input',()=>titleEl.dataset.auto='0');
+  titleEl.dataset.auto = existing ? '0' : '1';   // al editar, no sobreescribas el título
+  titleEl.addEventListener('input',()=>titleEl.dataset.auto='0');
   kindSel.onchange=applyKind; freqEl.onchange=()=>{document.getElementById('c-proxima').value='';recalc();};
   document.getElementById('c-fecha').onchange=()=>{document.getElementById('c-proxima').value='';recalc();};
-  applyKind();
+  if(!existing) applyKind();    // solo autorrellena en alta nueva
   document.getElementById('saveCare').onclick=()=>{ const fecha=val('c-fecha'); if(!fecha){document.getElementById('f-cfecha').classList.add('err');return;}
-    pet.cares.push({ id:uid(), kind, titulo:val('c-title').trim()||t('care_'+kind), fecha, cada:Number(val('c-freq')), proxima:val('c-proxima'), notas:val('c-notas').trim() });
+    const rec={ kind, titulo:val('c-title').trim()||t('care_'+kind), fecha, cada:Number(val('c-freq')), proxima:val('c-proxima'), notas:val('c-notas').trim() };
+    if(existing){ Object.assign(existing, rec); } else { pet.cares.push({ id:uid(), ...rec }); }
     save(); closeModal(); toast(t('saved_care')); render(); };
 }
 
@@ -2194,6 +2210,7 @@ document.addEventListener('click', e=>{
   const odoc=t0.closest('[data-opendoc]'); if(odoc){ openDoc(odoc.dataset.opendoc); return; }
   if(t0.closest('#editPet')){ petModal(activePet().info); return; }
   if(t0.closest('#delPet')){ if(confirm(`¿Eliminar a ${activePet().info.nombre} y todo su carné?`)){ data.pets=data.pets.filter(p=>p.info.id!==data.activeId); data.activeId=data.pets[0]?data.pets[0].info.id:null; save(); toast(t('deleted')); go('home'); } return; }
+  const ed=t0.closest('[data-edit]'); if(ed){ openEdit(ed.dataset.edit, ed.dataset.id); return; }
   const del=t0.closest('[data-del]'); if(del){ const pet=activePet(), id=del.dataset.id, k=del.dataset.del;
     if(k==='vacuna') pet.vaccines=pet.vaccines.filter(x=>x.id!==id);
     else if(k==='desparasitacion') pet.dewormings=pet.dewormings.filter(x=>x.id!==id);
