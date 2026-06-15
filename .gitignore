@@ -15,6 +15,14 @@ node_modules/
 dist/
 .netlify/
 
+# Perfiles temporales de Chrome (pruebas headless) y archivos de trabajo
+.ct*/
+.shot*/
+.chrome-test/
+_*.html
+_*.js
+_*.txt
+
 # Supabase CLI
 supabase/.temp/
 

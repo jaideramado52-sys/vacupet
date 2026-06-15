@@ -74,7 +74,7 @@ section('i18n (es/en/pt)');
 const d=VP.getData();
 d.lang='es'; ok('es', VP.t('tab_home')==='Inicio');
 d.lang='en'; ok('en', VP.t('tab_home')==='Home');
-d.lang='pt'; ok('pt', VP.t('tab_card')==='Carteira');
+d.lang='pt'; ok('pt', VP.t('tab_card')==='Saúde');
 d.lang='es'; ok('tf interpola', VP.tf('in_days',{n:5})==='En 5 días');
 ok('fallback clave inexistente', VP.t('__no__')==='__no__');
 
