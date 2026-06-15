@@ -14,8 +14,8 @@
 //  (sin nube), igual que offline.  Ver docs/SUPABASE_SETUP.md (Fase 3).
 // ============================================================
 window.VACUPET_SUPABASE = {
-  url: "",
-  anonKey: ""
+  url: "https://zrcpnuzodxxfipnelrvy.supabase.co",
+  anonKey: "sb_publishable_1xggN_uZGWROPaq1O7CnXg_Z6kujw-g"
 };
 
 // ------------------------------------------------------------
