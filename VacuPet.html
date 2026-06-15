@@ -420,7 +420,7 @@ const STR = {
     shared_title:'Carné compartido (solo lectura)', open_mine:'Abrir mi VacuPet', shared_bad:'Enlace de carné no válido.',
     copied:'Enlace copiado', saved_pet:'Mascota guardada', saved_vac:'Vacuna registrada', saved_dew:'Desparasitación registrada',
     saved_weight:'Peso registrado', saved_visit:'Visita registrada', deleted:'Registro eliminado', pref_saved:'Preferencia guardada',
-    new_pet:'Nueva mascota', reg_vac:'Registrar vacuna', reg_dew:'Registrar desparasitación', reg_weight:'Registrar peso', reg_visit:'Registrar visita',
+    new_pet:'Nueva mascota', reg_vac:'Registrar vacuna', vac_legal:'La rabia suele ser obligatoria por ley (refuerzo anual). Orientativo: confírmalo con tu veterinario.', reg_dew:'Registrar desparasitación', reg_weight:'Registrar peso', reg_visit:'Registrar visita',
     sec_app:'Aplicación', m_install:'Instalar VacuPet', m_install_sub:'Añade la app a tu pantalla de inicio',
     m_notif:'Avisos en este dispositivo', notif_on:'Activados · toca para probar', notif_off:'Toca para activar',
     notif_blocked:'Bloqueados — actívalos en los ajustes del navegador', notif_unsupported:'No disponible en este navegador',
@@ -505,7 +505,7 @@ const STR = {
     shared_title:'Shared record (read-only)', open_mine:'Open my VacuPet', shared_bad:'Invalid record link.',
     copied:'Link copied', saved_pet:'Pet saved', saved_vac:'Vaccine saved', saved_dew:'Deworming saved',
     saved_weight:'Weight saved', saved_visit:'Visit saved', deleted:'Record deleted', pref_saved:'Preference saved',
-    new_pet:'New pet', reg_vac:'Add vaccine', reg_dew:'Add deworming', reg_weight:'Add weight', reg_visit:'Add visit',
+    new_pet:'New pet', reg_vac:'Add vaccine', vac_legal:'Rabies is often legally required (annual booster). Guidance only: confirm with your vet.', reg_dew:'Add deworming', reg_weight:'Add weight', reg_visit:'Add visit',
     sec_app:'App', m_install:'Install VacuPet', m_install_sub:'Add the app to your home screen',
     m_notif:'Alerts on this device', notif_on:'On · tap to test', notif_off:'Tap to enable',
     notif_blocked:'Blocked — enable them in your browser settings', notif_unsupported:'Not available in this browser',
@@ -590,7 +590,7 @@ const STR = {
     shared_title:'Carteira compartilhada (somente leitura)', open_mine:'Abrir meu VacuPet', shared_bad:'Link de carteira inválido.',
     copied:'Link copiado', saved_pet:'Pet salvo', saved_vac:'Vacina registrada', saved_dew:'Vermífugo registrado',
     saved_weight:'Peso registrado', saved_visit:'Visita registrada', deleted:'Registro excluído', pref_saved:'Preferência salva',
-    new_pet:'Novo pet', reg_vac:'Registrar vacina', reg_dew:'Registrar vermífugo', reg_weight:'Registrar peso', reg_visit:'Registrar visita',
+    new_pet:'Novo pet', reg_vac:'Registrar vacina', vac_legal:'A raiva costuma ser obrigatória por lei (reforço anual). Orientativo: confirme com seu veterinário.', reg_dew:'Registrar vermífugo', reg_weight:'Registrar peso', reg_visit:'Registrar visita',
     sec_app:'App', m_install:'Instalar VacuPet', m_install_sub:'Adicione o app à tela inicial',
     m_notif:'Avisos neste aparelho', notif_on:'Ativados · toque para testar', notif_off:'Toque para ativar',
     notif_blocked:'Bloqueados — ative nas configurações do navegador', notif_unsupported:'Indisponível neste navegador',
@@ -720,7 +720,18 @@ const SCHEME = {
   }
 };
 function schemeRule(especie,nombre){ return (SCHEME[especie]||SCHEME.otro)[nombre]||null; }
-function vaccineOptions(especie){ return Object.keys(SCHEME[especie]||SCHEME.otro); }
+// Sugerencias extra (nombres comunes en Guatemala/LatAm). No llevan regla de esquema;
+// el usuario fija la próxima fecha a mano. Solo aparecen en el autocompletado.
+const VAC_EXTRA = {
+  perro:['Óctuple','Séxtuple','Quíntuple','Coronavirus canino','Giardia'],
+  gato:['Triple felina','PIF (peritonitis infecciosa)'],
+  otro:[],
+};
+function vaccineOptions(especie){
+  const base = Object.keys(SCHEME[especie]||SCHEME.otro);
+  const extra = (VAC_EXTRA[especie]||[]).filter(x=>!base.includes(x));
+  return [...base, ...extra];
+}
 
 /* ---------------------------- Estado / persistencia ---------------------------- */
 const KEY = 'vacupet:data:v1';
@@ -1284,7 +1295,8 @@ function vaccineModal(existing){
     <div class="two"><div class="field"><label>Lugar</label><input id="v-lugar" placeholder="Clínica" value="${esc(e.lugar||'')}"></div>
       <div class="field"><label>Vía</label><select id="v-via">${['','Subcutánea','Intramuscular','Intranasal','Oral'].map(o=>`<option value="${o}" ${via===o?'selected':''}>${o||'—'}</option>`).join('')}</select></div></div>
     <div class="field"><label>Aplicada por</label><input id="v-por" placeholder="Veterinario/a" value="${esc(e.aplicada_por||'')}"></div>
-    <div class="field"><label>Notas</label><textarea id="v-notas">${esc(e.notas||'')}</textarea></div>`;
+    <div class="field"><label>Notas</label><textarea id="v-notas">${esc(e.notas||'')}</textarea></div>
+    <p class="hint" style="margin-top:10px">⚖️ ${esc(t('vac_legal'))}</p>`;
   openModal(modalShell(existing?t('edit'):t('reg_vac'), body, FOOT('saveVac')));
   function refreshSug(){ const nombre=val('v-nombre'), fecha=val('v-fecha'); const sug=suggestProxima(pet.info.especie,nombre,fecha,pet.info.nacimiento);
     const el=document.getElementById('v-sug');

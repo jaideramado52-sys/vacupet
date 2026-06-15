@@ -6,6 +6,26 @@
 
 ---
 
+## 🇬🇹 Nota para Guatemala (orientativa — **pendiente de validación veterinaria local**)
+
+> Lo siguiente es una guía general adaptada a la práctica habitual en Guatemala. **No sustituye**
+> el criterio de un médico veterinario colegiado ni la normativa oficial vigente. Antes de usarla
+> con usuarios reales, **validarla con un veterinario en Guatemala**.
+
+- **Rabia:** se considera **obligatoria** y se aplica con **refuerzo anual** (zoonosis de control
+  sanitario). Es el refuerzo que más conviene no saltarse.
+- **Perro — polivalente:** en clínicas de Guatemala es común la **óctuple** (o séxtuple/quíntuple
+  según laboratorio): moquillo, hepatitis (adenovirus), parvovirus, parainfluenza, +/- leptospira
+  y coronavirus. Serie de cachorro y **refuerzo anual**.
+- **Gato — trivalente felina (FVRCP)** + **rabia**; **leucemia felina (FeLV)** si hay acceso al
+  exterior. Refuerzo anual.
+- **Desparasitación:** interna cada ~3 meses (clima cálido/húmedo favorece parásitos); externa
+  (pulgas/garrapatas) mensual, sobre todo en costa y tierra caliente.
+- **Nombres comerciales** (solo como referencia para reconocerlos, no es recomendación de marca):
+  óctuple/séxtuple polivalente, antirrábica, Bordetella (tos de las perreras), triple felina.
+
+---
+
 ## 🐶 Perro
 
 ### Core (esenciales)

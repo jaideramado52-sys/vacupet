@@ -50,6 +50,8 @@ ok('gato FVRCP existe', !!VP.schemeRule('gato','Trivalente felina (FVRCP)'));
 ok('vacuna desconocida → sin sugerencia', VP.suggestProxima('perro','Inventada','2024-01-01','2020-01-01')==='');
 ok('deworm interna +3m', VP.suggestDeworm('interna','2024-01-15')==='2024-04-15');
 ok('deworm externa +1m', VP.suggestDeworm('externa','2024-01-15')==='2024-02-15');
+ok('opciones de perro incluyen sugerencia GT (Óctuple)', VP.vaccineOptions('perro').includes('Óctuple'));
+ok('opciones incluyen las del esquema (Rabia)', VP.vaccineOptions('perro').includes('Rabia'));
 
 section('Recordatorios y cobertura');
 VP.getData().lang='es'; VP.getData().remDays=30;
