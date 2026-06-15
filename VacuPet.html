@@ -476,7 +476,7 @@ const STR = {
     care_kind:'Tipo', care_title:'Título', care_last:'Última vez / fecha', care_freq:'Frecuencia', care_freq_none:'Una vez', care_every:'Cada {n} días', care_yearly:'Cada año', care_notes:'Notas',
     care_bano:'Baño', care_unas:'Corte de uñas', care_medic:'Medicación', care_grooming:'Peluquería', care_cumple:'Cumpleaños', care_otro:'Otro',
     sec_appearance:'Apariencia', accent_color:'Color de acento',
-    sec_album:'Álbum', add_photo:'Añadir foto', no_album:'Sin fotos todavía', album_saved:'Foto añadida',
+    sec_album:'Álbum', add_photo:'Añadir foto', no_album:'Sin fotos todavía', album_saved:'Foto añadida', uploading:'Subiendo…',
     sec_docs:'Documentos', add_doc:'Adjuntar documento', no_docs:'Sin documentos', doc_saved:'Documento adjuntado', doc_big:'El archivo es muy grande para guardarlo localmente (máx. ~2 MB)',
   },
   en:{
@@ -561,7 +561,7 @@ const STR = {
     care_kind:'Type', care_title:'Title', care_last:'Last done / date', care_freq:'Frequency', care_freq_none:'Once', care_every:'Every {n} days', care_yearly:'Yearly', care_notes:'Notes',
     care_bano:'Bath', care_unas:'Nail trim', care_medic:'Medication', care_grooming:'Grooming', care_cumple:'Birthday', care_otro:'Other',
     sec_appearance:'Appearance', accent_color:'Accent color',
-    sec_album:'Album', add_photo:'Add photo', no_album:'No photos yet', album_saved:'Photo added',
+    sec_album:'Album', add_photo:'Add photo', no_album:'No photos yet', album_saved:'Photo added', uploading:'Uploading…',
     sec_docs:'Documents', add_doc:'Attach document', no_docs:'No documents', doc_saved:'Document attached', doc_big:'File too large to store locally (max ~2 MB)',
   },
   pt:{
@@ -646,7 +646,7 @@ const STR = {
     care_kind:'Tipo', care_title:'Título', care_last:'Última vez / data', care_freq:'Frequência', care_freq_none:'Uma vez', care_every:'A cada {n} dias', care_yearly:'A cada ano', care_notes:'Notas',
     care_bano:'Banho', care_unas:'Corte de unhas', care_medic:'Medicação', care_grooming:'Banho e tosa', care_cumple:'Aniversário', care_otro:'Outro',
     sec_appearance:'Aparência', accent_color:'Cor de destaque',
-    sec_album:'Álbum', add_photo:'Adicionar foto', no_album:'Sem fotos ainda', album_saved:'Foto adicionada',
+    sec_album:'Álbum', add_photo:'Adicionar foto', no_album:'Sem fotos ainda', album_saved:'Foto adicionada', uploading:'Enviando…',
     sec_docs:'Documentos', add_doc:'Anexar documento', no_docs:'Sem documentos', doc_saved:'Documento anexado', doc_big:'Arquivo muito grande para salvar localmente (máx. ~2 MB)',
   },
 };
@@ -925,6 +925,7 @@ function render(){
   else if(currentTab==='card') app.innerHTML = viewCard();
   else if(currentTab==='pet') app.innerHTML = viewPet();
   else app.innerHTML = viewMore();
+  if(typeof hydrateStorage==='function') hydrateStorage();
 }
 
 /* ---- Onboarding ---- */
@@ -1622,6 +1623,34 @@ async function pushState(silent){
 }
 function scheduleSync(){ if(!session) return; clearTimeout(syncT); syncT=setTimeout(()=>pushState(true), 1500); }
 
+/* ---- Storage (fotos/documentos en el bucket "mascotas") ---- */
+async function sbUploadDataUrl(dataUrl, path, contentType){
+  const c = await ensureSupabase(); if(!c || !session) return null;
+  try{
+    const blob = await (await fetch(dataUrl)).blob();
+    const { error } = await c.storage.from('mascotas').upload(path, blob, { contentType: contentType||blob.type||'application/octet-stream', upsert:true });
+    if(error){ console.warn('upload:', error); return null; }
+    return path;
+  }catch(e){ console.warn('upload:', e); return null; }
+}
+const _signed = {}; // cache ruta -> { url, exp }
+async function sbSignedUrl(path){
+  if(_signed[path] && _signed[path].exp > Date.now()) return _signed[path].url;
+  const c = await ensureSupabase(); if(!c) return null;
+  try{
+    const { data, error } = await c.storage.from('mascotas').createSignedUrl(path, 3600);
+    if(error || !data) return null;
+    _signed[path] = { url:data.signedUrl, exp: Date.now()+3300000 };
+    return data.signedUrl;
+  }catch(e){ console.warn('signed url:', e); return null; }
+}
+async function sbRemove(path){ const c=await ensureSupabase(); if(!c||!session||!path) return; try{ await c.storage.from('mascotas').remove([path]); }catch(e){ console.warn('remove:', e); } }
+// Rellena las imágenes con ruta de Storage tras renderizar (URL firmada).
+async function hydrateStorage(){
+  const els = document.querySelectorAll('img[data-storage]');
+  for(const el of els){ const p=el.getAttribute('data-storage'); if(!p || el.dataset.done) continue; const url=await sbSignedUrl(p); if(url){ el.src=url; el.dataset.done='1'; } }
+}
+
 /* ---- Auth UI ---- */
 function authModal(){
   const body = `
@@ -2114,9 +2143,10 @@ function careModal(existing){
 /* ======================================================================
    Álbum de fotos y documentos adjuntos (locales)
    ====================================================================== */
+function photoImgTag(p){ return p.path ? `<img data-storage="${esc(p.path)}" alt="">` : `<img src="${p.img||''}" alt="">`; }
 function albumHTML(pet){
   const thumbs=(pet.album||[]).slice().sort((a,b)=>(b.fecha||'')<(a.fecha||'')?-1:1)
-    .map(p=>`<button class="gthumb" data-photo="${p.id}" aria-label="${fmt(p.fecha)}"><img src="${p.img}" alt=""></button>`).join('');
+    .map(p=>`<button class="gthumb" data-photo="${p.id}" aria-label="${fmt(p.fecha)}">${photoImgTag(p)}</button>`).join('');
   return `<div class="gallery">${thumbs}<button class="gadd" id="albumAdd" aria-label="${t('add_photo')}">${I.plus}</button></div>`;
 }
 function docsHTML(pet){
@@ -2130,27 +2160,49 @@ function docsHTML(pet){
 }
 function pickAlbumPhoto(){
   const pet=activePet(); const inp=document.getElementById('photoInput'); inp.value='';
-  inp.onchange=()=>{ const f=inp.files[0]; if(f) compressImage(f, url=>{ pet.album.push({id:uid(), img:url, fecha:todayISO()}); save(); toast(t('album_saved')); render(); }, 900); };
+  inp.onchange=()=>{ const f=inp.files[0]; if(!f) return; compressImage(f, async url=>{
+    const id=uid();
+    if(session){ toast(t('uploading'));
+      const path=`${session.user.id}/${pet.info.id}/album-${id}.jpg`;
+      const stored=await sbUploadDataUrl(url, path, 'image/jpeg');
+      if(stored){ pet.album.push({id, path:stored, fecha:todayISO()}); save(); toast(t('album_saved')); render(); return; }
+    }
+    pet.album.push({id, img:url, fecha:todayISO()}); save(); toast(t('album_saved')); render();
+  }, 900); };
   inp.click();
 }
-function viewPhoto(id){
+async function viewPhoto(id){
   const pet=activePet(); const ph=(pet.album||[]).find(x=>x.id===id); if(!ph) return;
-  openModal(modalShell(fmt(ph.fecha), `<div class="lightbox"><img src="${ph.img}" alt=""></div>`,
+  let src = ph.img || '';
+  if(ph.path){ src = await sbSignedUrl(ph.path) || ''; }
+  openModal(modalShell(fmt(ph.fecha), `<div class="lightbox"><img src="${src}" alt=""></div>`,
     `<button class="btn btn-danger" data-delphoto="${id}" style="flex:none" aria-label="${t('delete')}">${I.trash}</button><button class="btn btn-block" data-close>${t('close')}</button>`));
 }
 function pickDoc(){
   const pet=activePet(); const inp=document.getElementById('docInput'); inp.value=''; inp.accept='image/*,application/pdf';
   inp.onchange=()=>{ const f=inp.files[0]; if(!f) return;
-    const finish=(data)=>{ if((data||'').length > 2400000){ toast(t('doc_big')); return; }
-      pet.docs.push({id:uid(), name:f.name, mime:f.type, data, fecha:todayISO()}); save(); toast(t('doc_saved')); render(); };
+    const finish=async (data)=>{
+      const id=uid();
+      const ext=(f.name.split('.').pop()||'bin').toLowerCase();
+      if(session){ toast(t('uploading'));
+        const path=`${session.user.id}/${pet.info.id}/doc-${id}.${ext}`;
+        const stored=await sbUploadDataUrl(data, path, f.type);
+        if(stored){ pet.docs.push({id, name:f.name, mime:f.type, path:stored, fecha:todayISO()}); save(); toast(t('doc_saved')); render(); return; }
+      }
+      if((data||'').length > 2400000){ toast(t('doc_big')); return; }
+      pet.docs.push({id, name:f.name, mime:f.type, data, fecha:todayISO()}); save(); toast(t('doc_saved')); render();
+    };
     if((f.type||'').startsWith('image/')) compressImage(f, finish, 1200);
     else { const r=new FileReader(); r.onload=()=>finish(r.result); r.readAsDataURL(f); }
   };
   inp.click();
 }
-function openDoc(id){
+async function openDoc(id){
   const pet=activePet(); const d=(pet.docs||[]).find(x=>x.id===id); if(!d) return;
-  const w=window.open(); if(w){ w.document.title=d.name||'Documento'; w.document.body.style.margin='0'; w.document.write(`<iframe src="${d.data}" style="border:0;width:100vw;height:100vh"></iframe>`); }
+  let src = d.data || '';
+  if(d.path){ src = await sbSignedUrl(d.path) || ''; }
+  if(!src){ toast(t('ocr_err')); return; }
+  const w=window.open(); if(w){ w.document.title=d.name||'Documento'; w.document.body.style.margin='0'; w.document.write(`<iframe src="${src}" style="border:0;width:100vw;height:100vh"></iframe>`); }
 }
 
 /* ======================================================================
@@ -2204,9 +2256,9 @@ document.addEventListener('click', e=>{
   const inf=t0.closest('[data-info]'); if(inf){ infoModal(inf.dataset.info); return; }
   if(t0.closest('#albumAdd')){ pickAlbumPhoto(); return; }
   const gph=t0.closest('[data-photo]'); if(gph){ viewPhoto(gph.dataset.photo); return; }
-  const dph=t0.closest('[data-delphoto]'); if(dph){ const pet=activePet(); pet.album=pet.album.filter(x=>x.id!==dph.dataset.delphoto); save(); closeModal(); toast(t('deleted')); render(); return; }
+  const dph=t0.closest('[data-delphoto]'); if(dph){ const pet=activePet(); const ph=(pet.album||[]).find(x=>x.id===dph.dataset.delphoto); if(ph&&ph.path) sbRemove(ph.path); pet.album=pet.album.filter(x=>x.id!==dph.dataset.delphoto); save(); closeModal(); toast(t('deleted')); render(); return; }
   if(t0.closest('#docAdd')){ pickDoc(); return; }
-  const ddoc=t0.closest('[data-deldoc]'); if(ddoc){ const pet=activePet(); pet.docs=pet.docs.filter(x=>x.id!==ddoc.dataset.deldoc); save(); toast(t('deleted')); render(); return; }
+  const ddoc=t0.closest('[data-deldoc]'); if(ddoc){ const pet=activePet(); const dc=(pet.docs||[]).find(x=>x.id===ddoc.dataset.deldoc); if(dc&&dc.path) sbRemove(dc.path); pet.docs=pet.docs.filter(x=>x.id!==ddoc.dataset.deldoc); save(); toast(t('deleted')); render(); return; }
   const odoc=t0.closest('[data-opendoc]'); if(odoc){ openDoc(odoc.dataset.opendoc); return; }
   if(t0.closest('#editPet')){ petModal(activePet().info); return; }
   if(t0.closest('#delPet')){ if(confirm(`¿Eliminar a ${activePet().info.nombre} y todo su carné?`)){ data.pets=data.pets.filter(p=>p.info.id!==data.activeId); data.activeId=data.pets[0]?data.pets[0].info.id:null; save(); toast(t('deleted')); go('home'); } return; }
