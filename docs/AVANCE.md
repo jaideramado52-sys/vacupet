@@ -23,7 +23,8 @@ programados). Lo único pendiente para el 100% es **activar la IA** (clave de An
 | Infraestructura en la nube | ✅ **Conectada y operativa** (DB, auth, storage, sync, cron) |
 | Edge Functions | ✅ **6 desplegadas** |
 | Firma del QR (VAPID/ES256) | ✅ Activa y verificada |
-| Asistente IA / OCR | ⏳ Falta `ANTHROPIC_API_KEY` |
+| Asistente FAQ | ✅ **LLM local en el navegador** (WebLLM) — privado, sin clave |
+| Escaneo OCR del carné | ⏳ Falta `ANTHROPIC_API_KEY` (solo OCR usa la nube) |
 | Email de recordatorios | ⏳ Falta `RESEND_API_KEY` |
 | Login por email | 🟡 Funciona (enlace mágico); SMTP propio recomendado para fiabilidad |
 | Documentación legal | 🟡 Borrador — pendiente revisión de abogado |
@@ -83,9 +84,12 @@ programados). Lo único pendiente para el 100% es **activar la IA** (clave de An
 ### Inteligencia artificial (híbrida)
 - **Motor de reglas offline** (sin enviar datos): "¿qué le falta?", "próxima dosis", "próxima
   desparasitación", "registrar por chat", "explica el recomendador".
-- **Asistente FAQ veterinaria con Claude** _(función desplegada; falta clave de Anthropic)._
-- **Escaneo de carné con IA (OCR)** + pantalla de **revisión obligatoria** _(idem)._
-- Consentimiento de IA **explícito** antes de enviar nada a la nube.
+- **Asistente FAQ veterinaria con LLM LOCAL** (WebLLM en el navegador): las preguntas **no
+  salen del dispositivo**, sin API key ni costo. Descarga el modelo una vez (con consentimiento)
+  y requiere WebGPU (Chrome/Edge); si no, deriva al veterinario.
+- **Escaneo de carné con IA (OCR)** + pantalla de **revisión obligatoria** _(usa Claude; la foto
+  se envía con consentimiento — falta clave de Anthropic)._
+- Consentimiento de IA **explícito** (descarga del modelo local / envío de la foto al OCR).
 
 ### Exportación y verificación
 - **PDF clínico veterinario** (datos de la mascota + tablas de vacunas/desparasitación/peso/visitas).

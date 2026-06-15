@@ -28,8 +28,14 @@ window.VACUPET_SUPABASE = {
 window.VACUPET_AI = (function () {
   var base = window.VACUPET_SUPABASE.url ? window.VACUPET_SUPABASE.url.replace(/\/$/, "") : null;
   return {
-    // FAQ veterinaria general (educativa, con disclaimers fuertes)
-    faqEndpoint: base ? base + "/functions/v1/vacupet-faq" : null,
+    // FAQ veterinaria general: ahora corre con un LLM LOCAL en el navegador (WebLLM).
+    // Las preguntas NO salen del dispositivo. Modelo (lista en https://mlc.ai/models):
+    //   "Qwen2.5-1.5B-Instruct-q4f16_1-MLC"  (≈1 GB, multilingüe, recomendado)
+    //   "Qwen2.5-0.5B-Instruct-q4f16_1-MLC"  (≈0.5 GB, más ligero, menor calidad)
+    //   "Llama-3.2-1B-Instruct-q4f16_1-MLC"  (≈0.9 GB)
+    localModel: "Qwen2.5-1.5B-Instruct-q4f16_1-MLC",
+    // (Obsoleto: la FAQ ya no usa este endpoint; se deja por compatibilidad.)
+    faqEndpoint: null,
     // Escanear carné veterinario con IA (visión). La foto va a Claude con tu consentimiento.
     ocrEndpoint: base ? base + "/functions/v1/vacupet-ocr" : null,
     // Firma del QR de integridad del carné (exportación profesional)

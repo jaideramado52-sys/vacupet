@@ -1,0 +1,329 @@
+###############################################################################
+#                                                                             #
+#                               V A C U P E T                                 #
+#            El carne de salud digital para tus mascotas                      #
+#                                                                             #
+###############################################################################
+
+   Demo en vivo:  https://vacupet-app.netlify.app
+   Documento:     Presentacion del proyecto y revision legal
+   Fecha:         2026-06-15
+   Contacto:      [COMPLETAR: correo / telefono]
+
+
+   CONTENIDO
+   ---------
+   PARTE A — EL PROYECTO
+     A1. Que es        A2. El problema     A3. La solucion
+     A4. Funciones     A5. Por que gana    A6. Tecnologia
+     A7. Estado y cifras                   A8. Mercado y negocio
+     A9. Roadmap       A10. El pedido y cierre
+
+   PARTE B — REVISION LEGAL
+     B1. Resumen del estado     B2. Ya aplicado
+     B3. Que datos trata        B4. Terceros y transferencia
+     B5. Pendiente de abogado   B6. Preguntas para el abogado
+
+
+###############################################################################
+#  PARTE A — EL PROYECTO                                                       #
+###############################################################################
+
+===============================================================================
+ A1. QUE ES
+===============================================================================
+
+ VacuPet es el carne de salud digital para mascotas. Reune en una sola app todo
+ lo que un dueno necesita recordar: vacunas, desparasitacion, cuidados, peso,
+ visitas al veterinario y documentos. Entiende el esquema segun la especie,
+ avisa cuando toca un refuerzo y permite compartir un carne verificable.
+ Funciona sin internet, respeta la privacidad y se instala como una app en
+ cualquier telefono o computadora.
+
+
+===============================================================================
+ A2. EL PROBLEMA
+===============================================================================
+
+ Cuidar la salud de una mascota implica seguir muchas fechas, y casi siempre se
+ hace de memoria o en papel:
+
+   - El carne veterinario es de papel: se pierde y no tiene copia.
+   - Nadie recuerda la rabia anual, los refuerzos ni la desparasitacion.
+   - Con varias mascotas, el control se vuelve inmanejable.
+   - Es dificil compartir el historial con el veterinario o al viajar.
+   - El peso, las visitas y los documentos quedan dispersos.
+
+
+===============================================================================
+ A3. LA SOLUCION  (y como funciona)
+===============================================================================
+
+ VacuPet centraliza todo y lo hace simple. El uso se resume en cuatro pasos:
+
+   1) CREAS el perfil de tu mascota (o escaneas su carne con IA).
+   2) La app DETECTA que toca segun la especie y la edad.
+   3) Te RECUERDA vacunas, desparasitacion y cuidados (push y correo).
+   4) COMPARTES un carne verificable (QR firmado) o lo exportas en PDF/CSV.
+
+ Todo funciona tambien sin conexion; la sincronizacion en la nube es opcional y
+ solo se activa si el dueno inicia sesion.
+
+
+===============================================================================
+ A4. FUNCIONES PRINCIPALES
+===============================================================================
+
+ SALUD DE LA MASCOTA (NUCLEO)
+   - Perfiles multimascota (perro, gato, conejo, huron, ave, otro): raza, sexo,
+     nacimiento, microchip, esterilizacion, color, foto y veterinario.
+   - Vacunas, desparasitacion (interna/externa), cuidados (bano, unas,
+     medicacion, peluqueria, cumpleanos), peso (con grafico) y visitas.
+   - Editar cualquier registro, no solo anadir o borrar.
+   - Esquema por especie con sugerencia de proxima dosis (orientado a Guatemala,
+     rabia anual). Etiquetado "orientativo, validar con el veterinario".
+   - Fichas por vacuna/enfermedad (que previene, para quien, efectos).
+
+ RECORDATORIOS
+   - Locales: chips y banner de proximas/vencidas, exportar .ics.
+   - Servidor: Web Push y email, con cron diario ya programado y antiduplicado.
+
+ ASISTENTE CON IA
+   - Motor offline (sin enviar datos) para dudas frecuentes y registro por chat.
+   - Asistente FAQ veterinaria con IA y escaneo del carne por vision (con permiso).
+
+ EXPORTACION Y VERIFICACION
+   - PDF clinico veterinario, CSV y QR de integridad firmado + verificador.
+
+ EXTRAS
+   - Modo viajero (requisitos por destino), veterinarias cercanas (geolocalizacion)
+     y logros (gamificacion). Album de fotos y documentos.
+
+ SEGURIDAD DEL USUARIO
+   - Bloqueo con PIN y biometrico, respaldo cifrado y borrado total de datos.
+
+
+===============================================================================
+ A5. POR QUE GANA  (diferenciadores)
+===============================================================================
+
+   +  Completo: salud, cuidados, peso, album, documentos, viajero y asistente
+      en un solo lugar.
+   +  Privacidad real: funciona 100% offline; la nube es opcional.
+   +  Carga legal ligera: trata datos de mascotas, no de salud humana ni de menores.
+   +  Verificabilidad: el QR esta firmado criptograficamente.
+   +  Cero friccion: se instala sin pasar por tiendas de aplicaciones.
+
+
+===============================================================================
+ A6. TECNOLOGIA
+===============================================================================
+
+   [ Usuario / Navegador ]
+            |  HTTPS
+            v
+   [ Netlify - Hosting (PWA + Service Worker) ]
+            |
+            v
+   [ App VacuPet (un solo archivo) ]
+        |                         |
+        | sin conexion            | opcional, con sesion
+        v                         v
+   [ Datos locales ]        [ SUPABASE (EE.UU.) ]
+                              - Inicio de sesion (enlace magico)
+                              - Base de datos con seguridad por fila (RLS)
+                              - Almacenamiento privado de fotos y documentos
+                              - 6 Funciones de servidor DESPLEGADAS: IA (Claude),
+                                correo (Resend), push, firma del QR, eliminar cuenta
+                              - Cron diario que dispara los recordatorios
+
+   Estandares: FHIR no aplica; export en PDF/CSV. Firma ES256 (ECDSA P-256).
+   Seguridad:  cifrado AES-GCM, biometrico WebAuthn, RLS.
+   Calidad:    suite de 79 pruebas automatizadas (todas en verde).
+   Costo base: planes gratuitos (Supabase / Netlify); arquitectura escalable.
+
+
+===============================================================================
+ A7. ESTADO ACTUAL Y CIFRAS
+===============================================================================
+
+ Lo mas importante: NO es una maqueta. La app esta publicada Y con el backend
+ conectado y operativo.
+
+   - Producto terminado (~100%); nube, sync, fotos, firma del QR y cron ya operan.
+   - 6 Edge Functions desplegadas; firma del QR activa y verificada.
+   - Pendiente: activar IA (clave de Anthropic) y email (clave de Resend).
+   - [COMPLETAR: usuarios, pruebas piloto o cartas de interes, si las hay]
+
+   En numeros:
+        6  especies soportadas
+       ~9  fichas de vacuna (perro/gato/generico)
+        5  destinos del modo viajero
+        3  idiomas (ES / EN / PT)
+        3  formatos de exportacion (PDF, CSV, QR firmado)
+        6  Edge Functions desplegadas
+       79  pruebas automatizadas (en verde)
+
+
+===============================================================================
+ A8. MERCADO Y MODELO DE NEGOCIO
+===============================================================================
+
+ MERCADO
+   - Alta tenencia de mascotas y gasto creciente en su salud y bienestar.
+   - Publico: duenos de perros/gatos, criadores, viajeros con mascota.
+   - Foco inicial: Guatemala / Latinoamerica.
+   - [COMPLETAR: tamano de mercado o nº de hogares con mascota objetivo]
+
+ MODELO (gratis para el dueno; ingresos por valor anadido)
+   - Freemium: premium (mas mascotas, nube ampliada, IA avanzada).
+   - B2B: clinicas veterinarias, pet shops, aseguradoras de mascotas.
+   - Alianzas: marcas de alimento/antiparasitarios, campanas de vacunacion.
+   - White-label para cadenas veterinarias.
+   - [COMPLETAR: precio y proyeccion financiera]
+
+
+===============================================================================
+ A9. ROADMAP
+===============================================================================
+
+   CORTO PLAZO  ->  activar IA y email; cerrar la revision legal.
+   MEDIO PLAZO  ->  esquema validado por veterinario, multi-cuidador (familia),
+                    dominio propio y monitoreo de errores.
+   LARGO PLAZO  ->  campanas/recordatorios estacionales y crecimiento.
+
+
+===============================================================================
+ A10. EL PEDIDO Y CIERRE
+===============================================================================
+
+   - [COMPLETAR: monto que buscas o tipo de alianza]
+   - Uso de fondos (ej.): producto, legal/cumplimiento, usuarios, alianzas.
+   - [COMPLETAR: hito que lograras a 6-12 meses con esa inversion]
+
+   VacuPet - la salud de tu mascota, siempre contigo.
+   Demo: https://vacupet-app.netlify.app
+
+
+###############################################################################
+#  PARTE B — REVISION LEGAL                                                    #
+###############################################################################
+
+ Nota: VacuPet es un registro personal de apoyo. NO reemplaza el carne oficial
+ ni la consulta veterinaria.
+
+ DIFERENCIA ESENCIAL vs. apps de salud humana: VacuPet trata datos de MASCOTAS,
+ que en general NO son datos personales de salud de categoria especial ni de
+ menores. El unico dato personal relevante es el del DUENO (su correo de cuenta
+ y, de forma incidental, lo que aparezca en fotos). Por eso la carga legal es
+ MUCHO menor — pero el tratamiento de la cuenta y el envio de fotos a IA siguen
+ requiriendo aviso y consentimiento.
+
+===============================================================================
+ B1. RESUMEN DEL ESTADO LEGAL
+===============================================================================
+
+ Los textos legales (Politica de Privacidad y Terminos de Uso) son borradores en
+ docs/. Ya se aplicaron las mejoras de caracter tecnico y factico; lo pendiente
+ son decisiones que corresponden a un profesional legal, mas rellenar el
+ responsable y el contacto.
+
+
+===============================================================================
+ B2. YA APLICADO  (sin necesitar criterio legal)
+===============================================================================
+
+   1. Terceros identificados (Supabase, Resend, Anthropic, Netlify), todos en EE.UU.
+   2. Nube opcional: por defecto todo es local; nada sale sin iniciar sesion.
+   3. Consentimiento de IA explicito antes de enviar pregunta/foto a la nube.
+   4. Almacenamiento local sin cookies de rastreo ni analitica de terceros.
+   5. Compartir carne: enlace de solo lectura; con sesion usa token que caduca (30 dias).
+   6. Eliminar cuenta y datos (funcion dedicada) - derecho de supresion.
+   7. Seguridad real: RLS por usuario, cifrado en reposo, TLS, bucket privado con
+      enlaces firmados, bloqueo local (PIN/biometrico), respaldo cifrado.
+   8. Descargo "no reemplaza el carne oficial ni la consulta veterinaria" visible.
+
+
+===============================================================================
+ B3. QUE DATOS TRATA LA APP
+===============================================================================
+
+   Mascota ......... nombre, especie, raza, sexo, nacimiento, microchip  (no personal)
+   Salud mascota ... vacunas, desparasitacion, cuidados, peso, visitas    (no es salud humana)
+   Imagenes ........ fotos de la mascota, del carne y documentos          (personal solo si
+                                                                           aparece una persona)
+   Cuenta .......... correo de inicio de sesion del DUENO                 (PERSONAL)
+   Tecnicos ........ almacenamiento local; IP/logs de hosting
+
+   Punto clave: NO se tratan datos de salud de personas ni de menores. El dato
+   personal a proteger es esencialmente el correo del dueno y, de forma
+   incidental, lo que pueda aparecer en las fotos.
+
+
+===============================================================================
+ B4. TERCEROS Y TRANSFERENCIA INTERNACIONAL
+===============================================================================
+
+   Supabase .. base de datos, login y almacenamiento ..... EE.UU. .. declarado
+   Resend .... correos de recordatorio .................. EE.UU. .. declarado
+   Anthropic . asistente FAQ y escaneo del carne (IA) ... EE.UU. .. declarado
+   Netlify ... alojamiento del sitio web ................ EE.UU. .. declarado
+
+   Todos los proveedores operan en EE.UU.; existe una transferencia internacional
+   (del correo del dueno y, si las sube, sus fotos) que debe legitimarse segun la
+   jurisdiccion que se confirme. Menor sensibilidad por no tratarse de salud humana.
+
+
+===============================================================================
+ B5. PENDIENTE DE DECISION LEGAL  (checklist para el abogado)
+===============================================================================
+
+   RESPONSABLE Y JURISDICCION
+     [ ] Responsable formal del tratamiento y domicilio.
+     [ ] Confirmar contacto (provisional: luis@gomezgt.com).
+     [ ] Confirmar ley aplicable y jurisdiccion (provisional: Guatemala).
+     [ ] Mecanismo de resolucion de disputas.
+
+   DATOS DEL DUENO E IMAGENES
+     [ ] Base legal para el correo del dueno y las fotos (consentimiento).
+     [ ] Aviso de que las fotos podrian contener personas (responsabilidad del usuario).
+     [ ] Edad minima del dueno para crear cuenta.
+
+   TERCEROS Y CONSERVACION
+     [ ] Necesidad de firmar DPA con Supabase, Resend, Anthropic y Netlify.
+     [ ] Plazos concretos de conservacion de los datos.
+     [ ] Plazo de respuesta a las solicitudes de derechos.
+     [ ] Clausula de notificacion de brechas.
+
+   DOCUMENTACION
+     [ ] Versionado de las politicas y aviso de cambios.
+     [ ] Mencionar portabilidad (export CSV/JSON).
+     [ ] Decidir si los textos legales deben traducirse a EN / PT.
+
+
+===============================================================================
+ B6. PREGUNTAS CONCRETAS PARA EL ABOGADO
+===============================================================================
+
+   1. Al tratar datos de MASCOTAS (no de personas), que obligaciones aplican
+      realmente y sobre que dato (el correo del dueno)?
+   2. Basta el consentimiento como base legal para el correo del dueno y para el
+      envio de fotos a IA (Anthropic)?
+   3. Como redactar la transferencia internacional (datos en EE.UU.)?
+   4. Que plazos de conservacion y que registro de consentimiento conviene?
+   5. Hace falta DPA firmado con cada proveedor?
+   6. Es necesario traducir lo legal a los idiomas de la app?
+   7. Conviene fijar una edad minima para el dueno que crea la cuenta?
+
+
+-------------------------------------------------------------------------------
+ DOCUMENTOS DE APOYO
+   - Avance detallado .......... AVANCE.md
+   - Dossier legal completo .... REVISION_LEGAL.md
+   - Especificacion ............ SPEC.md
+   - Despliegue / servicios .... DESPLIEGUE.md / ACTIVAR_SERVICIOS.md
+-------------------------------------------------------------------------------
+
+###############################################################################
+#                          FIN DE LA PRESENTACION                             #
+###############################################################################

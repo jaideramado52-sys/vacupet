@@ -12,7 +12,8 @@ _Preparado: 2026-06-15 · Estado: BORRADOR para abogado/a · Textos legales: bor
 > ## ✅ Ya aplicado (cambios técnicos/fácticos, sin criterio legal)
 > 1. **Terceros** identificados (Supabase, Resend, Anthropic, Netlify), todos en EE.UU.
 > 2. **Nube opcional**: por defecto todo es local; nada sale del dispositivo sin iniciar sesión.
-> 3. **Consentimiento de IA explícito** antes de enviar pregunta/foto a la nube.
+> 3. **FAQ con LLM local** (WebLLM): las preguntas no salen del dispositivo. El **OCR** (única
+>    función que usa la nube) envía la foto a Anthropic **solo con consentimiento explícito**.
 > 4. **Almacenamiento local** (localStorage) sin cookies de rastreo ni analítica de terceros.
 > 5. **Compartir** carné: enlace de solo lectura; con sesión usa **token que caduca** (30 días).
 > 6. **Eliminar cuenta y datos** (función `eliminar-cuenta`) — derecho de supresión.
@@ -61,14 +62,15 @@ _Preparado: 2026-06-15 · Estado: BORRADOR para abogado/a · Textos legales: bor
 |---------|----------|------------------|-----------|-----------------|
 | **Supabase** | Base de datos, autenticación, almacenamiento de fotos/documentos | Datos sincronizados de la mascota + correo del dueño + archivos | **EE.UU. — us-east-2** | ✅ Sí |
 | **Resend** | Envío de correos de recordatorio (opcional) | Correo del dueño y datos del recordatorio | EE.UU. | ✅ Sí |
-| **Anthropic (Claude)** | Asistente FAQ y **OCR del carné** (visión) | **Foto del carné** y/o texto de la consulta | EE.UU. | ✅ Sí |
+| **Anthropic (Claude)** | **Solo OCR** del carné (visión). La FAQ corre en local (WebLLM) y **no** envía nada. | **Foto del carné** (solo si el usuario usa el OCR) | EE.UU. | ✅ Sí |
 | **Netlify** | Hosting del sitio web | Datos de conexión (IP, logs de servidor) | EE.UU. | ✅ Sí |
 
 ### 🟦 DECISIÓN LEGAL 3-A — Anthropic / IA
-La app puede enviar **fotos del carné a Anthropic** (OCR) y consultas a Claude (FAQ), **con
-consentimiento explícito del usuario**. Confirmar: (a) que se declare como encargado en el
-aviso, (b) que el consentimiento separado de IA es suficiente. _Funciones desplegadas; la IA
-se activa al añadir la clave de API._
+La **FAQ del asistente corre con un LLM LOCAL en el navegador** (WebLLM): las preguntas **no
+salen del dispositivo** → sin tratamiento por terceros para ese flujo (mejora de privacidad).
+El único envío a Anthropic es la **foto del carné en el OCR**, y solo si el usuario lo usa, **con
+consentimiento explícito**. Confirmar: (a) declarar Anthropic como encargado para el OCR, (b)
+que el consentimiento separado es suficiente. _OCR desplegado; se activa con la clave de API._
 
 ### 🟦 DECISIÓN LEGAL 3-B — Transferencia internacional
 Todos los proveedores están en **EE.UU.** Si los usuarios están en Guatemala/LatAm, hay

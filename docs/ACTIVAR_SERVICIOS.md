@@ -32,16 +32,18 @@ limitado** (pocos correos/hora, a veces no llega). Para producción, configura S
 
 ---
 
-## 2. Asistente IA + escanear carné (Anthropic)
-Activa el chat de FAQ veterinaria y el OCR del carné.
+## 2. Escanear carné con IA — OCR (Anthropic)
+> La **FAQ del asistente ya NO usa la nube**: corre con un **LLM local en el navegador**
+> (WebLLM), privado y sin clave. Solo el **OCR** (leer una foto del carné) usa Claude.
+
 1. Saca una API key en [console.anthropic.com](https://console.anthropic.com) (`sk-ant-...`).
 2. Fíjala como secret:
    ```bash
    supabase secrets set ANTHROPIC_API_KEY=sk-ant-... --project-ref zrcpnuzodxxfipnelrvy
    ```
-   (Los modelos `FAQ_MODEL`/`OCR_MODEL` ya están en `claude-opus-4-8`; para abaratar puedes
-   poner `claude-haiku-4-5`.)
-3. Listo — las funciones `vacupet-faq` y `vacupet-ocr` ya están desplegadas. No hay que redeployar.
+   (`OCR_MODEL` ya está en `claude-opus-4-8`.)
+3. Listo — la función `vacupet-ocr` ya está desplegada. No hay que redeployar.
+   _(Sin esta clave, el OCR degrada con elegancia; el resto del asistente funciona local.)_
 
 ---
 

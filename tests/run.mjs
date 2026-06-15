@@ -103,11 +103,14 @@ ok('whatsMissing menciona faltante', VP.aWhatsMissing().includes('Polivalente'))
 ok('nextDose = próxima upcoming', VP.aNextDose().includes('Pipeta'));
 ok('register → botones', VP.handleIntent('register','x').html.includes('data-chatadd'));
 
-section('Asistente (FAQ + consentimiento)');
-globalThis.window.VACUPET_AI = {};
-ok('FAQ sin endpoint → local', (await VP.askFaq('duda')).includes('veterinario'));
-globalThis.window.VACUPET_AI = { faqEndpoint:'http://x' }; VP.getData().faqConsent=false;
-ok('FAQ sin consentimiento → pide permiso', (await VP.askFaq('duda')).includes('data-consent'));
+section('Asistente (FAQ con LLM local / WebLLM)');
+VP.getData().lang='es';
+// En Node no hay WebGPU → la FAQ deriva al veterinario (degradación elegante).
+{
+  const r = await VP.askFaq('mi gato puede comer chocolate');
+  ok('FAQ sin WebGPU → deriva al veterinario', r.includes('veterinario'));
+  ok('FAQ devuelve string no vacío', typeof r === 'string' && r.length > 0);
+}
 
 section('Integridad del carné (QR firmado, ES256)');
 {

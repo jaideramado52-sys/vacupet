@@ -442,7 +442,7 @@ const STR = {
     a_next:'La próxima es {nombre} el {fecha} ({cuando}).', a_next_none:'No hay próximas fechas registradas.',
     a_deworm_next:'Próxima desparasitación: {nombre} el {fecha}.', a_deworm_none:'No hay desparasitaciones programadas. Toca “Registrar”.',
     a_register:'¿Qué quieres registrar?', a_explain:'Calculo las fechas con el esquema por especie: en cachorros, refuerzos cada pocas semanas; en adultos, refuerzo anual. Todo es orientativo: confírmalo con tu veterinario.',
-    a_consent:'Para responder dudas generales envío tu pregunta (sin tus datos) al asistente en la nube. ¿Permites?', a_consent_yes:'Permitir y preguntar',
+    a_consent:'Para responder dudas generales envío tu pregunta (sin tus datos) al asistente en la nube. ¿Permites?', a_consent_yes:'Permitir y preguntar', llm_consent:'El asistente descargará UNA VEZ un modelo de IA (~1 GB) que corre EN TU DISPOSITIVO: privado, sin enviar tus preguntas a ningún servidor. Necesita Chrome o Edge recientes. ¿Descargar y preguntar?', llm_consent_yes:'Descargar y preguntar', llm_loading:'Preparando el modelo en tu dispositivo…', llm_thinking:'Pensando en tu dispositivo…',
     a_local_only:'Puedo ayudarte con el carné de tu mascota (qué le falta, próximas dosis). Para dudas generales de salud, consulta a tu veterinario.',
     ocr_scan:'Escanear carné con IA', ocr_scan_sub:'Detecta vacunas desde una foto',
     ocr_consent:'La foto se enviará al servicio de IA para leerla, con tu permiso. ¿Continuar?',
@@ -527,7 +527,7 @@ const STR = {
     a_next:'Next is {nombre} on {fecha} ({cuando}).', a_next_none:'No upcoming dates recorded.',
     a_deworm_next:'Next deworming: {nombre} on {fecha}.', a_deworm_none:'No deworming scheduled. Tap “Add record”.',
     a_register:'What would you like to add?', a_explain:'I compute dates from the species schedule: puppies get boosters every few weeks; adults a yearly booster. All guidance — confirm with your vet.',
-    a_consent:'To answer general questions I send your question (without your data) to the cloud assistant. Allow?', a_consent_yes:'Allow and ask',
+    a_consent:'To answer general questions I send your question (without your data) to the cloud assistant. Allow?', a_consent_yes:'Allow and ask', llm_consent:'The assistant will download ONCE an AI model (~1 GB) that runs ON YOUR DEVICE: private, your questions never leave it. Needs a recent Chrome or Edge. Download and ask?', llm_consent_yes:'Download and ask', llm_loading:'Preparing the model on your device…', llm_thinking:'Thinking on your device…',
     a_local_only:"I can help with your pet's record (what's missing, next doses). For general health questions, consult your vet.",
     ocr_scan:'Scan record with AI', ocr_scan_sub:'Detect vaccines from a photo',
     ocr_consent:'The photo will be sent to the AI service to read it, with your permission. Continue?',
@@ -612,7 +612,7 @@ const STR = {
     a_next:'A próxima é {nombre} em {fecha} ({cuando}).', a_next_none:'Nenhuma data próxima registrada.',
     a_deworm_next:'Próximo vermífugo: {nombre} em {fecha}.', a_deworm_none:'Nenhum vermífugo agendado. Toque em “Registrar”.',
     a_register:'O que você quer registrar?', a_explain:'Calculo as datas pelo esquema da espécie: filhotes recebem reforços a cada poucas semanas; adultos, reforço anual. Tudo orientativo: confirme com seu veterinário.',
-    a_consent:'Para responder dúvidas gerais envio sua pergunta (sem seus dados) ao assistente na nuvem. Permite?', a_consent_yes:'Permitir e perguntar',
+    a_consent:'Para responder dúvidas gerais envio sua pergunta (sem seus dados) ao assistente na nuvem. Permite?', a_consent_yes:'Permitir e perguntar', llm_consent:'O assistente vai baixar UMA VEZ um modelo de IA (~1 GB) que roda NO SEU APARELHO: privado, suas perguntas não saem dele. Precisa de Chrome ou Edge recentes. Baixar e perguntar?', llm_consent_yes:'Baixar e perguntar', llm_loading:'Preparando o modelo no seu aparelho…', llm_thinking:'Pensando no seu aparelho…',
     a_local_only:'Posso ajudar com a carteira do seu pet (o que falta, próximas doses). Para dúvidas gerais de saúde, consulte seu veterinário.',
     ocr_scan:'Escanear carteira com IA', ocr_scan_sub:'Detecta vacinas a partir de uma foto',
     ocr_consent:'A foto será enviada ao serviço de IA para leitura, com sua permissão. Continuar?',
@@ -1770,19 +1770,44 @@ function handleIntent(intent, text){
 }
 
 // --- FAQ general (nube, opcional, con consentimiento) ---
+// --- LLM LOCAL en el navegador (WebLLM). Las preguntas NO salen del dispositivo. ---
+const LLM_SYSTEM = {
+  es:'Eres el asistente informativo de VacuPet, una app de carné de salud para mascotas. Respondes en español, breve, claro y cálido (2 a 5 frases). Solo das información GENERAL y educativa sobre salud de mascotas (perros, gatos, etc.). NUNCA des diagnóstico, dosis de fármacos ni indicaciones clínicas para un animal concreto. Ante cualquier signo de enfermedad, urgencia o caso particular, deriva SIEMPRE: "consúltalo con tu veterinario". No reemplazas el carné oficial ni la consulta veterinaria. Si te preguntan algo fuera de salud de mascotas, redirige amablemente.',
+  en:'You are the informational assistant of VacuPet, a pet health-record app. Reply in English, short, clear and warm (2 to 5 sentences). Only GENERAL, educational info about pet health. NEVER give diagnosis, drug doses or clinical advice for a specific animal. For any sign of illness or specific case, ALWAYS refer: "check with your vet". You do not replace the official record or veterinary care.',
+  pt:'Você é o assistente informativo do VacuPet, um app de carteira de saúde para pets. Responda em português, breve, claro e acolhedor (2 a 5 frases). Apenas informação GERAL e educativa sobre saúde de pets. NUNCA dê diagnóstico, doses de medicamentos nem orientação clínica para um animal específico. Em qualquer sinal de doença ou caso específico, oriente SEMPRE: "consulte seu veterinário". Você não substitui a carteira oficial nem a consulta veterinária.',
+};
+const LLM_MODEL = (window.VACUPET_AI && window.VACUPET_AI.localModel) || 'Qwen2.5-1.5B-Instruct-q4f16_1-MLC';
+let llmEngine = null;
+function webgpuOK(){ try{ return typeof navigator!=='undefined' && 'gpu' in navigator; }catch(_){ return false; } }
+async function ensureLLM(onProgress){
+  if(llmEngine) return llmEngine;
+  const webllm = await import('https://esm.run/@mlc-ai/web-llm');
+  llmEngine = await webllm.CreateMLCEngine(LLM_MODEL, {
+    initProgressCallback: (r)=>{ if(onProgress) onProgress(Math.round((r.progress||0)*100)); }
+  });
+  return llmEngine;
+}
+function updateLastBubble(html){
+  if(!chatMsgs.length) return;
+  chatMsgs[chatMsgs.length-1] = { role:'bot', html };
+  const body=document.getElementById('chatBody');
+  if(body && body.lastElementChild){ body.lastElementChild.innerHTML=html; body.scrollTop=body.scrollHeight; }
+}
 async function askFaq(question){
-  const ai = window.VACUPET_AI || {};
-  if(!ai.faqEndpoint) return esc(t('a_local_only'));
-  if(!data.faqConsent){
-    return esc(t('a_consent'))+`<div class="inline-actions"><button class="ia-btn" data-consent="${esc(question)}">${esc(t('a_consent_yes'))}</button></div>`;
+  if(!webgpuOK()) return esc(t('a_local_only'));   // sin WebGPU → reglas / derivar al veterinario
+  if(!data.llmConsent){
+    return esc(t('llm_consent'))+`<div class="inline-actions"><button class="ia-btn" data-llmgo="${esc(question)}">${esc(t('llm_consent_yes'))}</button></div>`;
   }
   try{
-    const pet=activePet();
-    const r=await fetch(ai.faqEndpoint,{ method:'POST', headers:{'Content-Type':'application/json'},
-      body:JSON.stringify({ question, especie: pet?pet.info.especie:'', lang:data.lang||'es' }) });
-    const j=await r.json();
-    return esc(j.answer || j.error || t('asst_faq_err'));
-  }catch(e){ console.warn('faq:', e); return esc(t('asst_faq_err')); }
+    const eng = await ensureLLM((pct)=> updateLastBubble(esc(t('llm_loading'))+' '+pct+'%'));
+    updateLastBubble(esc(t('llm_thinking')));
+    const res = await eng.chat.completions.create({
+      messages:[ { role:'system', content: LLM_SYSTEM[data.lang||'es']||LLM_SYSTEM.es }, { role:'user', content: question } ],
+      temperature:0.4, max_tokens:480,
+    });
+    const out = (res && res.choices && res.choices[0] && res.choices[0].message && res.choices[0].message.content) || '';
+    return esc(out.trim()) || esc(t('asst_faq_err'));
+  }catch(e){ console.warn('llm:', e); return esc(t('a_local_only')); }
 }
 
 // --- UI del chat ---
@@ -1813,6 +1838,7 @@ function renderAssistant(){
     if(e.target.closest('#chatSend')){ const v=(document.getElementById('chatIn').value||'').trim(); if(v) userSay(v); return; }
     const add=e.target.closest('[data-chatadd]'); if(add){ const k=add.dataset.chatadd; closeAssistant(); k==='vacuna'?vaccineModal():dewormModal(); return; }
     const con=e.target.closest('[data-consent]'); if(con){ data.faqConsent=true; save(); userSay(con.dataset.consent); return; }
+    const llg=e.target.closest('[data-llmgo]'); if(llg){ data.llmConsent=true; save(); userSay(llg.dataset.llmgo); return; }
   });
   const inp=document.getElementById('chatIn');
   if(inp){ inp.addEventListener('keydown', e=>{ if(e.key==='Enter'){ const v=inp.value.trim(); if(v) userSay(v); } }); }
