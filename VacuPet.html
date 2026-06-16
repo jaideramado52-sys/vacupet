@@ -399,7 +399,24 @@ const I = {
   download:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v12m0 0 4-4m-4 4-4-4M5 21h14"/></svg>',
   upload:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 21V9m0 0 4 4m-4-4-4 4M5 3h14"/></svg>',
 };
-const SPECIES_EMOJI = { perro:'🐶', gato:'🐱', conejo:'🐰', huron:'🦦', ave:'🐦', otro:'🐾' };
+const SPECIES_EMOJI = { perro:'🐶', gato:'🐱', conejo:'🐰', huron:'🦦', ave:'🐦', tortuga:'🐢', otro:'🐾' };
+// Ilustración SVG por especie (avatar cuando no hay foto subida). Sin internet ni derechos.
+function speciesArt(especie){
+  const BG = { perro:['#fde68a','#f59e0b'], gato:['#ddd6fe','#8b5cf6'], conejo:['#fbcfe8','#ec4899'], huron:['#99f6e4','#14b8a6'], ave:['#bae6fd','#38bdf8'], tortuga:['#bbf7d0','#22c55e'], otro:['#e5e7eb','#9ca3af'] };
+  const FACE = {
+    perro:'<ellipse cx="108" cy="168" rx="40" ry="68" fill="#8b5e3c" transform="rotate(-18 108 168)"/><ellipse cx="292" cy="168" rx="40" ry="68" fill="#8b5e3c" transform="rotate(18 292 168)"/><circle cx="200" cy="215" r="108" fill="#d9a066"/><ellipse cx="200" cy="262" rx="68" ry="54" fill="#f0d2a8"/><circle cx="165" cy="200" r="13" fill="#3a2a1a"/><circle cx="235" cy="200" r="13" fill="#3a2a1a"/><ellipse cx="200" cy="246" rx="22" ry="16" fill="#3a2a1a"/><path d="M188 286 q12 30 24 0 z" fill="#f472b6"/>',
+    gato:'<polygon points="120,118 152,202 92,192" fill="#a1a1aa"/><polygon points="280,118 308,192 248,202" fill="#a1a1aa"/><polygon points="124,138 146,192 108,186" fill="#f9a8d4"/><polygon points="276,138 292,186 254,192" fill="#f9a8d4"/><circle cx="200" cy="222" r="104" fill="#b4b4bb"/><ellipse cx="165" cy="208" rx="12" ry="16" fill="#1f2937"/><ellipse cx="235" cy="208" rx="12" ry="16" fill="#1f2937"/><polygon points="200,236 212,249 188,249" fill="#f472b6"/><g stroke="#eef" stroke-width="3"><line x1="118" y1="240" x2="176" y2="248"/><line x1="118" y1="262" x2="176" y2="260"/><line x1="282" y1="240" x2="224" y2="248"/><line x1="282" y1="262" x2="224" y2="260"/></g>',
+    conejo:'<ellipse cx="165" cy="100" rx="25" ry="80" fill="#fafafa"/><ellipse cx="235" cy="100" rx="25" ry="80" fill="#fafafa"/><ellipse cx="165" cy="106" rx="12" ry="58" fill="#fbcfe8"/><ellipse cx="235" cy="106" rx="12" ry="58" fill="#fbcfe8"/><circle cx="200" cy="248" r="100" fill="#fff"/><circle cx="168" cy="238" r="11" fill="#374151"/><circle cx="232" cy="238" r="11" fill="#374151"/><path d="M200 272 l-11 -9 h22 z" fill="#f472b6"/><circle cx="150" cy="270" r="14" fill="#fbcfe8" opacity=".7"/><circle cx="250" cy="270" r="14" fill="#fbcfe8" opacity=".7"/>',
+    huron:'<circle cx="135" cy="150" r="26" fill="#efe5d4"/><circle cx="265" cy="150" r="26" fill="#efe5d4"/><ellipse cx="200" cy="222" rx="96" ry="106" fill="#efe5d4"/><ellipse cx="168" cy="206" rx="36" ry="27" fill="#8b6f55" opacity=".65"/><ellipse cx="232" cy="206" rx="36" ry="27" fill="#8b6f55" opacity=".65"/><circle cx="168" cy="206" r="11" fill="#1f2937"/><circle cx="232" cy="206" r="11" fill="#1f2937"/><ellipse cx="200" cy="258" rx="15" ry="11" fill="#5b4636"/>',
+    ave:'<circle cx="205" cy="222" r="104" fill="#fcd34d"/><path d="M252 196 q62 22 28 84 q-34 -8 -44 -42 z" fill="#f59e0b"/><circle cx="180" cy="196" r="13" fill="#1f2937"/><polygon points="116,214 168,204 168,230" fill="#f97316"/><circle cx="168" cy="250" r="14" fill="#fb923c" opacity=".6"/>',
+    tortuga:'<ellipse cx="120" cy="288" rx="30" ry="18" fill="#86efac"/><ellipse cx="280" cy="288" rx="30" ry="18" fill="#86efac"/><circle cx="200" cy="120" r="40" fill="#86efac"/><circle cx="186" cy="114" r="6" fill="#1f2937"/><circle cx="214" cy="114" r="6" fill="#1f2937"/><path d="M92 256 a108 86 0 0 1 216 0 z" fill="#16a34a"/><g fill="#15803d"><polygon points="200,176 232,214 200,252 168,214"/><polygon points="146,214 172,236 156,262 124,250"/><polygon points="254,214 276,250 244,262 228,236"/></g><rect x="92" y="250" width="216" height="16" rx="8" fill="#16a34a"/>',
+    otro:'<g fill="#6b7280" transform="translate(104,158) scale(8)"><circle cx="6" cy="10" r="2.1"/><circle cx="10.5" cy="6.5" r="2.1"/><circle cx="15.5" cy="6.5" r="2.1"/><circle cx="19" cy="10.5" r="2"/><path d="M12.5 11c-2.4 0-4.3 1.7-5.2 3.4-.9 1.7-1.6 3.6.2 4.6 1.2.7 2.6-.2 4-.2s2.8.9 4 .2c1.8-1 .9-2.9 0-4.6C14.8 12.7 14.9 11 12.5 11z"/></g>',
+  };
+  const bg = BG[especie]||BG.otro, face = FACE[especie]||FACE.otro;
+  const svg = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 400"><defs><linearGradient id="g" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="'+bg[0]+'"/><stop offset="1" stop-color="'+bg[1]+'"/></linearGradient></defs><rect width="400" height="400" fill="url(#g)"/>'+face+'</svg>';
+  return 'data:image/svg+xml;base64,' + btoa(svg);
+}
+function petFoto(info){ return (info && info.foto) || speciesArt(info ? info.especie : 'otro'); }
 
 /* ======================================================================
    i18n (es / en / pt) — chrome y pantallas principales.
@@ -486,7 +503,7 @@ const STR = {
     sec_achievements:'Logros', ach_uptodate:'Carné al día', ach_microchip:'Microchip', ach_complete:'Esquema completo', ach_tracker:'Control de peso',
     dest_ue:'Unión Europea', dest_uk:'Reino Unido', dest_us:'Estados Unidos', dest_rabiesfree:'Países libres de rabia', dest_latam:'Latinoamérica (general)',
     a11y_big:'Texto grande', a11y_big_sub:'Aumenta el tamaño de la interfaz', update_ready:'Nueva versión disponible. Recarga la app.',
-    demo_view:'Ver ejemplo', demo_loaded:'4 mascotas de ejemplo creadas · cámbialas en el carrusel y bórralas cuando quieras',
+    demo_view:'Ver ejemplo', demo_loaded:'6 mascotas de ejemplo creadas · cámbialas en el carrusel y bórralas cuando quieras',
     sec_cares:'Cuidados', tile_care:'Cuidado', tile_care_sub:'Baño, uñas, medicación…', add_care:'Añadir cuidado', no_cares:'Sin cuidados programados', reg_care:'Registrar cuidado', saved_care:'Cuidado guardado',
     care_kind:'Tipo', care_title:'Título', care_last:'Última vez / fecha', care_freq:'Frecuencia', care_freq_none:'Una vez', care_every:'Cada {n} días', care_yearly:'Cada año', care_notes:'Notas',
     care_bano:'Baño', care_unas:'Corte de uñas', care_medic:'Medicación', care_grooming:'Peluquería', care_cumple:'Cumpleaños', care_otro:'Otro',
@@ -574,7 +591,7 @@ const STR = {
     sec_achievements:'Achievements', ach_uptodate:'Record up to date', ach_microchip:'Microchip', ach_complete:'Schedule complete', ach_tracker:'Weight tracking',
     dest_ue:'European Union', dest_uk:'United Kingdom', dest_us:'United States', dest_rabiesfree:'Rabies-free countries', dest_latam:'Latin America (general)',
     a11y_big:'Large text', a11y_big_sub:'Increase the interface size', update_ready:'New version available. Reload the app.',
-    demo_view:'View example', demo_loaded:'4 example pets created · switch in the carousel and delete anytime',
+    demo_view:'View example', demo_loaded:'6 example pets created · switch in the carousel and delete anytime',
     sec_cares:'Care', tile_care:'Care', tile_care_sub:'Bath, nails, medication…', add_care:'Add care', no_cares:'No care scheduled', reg_care:'Add care task', saved_care:'Care saved',
     care_kind:'Type', care_title:'Title', care_last:'Last done / date', care_freq:'Frequency', care_freq_none:'Once', care_every:'Every {n} days', care_yearly:'Yearly', care_notes:'Notes',
     care_bano:'Bath', care_unas:'Nail trim', care_medic:'Medication', care_grooming:'Grooming', care_cumple:'Birthday', care_otro:'Other',
@@ -662,7 +679,7 @@ const STR = {
     sec_achievements:'Conquistas', ach_uptodate:'Carteira em dia', ach_microchip:'Microchip', ach_complete:'Esquema completo', ach_tracker:'Controle de peso',
     dest_ue:'União Europeia', dest_uk:'Reino Unido', dest_us:'Estados Unidos', dest_rabiesfree:'Países livres de raiva', dest_latam:'América Latina (geral)',
     a11y_big:'Texto grande', a11y_big_sub:'Aumenta o tamanho da interface', update_ready:'Nova versão disponível. Recarregue o app.',
-    demo_view:'Ver exemplo', demo_loaded:'4 pets de exemplo criados · troque no carrossel e exclua quando quiser',
+    demo_view:'Ver exemplo', demo_loaded:'6 pets de exemplo criados · troque no carrossel e exclua quando quiser',
     sec_cares:'Cuidados', tile_care:'Cuidado', tile_care_sub:'Banho, unhas, medicação…', add_care:'Adicionar cuidado', no_cares:'Sem cuidados agendados', reg_care:'Registrar cuidado', saved_care:'Cuidado salvo',
     care_kind:'Tipo', care_title:'Título', care_last:'Última vez / data', care_freq:'Frequência', care_freq_none:'Uma vez', care_every:'A cada {n} dias', care_yearly:'A cada ano', care_notes:'Notas',
     care_bano:'Banho', care_unas:'Corte de unhas', care_medic:'Medicação', care_grooming:'Banho e tosa', care_cumple:'Aniversário', care_otro:'Outro',
@@ -680,7 +697,7 @@ const ACCENTS = [
   { key:'naranja',  c:'#EA580C' },
   { key:'turquesa', c:'#0D9488' },
 ];
-const SPECIES_COLOR = { perro:'#D97706', gato:'#7C3AED', conejo:'#DB2777', huron:'#0D9488', ave:'#2563EB', otro:'#16A34A' };
+const SPECIES_COLOR = { perro:'#D97706', gato:'#7C3AED', conejo:'#DB2777', huron:'#0D9488', ave:'#2563EB', tortuga:'#15803D', otro:'#16A34A' };
 function accentColor(){ const a=ACCENTS.find(x=>x.key===data.accent); return a?a.c:null; }
 function applyAccent(){
   const c=accentColor();
@@ -999,21 +1016,16 @@ function viewHome(){
 
   const pets = data.pets.map(p=>{
     const ps = petSummary(p); const col = stateMeta()[ps.estado].color;
-    const av = p.info.foto ? `<img src="${p.info.foto}" alt="">` : (SPECIES_EMOJI[p.info.especie]||'🐾');
     return `<button class="petav ${p.info.id===data.activeId?'active':''}" data-pet="${p.info.id}">
-      <div class="av">${av}<span class="ringmini">${ringSVG(ps.pct,col,70,4)}</span></div>
+      <div class="av"><img src="${petFoto(p.info)}" alt=""><span class="ringmini">${ringSVG(ps.pct,col,70,4)}</span></div>
       <div class="nm">${esc(p.info.nombre)}</div></button>`;
   }).join('');
 
   const logros = achievements(pet).filter(a=>a.got).length;
-  const heroMedia = pet.info.foto
-    ? `<img src="${pet.info.foto}" alt="${esc(pet.info.nombre)}">`
-    : `<div class="noimg">${SPECIES_EMOJI[pet.info.especie]||'🐾'}</div>`;
-  const heroBg = pet.info.foto ? '' : ` style="background:${speciesGrad(pet.info.especie)}"`;
 
   return `<div class="view">
-    <div class="phero" data-go="pet" role="button" tabindex="0" aria-label="${esc(pet.info.nombre)}"${heroBg}>
-      ${heroMedia}
+    <div class="phero" data-go="pet" role="button" tabindex="0" aria-label="${esc(pet.info.nombre)}">
+      <img src="${petFoto(pet.info)}" alt="${esc(pet.info.nombre)}">
       <div class="grad"></div>
       <div class="ringchip">${heroRing(s.pct, 58, 5)}<span class="pct">${s.pct}%</span></div>
       <div class="pinfo">
@@ -1129,7 +1141,7 @@ function viewCard(){
 /* ---- Mascota (perfil + peso) ---- */
 function viewPet(){
   const pet = activePet(); const info = pet.info;
-  const av = info.foto ? `<img src="${info.foto}" alt="">` : (SPECIES_EMOJI[info.especie]||'🐾');
+  const av = `<img src="${petFoto(info)}" alt="">`;
   const sexLbl={es:{m:'Macho',h:'Hembra'},en:{m:'Male',h:'Female'},pt:{m:'Macho',h:'Fêmea'}}[data.lang||'es'];
   const rows = [
     ['Microchip', info.microchip],
@@ -1228,7 +1240,7 @@ function viewShared(){
     <div class="sharebar"><span>${t('shared_title')}</span><button id="openMine">${t('open_mine')}</button></div>
     ${sharedSig?`<div id="vbadge" class="vbadge unk">${esc(t('verifying'))}</div>`:''}
     <div class="card hero" style="margin-top:14px">
-      <div class="av" style="width:60px;height:60px;font-size:28px;border-radius:50%;background:var(--surface-2);border:1px solid var(--line);display:grid;place-items:center;flex:none">${SPECIES_EMOJI[pet.info.especie]||'🐾'}</div>
+      <div class="av" style="width:60px;height:60px;border-radius:50%;background:var(--surface-2);border:1px solid var(--line);overflow:hidden;flex:none"><img src="${petFoto(pet.info)}" alt="" style="width:100%;height:100%;object-fit:cover"></div>
       <div><h2>${esc(pet.info.nombre)}</h2><div class="sub">${esc(cap(pet.info.especie))}${pet.info.raza?` · ${esc(pet.info.raza)}`:''}${pet.info.nacimiento?` · ${ageText(pet.info.nacimiento)}`:''}</div></div>
     </div>
     <section class="block"><div class="block-title">${t('sec_vaccines')}</div>
@@ -1274,10 +1286,10 @@ function petModal(existing){
   const p = existing || {}; photoTmp = p.foto || null;
   const especie = p.especie || 'perro';
   const body = `
-    <div class="photo-pick"><div class="pv" id="pvPhoto">${photoTmp?`<img src="${photoTmp}">`:(SPECIES_EMOJI[especie]||'🐾')}</div>
+    <div class="photo-pick"><div class="pv" id="pvPhoto"><img src="${photoTmp||speciesArt(especie)}"></div>
       <div><button class="btn" id="pickPhoto" type="button">Elegir foto</button>${photoTmp?`<button class="btn btn-ghost" id="clearPhoto" type="button">Quitar</button>`:''}</div></div>
     <div class="field" id="f-nombre"><label>Nombre *</label><input id="m-nombre" value="${esc(p.nombre||'')}" placeholder="Ej: Rocky"><div class="errmsg">Escribe un nombre</div></div>
-    <div class="field"><label>Especie *</label><select id="m-especie">${['perro','gato','conejo','huron','ave','otro'].map(e=>`<option value="${e}" ${especie===e?'selected':''}>${SPECIES_EMOJI[e]} ${cap(e)}</option>`).join('')}</select></div>
+    <div class="field"><label>Especie *</label><select id="m-especie">${['perro','gato','conejo','huron','ave','tortuga','otro'].map(e=>`<option value="${e}" ${especie===e?'selected':''}>${SPECIES_EMOJI[e]} ${cap(e)}</option>`).join('')}</select></div>
     <div class="two"><div class="field"><label>Raza</label><input id="m-raza" value="${esc(p.raza||'')}" placeholder="Mestizo, Labrador…"></div>
       <div class="field"><label>Sexo</label><select id="m-sexo"><option value="">—</option><option value="m" ${p.sexo==='m'?'selected':''}>Macho</option><option value="h" ${p.sexo==='h'?'selected':''}>Hembra</option></select></div></div>
     <div class="two"><div class="field"><label>Nacimiento</label><input type="date" id="m-nac" value="${esc(p.nacimiento||'')}" max="${todayISO()}"></div>
@@ -1295,10 +1307,10 @@ function petModal(existing){
 
   let esterVal = p.esterilizado===true?'si':p.esterilizado===false?'no':'';
   document.getElementById('m-ester').addEventListener('click', e=>{ const b=e.target.closest('button'); if(!b) return; esterVal=b.dataset.v; [...e.currentTarget.children].forEach(c=>c.classList.toggle('on',c===b)); });
-  document.getElementById('m-especie').addEventListener('change', e=>{ if(!photoTmp) document.getElementById('pvPhoto').innerHTML = SPECIES_EMOJI[e.target.value]||'🐾'; });
+  document.getElementById('m-especie').addEventListener('change', e=>{ if(!photoTmp) document.getElementById('pvPhoto').innerHTML = `<img src="${speciesArt(e.target.value)}">`; });
   document.getElementById('pickPhoto').addEventListener('click', ()=>{ const inp=document.getElementById('photoInput'); inp.value='';
     inp.onchange=()=>{ const f=inp.files[0]; if(f) compressImage(f, u=>{ photoTmp=u; document.getElementById('pvPhoto').innerHTML=`<img src="${u}">`; }); }; inp.click(); });
-  const clr=document.getElementById('clearPhoto'); if(clr) clr.addEventListener('click',()=>{ photoTmp=null; document.getElementById('pvPhoto').innerHTML=SPECIES_EMOJI[document.getElementById('m-especie').value]||'🐾'; });
+  const clr=document.getElementById('clearPhoto'); if(clr) clr.addEventListener('click',()=>{ photoTmp=null; document.getElementById('pvPhoto').innerHTML=`<img src="${speciesArt(document.getElementById('m-especie').value)}">`; });
 
   document.getElementById('savePet').addEventListener('click', ()=>{
     const nombre=val('m-nombre').trim();
@@ -1415,7 +1427,7 @@ function openEdit(kind, id){
 
 /* ---- Cambiar mascota ---- */
 function switchModal(){
-  const body = data.pets.map(p=>{ const av=p.info.foto?`<img src="${p.info.foto}" style="width:100%;height:100%;object-fit:cover">`:(SPECIES_EMOJI[p.info.especie]||'🐾');
+  const body = data.pets.map(p=>{ const av=`<img src="${petFoto(p.info)}" style="width:100%;height:100%;object-fit:cover">`;
     return `<button class="tile" data-switch="${p.info.id}" style="margin-bottom:10px"><span class="ic" style="background:var(--surface-2);overflow:hidden">${av}</span>
       <span class="tt"><b>${esc(p.info.nombre)}</b><span>${esc(cap(p.info.especie))}${p.info.raza?` · ${esc(p.info.raza)}`:''}</span></span>
       ${p.info.id===data.activeId?`<span style="color:var(--accent)">${I.check}</span>`:`<span class="chev">${I.chev}</span>`}</button>`; }).join('');
@@ -2307,7 +2319,7 @@ function loadDemoPet(){
   const add = (info, x) => P.push(Object.assign({ vaccines:[], dewormings:[], weights:[], vetVisits:[], cares:[], album:[], docs:[] }, x, { info: Object.assign({ id:uid(), demo:true }, info) }));
 
   // 🐶 Rocky — perro, con DOSIS PRÓXIMA (estado ámbar) + datos completos
-  add({ nombre:'Rocky', especie:'perro', raza:'Labrador', sexo:'m', nacimiento:'2022-03-10', microchip:'941000012345678', esterilizado:true, peso:28, foto:demoFoto('#f59e0b','#b45309'), veterinario:'Clínica Patitas' }, {
+  add({ nombre:'Rocky', especie:'perro', raza:'Labrador', sexo:'m', nacimiento:'2022-03-10', microchip:'941000012345678', esterilizado:true, peso:28, foto:speciesArt('perro'), veterinario:'Clínica Patitas' }, {
     vaccines:[ { id:uid(), nombre:'Rabia', fecha:d(-190), proxima:d(5), source:'manual' },
                { id:uid(), nombre:'Polivalente (quíntuple/séxtuple)', fecha:d(-220), proxima:d(40), source:'manual' },
                { id:uid(), nombre:'Leptospirosis', fecha:d(-220), proxima:d(140), source:'manual' } ],
@@ -2317,11 +2329,11 @@ function loadDemoPet(){
     vetVisits:[ { id:uid(), fecha:d(-20), motivo:'Revisión anual', clinica:'Clínica Patitas', diagnostico:'Sano', notas:'' } ],
     cares:[ { id:uid(), kind:'bano', titulo:'Baño', fecha:d(-12), cada:30, proxima:d(18), notas:'' },
             { id:uid(), kind:'cumple', titulo:'Cumpleaños', fecha:'2022-03-10', cada:365, proxima:nextAnniversary('2022-03-10'), notas:'' } ],
-    album:[ { id:uid(), img:demoFoto('#f59e0b','#b45309'), fecha:d(-120) }, { id:uid(), img:demoFoto('#fbbf24','#92400e'), fecha:d(-30) } ],
+    album:[ { id:uid(), img:speciesArt('perro'), fecha:d(-120) } ],
   });
 
   // 🐱 Luna — gata, AL DÍA (estado verde): refuerzos lejanos
-  add({ nombre:'Luna', especie:'gato', raza:'Siamés', sexo:'h', nacimiento:'2023-05-01', microchip:'900012345678901', esterilizado:true, peso:4.2, foto:demoFoto('#a78bfa','#6d28d9'), veterinario:'VetFelino' }, {
+  add({ nombre:'Luna', especie:'gato', raza:'Siamés', sexo:'h', nacimiento:'2023-05-01', microchip:'900012345678901', esterilizado:true, peso:4.2, foto:speciesArt('gato'), veterinario:'VetFelino' }, {
     vaccines:[ { id:uid(), nombre:'Trivalente felina (FVRCP)', fecha:d(-60), proxima:d(305), source:'manual' },
                { id:uid(), nombre:'Rabia', fecha:d(-60), proxima:d(305), source:'manual' },
                { id:uid(), nombre:'Leucemia felina (FeLV)', fecha:d(-60), proxima:d(305), source:'manual' } ],
@@ -2329,11 +2341,11 @@ function loadDemoPet(){
     weights:[ { id:uid(), fecha:d(-120), kg:3.6 }, { id:uid(), fecha:d(-60), kg:4.0 }, { id:uid(), fecha:d(-10), kg:4.2 } ],
     vetVisits:[ { id:uid(), fecha:d(-60), motivo:'Esterilización', clinica:'VetFelino', diagnostico:'Recuperada', notas:'' } ],
     cares:[ { id:uid(), kind:'unas', titulo:'Corte de uñas', fecha:d(-15), cada:30, proxima:d(15), notas:'' } ],
-    album:[ { id:uid(), img:demoFoto('#a78bfa','#6d28d9'), fecha:d(-40) } ],
+    album:[ { id:uid(), img:speciesArt('gato'), fecha:d(-40) } ],
   });
 
   // 🐰 Copo — conejo, con algo VENCIDO (estado rojo)
-  add({ nombre:'Copo', especie:'conejo', raza:'Belier', sexo:'m', nacimiento:'2024-02-15', esterilizado:false, peso:1.8, foto:demoFoto('#f472b6','#be185d') }, {
+  add({ nombre:'Copo', especie:'conejo', raza:'Belier', sexo:'m', nacimiento:'2024-02-15', esterilizado:false, peso:1.8, foto:speciesArt('conejo') }, {
     vaccines:[ { id:uid(), nombre:'Mixomatosis + RHD', fecha:d(-200), proxima:d(-3), source:'manual' } ],
     dewormings:[ { id:uid(), tipo:'externa', producto:'Antiparasitario', fecha:d(-40), proxima:d(-10) } ],
     weights:[ { id:uid(), fecha:d(-90), kg:1.5 }, { id:uid(), fecha:d(-30), kg:1.7 }, { id:uid(), fecha:d(-5), kg:1.8 } ],
@@ -2341,10 +2353,24 @@ function loadDemoPet(){
   });
 
   // 🦦 Pixel — hurón, sencillo (estado al día)
-  add({ nombre:'Pixel', especie:'huron', raza:'Estándar', sexo:'h', nacimiento:'2023-09-01', esterilizado:true, peso:0.9, foto:demoFoto('#2dd4bf','#0f766e') }, {
+  add({ nombre:'Pixel', especie:'huron', raza:'Estándar', sexo:'h', nacimiento:'2023-09-01', esterilizado:true, peso:0.9, foto:speciesArt('huron') }, {
     vaccines:[ { id:uid(), nombre:'Rabia', fecha:d(-90), proxima:d(275), source:'manual' } ],
     dewormings:[ { id:uid(), tipo:'externa', producto:'Pipeta', fecha:d(-25), proxima:d(35) } ],
     weights:[ { id:uid(), fecha:d(-60), kg:0.8 }, { id:uid(), fecha:d(-10), kg:0.9 } ],
+  });
+
+  // 🐦 Kiwi — ave (periquito), con cuidado próximo
+  add({ nombre:'Kiwi', especie:'ave', raza:'Periquito', sexo:'m', nacimiento:'2024-06-01', peso:0.045, foto:speciesArt('ave') }, {
+    vetVisits:[ { id:uid(), fecha:d(-40), motivo:'Chequeo de plumas', clinica:'Exóticos Vet', diagnostico:'Sano', notas:'' } ],
+    weights:[ { id:uid(), fecha:d(-40), kg:0.042 }, { id:uid(), fecha:d(-5), kg:0.045 } ],
+    cares:[ { id:uid(), kind:'otro', titulo:'Limpieza de jaula', fecha:d(-6), cada:7, proxima:d(1), notas:'' } ],
+  });
+
+  // 🐢 Tomi — tortuga, con desparasitación programada
+  add({ nombre:'Tomi', especie:'tortuga', raza:'Tortuga rusa', sexo:'h', nacimiento:'2019-04-20', peso:1.2, foto:speciesArt('tortuga') }, {
+    dewormings:[ { id:uid(), tipo:'interna', producto:'Antiparasitario reptiles', fecha:d(-15), proxima:d(75) } ],
+    weights:[ { id:uid(), fecha:d(-150), kg:1.0 }, { id:uid(), fecha:d(-60), kg:1.1 }, { id:uid(), fecha:d(-7), kg:1.2 } ],
+    vetVisits:[ { id:uid(), fecha:d(-30), motivo:'Control de caparazón', clinica:'Exóticos Vet', diagnostico:'Buen estado', notas:'' } ],
   });
 
   P.forEach(p => data.pets.push(p));
