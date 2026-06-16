@@ -1071,16 +1071,6 @@ function viewHome(){
       </div>
       <button class="tile" data-add="cuidado" style="margin-top:11px"><span class="ic c-violet">${I.heart}</span><span class="tt"><b>${t('tile_care')}</b><span>${t('tile_care_sub')}</span></span></button>
     </section>
-
-    <section class="block">
-      <div class="block-title">${t('sec_tools')}</div>
-      <button class="tile" data-asst style="margin-bottom:11px"><span class="ic c-violet">${I.spark}</span><span class="tt"><b>${t('asst_open')}</b><span>${t('asst_open_sub')}</span></span><span class="chev">${I.chev}</span></button>
-      <button class="tile" data-go="card" style="margin-bottom:11px"><span class="ic c-green">${I.card}</span><span class="tt"><b>${t('tool_card')}</b><span>${t('tool_card_sub')}</span></span><span class="chev">${I.chev}</span></button>
-      <button class="tile" id="travelOpen" style="margin-bottom:11px"><span class="ic c-blue">${I.shield}</span><span class="tt"><b>${t('travel_open')}</b><span>${t('travel_open_sub')}</span></span><span class="chev">${I.chev}</span></button>
-      <button class="tile" id="vetsOpen" style="margin-bottom:11px"><span class="ic c-red">${I.stetho}</span><span class="tt"><b>${t('vets_open')}</b><span>${t('vets_open_sub')}</span></span><span class="chev">${I.chev}</span></button>
-      <button class="tile" id="newsOpen" style="margin-bottom:11px"><span class="ic c-amber">${I.info}</span><span class="tt"><b>${t('news_open')}</b><span>${t('news_open_sub')}</span></span><span class="chev">${I.chev}</span></button>
-      <button class="tile" data-go="more"><span class="ic c-amber">${I.bell}</span><span class="tt"><b>${t('tool_more')}</b><span>${t('tool_more_sub')}</span></span><span class="chev">${I.chev}</span></button>
-    </section>
     <p class="disclaimer">${t('disc')}</p>
   </div>`;
 }
@@ -1191,13 +1181,22 @@ function viewPet(){
 function viewMore(){
   return `<div class="view">
     <h1 style="font-size:22px">${t('tab_more')}</h1>
-    <section class="block"><div class="block-title">${t('sec_reminders')}</div>
-      <div class="card pad"><div class="field" style="margin-top:0">
-        <label for="remDays">${t('rem_label')}</label>
-        <select id="remDays">${[7,14,30,45,60,90].map(n=>`<option value="${n}" ${data.remDays===n?'selected':''}>${tf('days_before',{n})}</option>`).join('')}</select>
-        <div class="hint">${t('rem_hint')}</div></div></div>
-      <button class="tile" id="expIcs" style="margin-top:11px"><span class="ic c-amber">${I.cal}</span><span class="tt"><b>${t('m_ics')}</b><span>${t('m_ics_sub')}</span></span><span class="chev">${I.chev}</span></button>
+    ${cloudConfigured()?`<section class="block"><div class="block-title">${t('sec_account')}</div>
+      ${session?`<div class="card pad">
+          <div style="display:flex;align-items:center;gap:12px"><span class="ic c-green" style="width:38px;height:38px;border-radius:11px;display:grid;place-items:center">${I.userOk}</span>
+            <div style="flex:1;min-width:0"><b style="font-size:14.5px">${t('acc_synced')}</b><div class="hint" style="margin-top:1px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${esc(session.user&&session.user.email||'')}</div></div></div>
+          <div class="row-actions"><button class="btn btn-primary" style="flex:1" id="syncNow">${t('acc_sync_now')}</button><button class="btn" id="signOut">${t('acc_signout')}</button></div>
+        </div>`
+       :`<button class="tile" id="signIn"><span class="ic c-accent">${I.user}</span><span class="tt"><b>${t('acc_signin')}</b><span>${t('acc_signin_sub')}</span></span><span class="chev">${I.chev}</span></button>`}
+    </section>`:''}
+
+    <section class="block"><div class="block-title">${t('sec_tools')}</div>
+      <button class="tile" data-asst><span class="ic c-violet">${I.spark}</span><span class="tt"><b>${t('asst_open')}</b><span>${t('asst_open_sub')}</span></span><span class="chev">${I.chev}</span></button>
+      <button class="tile" id="travelOpen" style="margin-top:11px"><span class="ic c-blue">${I.shield}</span><span class="tt"><b>${t('travel_open')}</b><span>${t('travel_open_sub')}</span></span><span class="chev">${I.chev}</span></button>
+      <button class="tile" id="vetsOpen" style="margin-top:11px"><span class="ic c-red">${I.stetho}</span><span class="tt"><b>${t('vets_open')}</b><span>${t('vets_open_sub')}</span></span><span class="chev">${I.chev}</span></button>
+      <button class="tile" id="newsOpen" style="margin-top:11px"><span class="ic c-amber">${I.info}</span><span class="tt"><b>${t('news_open')}</b><span>${t('news_open_sub')}</span></span><span class="chev">${I.chev}</span></button>
     </section>
+
     <section class="block"><div class="block-title">${t('sec_export')}</div>
       <button class="tile" id="shareCard"><span class="ic c-accent">${I.share}</span><span class="tt"><b>${t('m_share')}</b><span>${t('m_share_sub')}</span></span><span class="chev">${I.chev}</span></button>
       <button class="tile" id="expPdf" style="margin-top:11px"><span class="ic c-red">${I.pdf}</span><span class="tt"><b>${t('m_pdf')}</b><span>${t('m_pdf_sub')}</span></span><span class="chev">${I.chev}</span></button>
@@ -1205,6 +1204,15 @@ function viewMore(){
       <button class="tile" id="expJson" style="margin-top:11px"><span class="ic c-blue">${I.download}</span><span class="tt"><b>${t('m_json')}</b><span>${t('m_json_sub')}</span></span><span class="chev">${I.chev}</span></button>
       <button class="tile" id="impJson" style="margin-top:11px"><span class="ic c-green">${I.upload}</span><span class="tt"><b>${t('m_import')}</b><span>${t('m_import_sub')}</span></span><span class="chev">${I.chev}</span></button>
     </section>
+
+    <section class="block"><div class="block-title">${t('sec_reminders')}</div>
+      <div class="card pad"><div class="field" style="margin-top:0">
+        <label for="remDays">${t('rem_label')}</label>
+        <select id="remDays">${[7,14,30,45,60,90].map(n=>`<option value="${n}" ${data.remDays===n?'selected':''}>${tf('days_before',{n})}</option>`).join('')}</select>
+        <div class="hint">${t('rem_hint')}</div></div></div>
+      <button class="tile" id="expIcs" style="margin-top:11px"><span class="ic c-amber">${I.cal}</span><span class="tt"><b>${t('m_ics')}</b><span>${t('m_ics_sub')}</span></span><span class="chev">${I.chev}</span></button>
+    </section>
+
     <section class="block"><div class="block-title">${t('sec_appearance')}</div>
       <div class="card pad">
         <div class="hint" style="margin-bottom:8px">${t('theme_label')}</div>
@@ -1215,25 +1223,20 @@ function viewMore(){
         <div class="swatches">${ACCENTS.map(a=>`<button class="swatch ${(data.accent||'verde')===a.key?'on':''}" data-accent="${a.key}" aria-label="${a.key}" style="background:${a.c};color:${a.c}"></button>`).join('')}</div>
       </div>
     </section>
-    ${cloudConfigured()?`<section class="block"><div class="block-title">${t('sec_account')}</div>
-      ${session?`<div class="card pad">
-          <div style="display:flex;align-items:center;gap:12px"><span class="ic c-green" style="width:38px;height:38px;border-radius:11px;display:grid;place-items:center">${I.check}</span>
-            <div style="flex:1;min-width:0"><b style="font-size:14.5px">${t('acc_synced')}</b><div class="hint" style="margin-top:1px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${esc(session.user&&session.user.email||'')}</div></div></div>
-          <div class="row-actions"><button class="btn btn-primary" style="flex:1" id="syncNow">${t('acc_sync_now')}</button><button class="btn" id="signOut">${t('acc_signout')}</button></div>
-        </div>`
-       :`<button class="tile" id="signIn"><span class="ic c-accent">${I.upload}</span><span class="tt"><b>${t('acc_signin')}</b><span>${t('acc_signin_sub')}</span></span><span class="chev">${I.chev}</span></button>`}
-    </section>`:''}
-    <section class="block"><div class="block-title">${t('sec_app')}</div>
-      ${installPrompt?`<button class="tile" id="installApp" style="margin-bottom:11px"><span class="ic c-accent">${I.download}</span><span class="tt"><b>${t('m_install')}</b><span>${t('m_install_sub')}</span></span><span class="chev">${I.chev}</span></button>`:''}
-      <button class="tile" id="notifTile"><span class="ic c-amber">${I.bell}</span><span class="tt"><b>${t('m_notif')}</b><span>${notifSubText()}</span></span><span class="chev">${I.chev}</span></button>
-      <button class="tile" id="a11yBig" style="margin-top:11px" aria-pressed="${!!data.bigText}"><span class="ic c-violet">${I.spark}</span><span class="tt"><b>${t('a11y_big')}</b><span>${data.bigText?t('pv_lock_on'):t('a11y_big_sub')}</span></span><span class="chev">${I.chev}</span></button>
-    </section>
+
     <section class="block"><div class="block-title">${t('sec_privacy')}</div>
       <button class="tile" id="pvLock"><span class="ic c-accent">${I.lock}</span><span class="tt"><b>${t('pv_lock')}</b><span>${(data.lock&&data.lock.enabled)?t('pv_lock_on'):t('pv_lock_off')}</span></span><span class="chev">${I.chev}</span></button>
       <button class="tile" id="pvEnc" style="margin-top:11px"><span class="ic c-blue">${I.shield}</span><span class="tt"><b>${t('pv_encbak')}</b><span>${t('pv_encbak_sub')}</span></span><span class="chev">${I.chev}</span></button>
       <button class="tile" id="pvWipe" style="margin-top:11px"><span class="ic c-amber">${I.trash}</span><span class="tt"><b>${t('pv_delete')}</b><span>${t('pv_delete_sub')}</span></span><span class="chev">${I.chev}</span></button>
       ${cloudConfigured()&&session?`<button class="tile" id="pvDelAcc" style="margin-top:11px"><span class="ic c-red">${I.trash}</span><span class="tt"><b>${t('pv_delacc')}</b><span>${t('pv_delacc_sub')}</span></span><span class="chev">${I.chev}</span></button>`:''}
     </section>
+
+    <section class="block"><div class="block-title">${t('sec_app')}</div>
+      ${installPrompt?`<button class="tile" id="installApp" style="margin-bottom:11px"><span class="ic c-accent">${I.download}</span><span class="tt"><b>${t('m_install')}</b><span>${t('m_install_sub')}</span></span><span class="chev">${I.chev}</span></button>`:''}
+      <button class="tile" id="notifTile"><span class="ic c-amber">${I.bell}</span><span class="tt"><b>${t('m_notif')}</b><span>${notifSubText()}</span></span><span class="chev">${I.chev}</span></button>
+      <button class="tile" id="a11yBig" style="margin-top:11px" aria-pressed="${!!data.bigText}"><span class="ic c-violet">${I.spark}</span><span class="tt"><b>${t('a11y_big')}</b><span>${data.bigText?t('pv_lock_on'):t('a11y_big_sub')}</span></span><span class="chev">${I.chev}</span></button>
+    </section>
+
     <section class="block"><div class="block-title">${t('sec_about')}</div>
       <div class="card pad" style="font-size:13px;color:var(--muted)">${t('about_body')}<br><br>${t('disc')}</div>
     </section>
