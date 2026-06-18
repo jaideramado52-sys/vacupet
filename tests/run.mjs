@@ -164,7 +164,7 @@ VP.getData().lang='es';
 ok('freqLabel 30 → "Cada 30 días"', VP.freqLabel(30)==='Cada 30 días');
 ok('freqLabel 365 → "Cada año"', VP.freqLabel(365)==='Cada año');
 ok('freqLabel 0 → "Una vez"', VP.freqLabel(0)==='Una vez');
-ok('6 tipos de cuidado', VP.CARE_KINDS.length===6);
+ok('7 tipos de cuidado (incl. cita)', VP.CARE_KINDS.length===7 && VP.CARE_KINDS.some(k=>k.key==='cita'));
 ok('nextAnniversary devuelve fecha futura', (()=>{ const a=VP.nextAnniversary('2022-03-10'); return a>=new Date().toISOString().slice(0,10); })());
 VP.setData({ v:1, activeId:'1', remDays:30, lang:'es', pets:[{info:{id:'1',nombre:'R',especie:'perro'},vaccines:[],dewormings:[],weights:[],vetVisits:[],cares:[{id:'c',kind:'bano',titulo:'Baño',fecha:iso(-10),cada:30,proxima:iso(5)}]}] });
 {
