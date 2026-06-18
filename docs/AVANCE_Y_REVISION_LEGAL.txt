@@ -98,6 +98,8 @@
  EXTRAS
    - Modo viajero (requisitos por destino), veterinarias cercanas (geolocalizacion)
      y logros (gamificacion). Album de fotos y documentos.
+   - Noticias y alertas de salud animal: enlaces a fuentes oficiales
+     (OMSA/WOAH, MAGA, WSAVA, AVMA), con descargo de contenido de terceros.
 
  SEGURIDAD DEL USUARIO
    - Bloqueo con PIN y biometrico, respaldo cifrado y borrado total de datos.
@@ -242,6 +244,8 @@
    7. Seguridad real: RLS por usuario, cifrado en reposo, TLS, bucket privado con
       enlaces firmados, bloqueo local (PIN/biometrico), respaldo cifrado.
    8. Descargo "no reemplaza el carne oficial ni la consulta veterinaria" visible.
+   9. Noticias: seccion con enlaces a fuentes oficiales (contenido de terceros,
+      no se reproduce ni genera; con descargo). Riesgo bajo, a confirmar por abogado.
 
 
 ===============================================================================

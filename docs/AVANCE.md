@@ -45,6 +45,7 @@ programados). Lo único pendiente para el 100% es **activar la IA** (clave de An
 | Exportación (PDF / CSV / QR firmado) | 100% | QR de integridad activo en producción |
 | Privacidad y seguridad | 100% | PIN/biométrico, respaldo cifrado, borrar cuenta |
 | Viajero / veterinarias / logros | 100% | 5 destinos, geolocalización, gamificación |
+| Noticias y alertas de salud animal | 100% | Enlaces a fuentes oficiales (OMSA/WOAH, MAGA, WSAVA, AVMA) |
 | Álbum y documentos | 100% | Galería + adjuntos (a Storage con sesión) |
 | Asistente IA (chat híbrido) | 90% | Motor offline ✅; FAQ Claude por activar (clave) |
 | Escaneo OCR del carné | 90% | UI + función desplegada; falta clave de IA |
@@ -111,6 +112,8 @@ programados). Lo único pendiente para el 100% es **activar la IA** (clave de An
 ### Extras
 - **Modo viajero** (requisitos por destino contrastados con el carné), **veterinarias cercanas**
   (geolocalización) y **logros** (gamificación).
+- **Noticias y alertas de salud animal**: sección con enlaces a fuentes oficiales
+  (OMSA/WOAH, MAGA Guatemala, WSAVA, AVMA), con descargo de contenido de terceros.
 
 ---
 
