@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<meta name="theme-color" content="#16A34A">
+<meta name="theme-color" content="#0D9488">
 <meta name="description" content="Carné de salud digital para tu mascota: vacunas, desparasitación, peso y recordatorios.">
 <title>VacuPet — Carné de salud para mascotas</title>
 <link rel="manifest" href="./manifest.webmanifest">
@@ -19,30 +19,30 @@
 <style>
 /* ============================ Sistema de diseño ============================ */
 :root{
-  --bg:#F4F8F4; --surface:#FFFFFF; --surface-2:#FAFCFA; --ink:#10291A; --muted:#5B6B60;
-  --accent:#16A34A; --accent-ink:color-mix(in srgb,var(--accent) 72%,#000); --line:#E3ECE5; --line-2:#EEF3EF;
+  --bg:#EFF6F5; --surface:#FFFFFF; --surface-2:#F6FBFA; --ink:#102A28; --muted:#5C6E6B;
+  --accent:#0D9488; --accent-ink:color-mix(in srgb,var(--accent) 72%,#000); --line:#DCEBE8; --line-2:#EAF4F2;
   --green:#16A34A; --amber:#D97706; --red:#DC2626; --blue:#2563EB;
-  --radius:16px; --radius-sm:11px; --shadow:0 1px 2px rgba(16,41,26,.05),0 1px 3px rgba(16,41,26,.04);
-  --shadow-lg:0 10px 30px rgba(16,41,26,.14);
+  --radius:16px; --radius-sm:11px; --shadow:0 1px 2px rgba(13,40,38,.05),0 1px 3px rgba(13,40,38,.04);
+  --shadow-lg:0 10px 30px rgba(13,40,38,.13);
   --font:-apple-system,BlinkMacSystemFont,"Inter","Segoe UI",Roboto,system-ui,sans-serif;
 }
 /* Tokens de oscuro (reutilizados por: sistema en oscuro + forzado manual) */
 @media (prefers-color-scheme: dark){
   :root{
-    --bg:#0B130E; --surface:#121C15; --surface-2:#16221A; --ink:#EAF2EC; --muted:#9FB3A6;
-    --accent:#22C55E; --accent-ink:color-mix(in srgb,var(--accent) 55%,#fff); --line:#1E2A22; --line-2:#1A251E;
+    --bg:#08130F; --surface:#10201C; --surface-2:#142824; --ink:#E6F2EF; --muted:#97B2AD;
+    --accent:#2DD4BF; --accent-ink:color-mix(in srgb,var(--accent) 55%,#fff); --line:#1C2C28; --line-2:#172320;
     --shadow:0 1px 2px rgba(0,0,0,.3); --shadow-lg:0 12px 34px rgba(0,0,0,.5);
   }
 }
 html[data-theme="dark"]{
-  --bg:#0B130E; --surface:#121C15; --surface-2:#16221A; --ink:#EAF2EC; --muted:#9FB3A6;
-  --accent:#22C55E; --accent-ink:color-mix(in srgb,var(--accent) 55%,#fff); --line:#1E2A22; --line-2:#1A251E;
+  --bg:#08130F; --surface:#10201C; --surface-2:#142824; --ink:#E6F2EF; --muted:#97B2AD;
+  --accent:#2DD4BF; --accent-ink:color-mix(in srgb,var(--accent) 55%,#fff); --line:#1C2C28; --line-2:#172320;
   --shadow:0 1px 2px rgba(0,0,0,.3); --shadow-lg:0 12px 34px rgba(0,0,0,.5);
 }
 html[data-theme="light"]{
-  --bg:#F4F8F4; --surface:#FFFFFF; --surface-2:#FAFCFA; --ink:#10291A; --muted:#5B6B60;
-  --accent:#16A34A; --accent-ink:color-mix(in srgb,var(--accent) 72%,#000); --line:#E3ECE5; --line-2:#EEF3EF;
-  --shadow:0 1px 2px rgba(16,41,26,.05),0 1px 3px rgba(16,41,26,.04); --shadow-lg:0 10px 30px rgba(16,41,26,.14);
+  --bg:#EFF6F5; --surface:#FFFFFF; --surface-2:#F6FBFA; --ink:#102A28; --muted:#5C6E6B;
+  --accent:#0D9488; --accent-ink:color-mix(in srgb,var(--accent) 72%,#000); --line:#DCEBE8; --line-2:#EAF4F2;
+  --shadow:0 1px 2px rgba(13,40,38,.05),0 1px 3px rgba(13,40,38,.04); --shadow-lg:0 10px 30px rgba(13,40,38,.13);
 }
 *{box-sizing:border-box}
 html,body{margin:0;padding:0}
@@ -693,12 +693,12 @@ const STR = {
 };
 // Paleta de acentos y color por especie (personalización visual)
 const ACCENTS = [
-  { key:'verde',    c:'#16A34A' },
-  { key:'azul',     c:'#2563EB' },
-  { key:'morado',   c:'#7C3AED' },
-  { key:'rosa',     c:'#DB2777' },
-  { key:'naranja',  c:'#EA580C' },
   { key:'turquesa', c:'#0D9488' },
+  { key:'azul',     c:'#0EA5E9' },
+  { key:'verde',    c:'#16A34A' },
+  { key:'morado',   c:'#7C3AED' },
+  { key:'coral',    c:'#F97316' },
+  { key:'rosa',     c:'#E11D74' },
 ];
 const SPECIES_COLOR = { perro:'#D97706', gato:'#7C3AED', conejo:'#DB2777', huron:'#0D9488', ave:'#2563EB', tortuga:'#15803D', otro:'#16A34A' };
 function accentColor(){ const a=ACCENTS.find(x=>x.key===data.accent); return a?a.c:null; }
@@ -1220,7 +1220,7 @@ function viewMore(){
           ${['auto','light','dark'].map(k=>`<button type="button" data-theme-set="${k}" class="${(data.theme||'auto')===k?'on':''}">${t('theme_'+k)}</button>`).join('')}
         </div>
         <div class="hint" style="margin:14px 0 10px">${t('accent_color')}</div>
-        <div class="swatches">${ACCENTS.map(a=>`<button class="swatch ${(data.accent||'verde')===a.key?'on':''}" data-accent="${a.key}" aria-label="${a.key}" style="background:${a.c};color:${a.c}"></button>`).join('')}</div>
+        <div class="swatches">${ACCENTS.map(a=>`<button class="swatch ${(data.accent||'turquesa')===a.key?'on':''}" data-accent="${a.key}" aria-label="${a.key}" style="background:${a.c};color:${a.c}"></button>`).join('')}</div>
       </div>
     </section>
 
