@@ -17,6 +17,9 @@ globalThis.document = { getElementById:()=>stubEl, documentElement:{ classList:{
 globalThis.window = { addEventListener(){}, scrollTo(){}, VACUPET_AI:{}, VACUPET_SUPABASE:{ url:'', anonKey:'' } };
 globalThis.location = { hash:'', origin:'https://app', pathname:'/VacuPet.html' };
 globalThis.localStorage = { _s:{}, getItem(k){return this._s[k]??null;}, setItem(k,v){this._s[k]=String(v);}, removeItem(k){delete this._s[k];} };
+// `navigator` existe como global en Node ≥21 (sin serviceWorker), pero NO en Node 20.
+// Lo stubeamos solo si falta, para que el registro del SW se omita sin lanzar.
+if(typeof globalThis.navigator === 'undefined'){ globalThis.navigator = { userAgent:'node-test', onLine:true }; }
 
 let code = [...html.matchAll(/<script>([\s\S]*?)<\/script>/g)].pop()[1];
 code = code.replace(/shared = readShareHash\(\);[\s\S]*$/, '').replace(/"use strict";/, '');
