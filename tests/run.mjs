@@ -29,7 +29,7 @@ code += `;globalThis.__VP = {
   verifyIntegrity, decodeShareObj, getSig:()=>sharedSig,
   setPin, checkPin, encryptBackup, decryptBackup,
   hasValidRabies, recentDeworm, checkReq, achievements, DESTINOS,
-  nextAnniversary, freqLabel, CARE_KINDS,
+  nextAnniversary, freqLabel, CARE_KINDS, weightStatus,
   ACCENTS, accentColor, SPECIES_COLOR, albumHTML, docsHTML,
   getData:()=>data, setData:d=>{data=d}
 };`;
@@ -166,6 +166,15 @@ ok('freqLabel 365 → "Cada año"', VP.freqLabel(365)==='Cada año');
 ok('freqLabel 0 → "Una vez"', VP.freqLabel(0)==='Una vez');
 ok('7 tipos de cuidado (incl. cita)', VP.CARE_KINDS.length===7 && VP.CARE_KINDS.some(k=>k.key==='cita'));
 ok('nextAnniversary devuelve fecha futura', (()=>{ const a=VP.nextAnniversary('2022-03-10'); return a>=new Date().toISOString().slice(0,10); })());
+
+section('Peso objetivo (alerta)');
+ok('sin objetivo → null', VP.weightStatus(28,'','')===null);
+ok('sin peso → null', VP.weightStatus('',25,30)===null);
+ok('dentro de rango → ok', VP.weightStatus(28,25,30)==='ok');
+ok('por debajo → low', VP.weightStatus(22,25,30)==='low');
+ok('por encima → high', VP.weightStatus(33,25,30)==='high');
+ok('solo máximo, excede → high', VP.weightStatus(33,'',30)==='high');
+ok('límite exacto inferior → ok', VP.weightStatus(25,25,30)==='ok');
 VP.setData({ v:1, activeId:'1', remDays:30, lang:'es', pets:[{info:{id:'1',nombre:'R',especie:'perro'},vaccines:[],dewormings:[],weights:[],vetVisits:[],cares:[{id:'c',kind:'bano',titulo:'Baño',fecha:iso(-10),cada:30,proxima:iso(5)}]}] });
 {
   const rem = VP.reminders(VP.getData().pets[0]);
