@@ -8,8 +8,12 @@ desktop.ini
 .idea/
 .claude/
 
-# Node (por si más adelante usas CLI de Supabase)
+# Node / Playwright
 node_modules/
+package-lock.json
+playwright-report/
+test-results/
+.playwright/
 
 # Build de Netlify
 dist/

@@ -40,18 +40,23 @@ Lo que diferencia VacuPet de "una libreta de notas".
 - [ ] **Esquema vacunal por país/normativa** — parametrizar `SCHEME` (hoy GT) para
   respetar calendarios locales. (Pendiente: mayor reestructuración de datos.)
 
-## Bloque 3 — Robustez "pro" / técnica  ⏳
+## Bloque 3 — Robustez "pro" / técnica  ✅ (entregado, salvo recordatorios-triggers)
 
-- [ ] **CI/CD** — GitHub Actions: tests + build + deploy automático en cada push
-  (hoy el deploy es manual).
-- [ ] **Tests E2E (Playwright)** — login, sync, alta de mascota y tarjeta de
-  emergencia en navegador real, además de la suite de lógica (86 tests).
-- [ ] **Recordatorios más confiables** — fallback con Notification Triggers /
-  Periodic Background Sync + "centro de recordatorios" auditable.
-- [ ] **Telemetría de errores** anónima (Sentry o propia) para fallos en producción.
-- [ ] **Migración de datos versionada** — formalizar `migrate()` por versión de esquema.
-- [ ] **Accesibilidad AA** — foco visible, lectores de pantalla en modales,
-  contraste del teal en estados.
+- [x] **CI/CD** — GitHub Actions (`.github/workflows/ci.yml`): `test` (suite de
+  lógica) → `e2e` (Playwright) → `deploy` a Pages. El deploy **solo corre si los
+  tests y el E2E pasan** (gate por verde). Pages cambiado a fuente "GitHub Actions".
+- [x] **Tests E2E (Playwright)** — `tests/e2e/smoke.spec.js`: arranque + siembra del
+  demo, Salud con Medicación, línea de tiempo y tarjeta de emergencia. Config con
+  `webServer` propio. 4 specs verdes.
+- [x] **Telemetría de errores** anónima y **local** (sin red): anillo de 20 errores
+  en `localStorage` (`window.onerror` + `unhandledrejection`), con vista *Más ›
+  Diagnóstico* para copiar/limpiar.
+- [x] **Migración de datos versionada** — `SCHEMA_VERSION` + `migrate()` por pasos
+  idempotentes (corrigió un bug real de TDZ en el arranque). 6 tests.
+- [x] **Accesibilidad AA** — `:focus-visible` en inputs, Escape cierra modales, foco
+  al abrir diálogo, `role=tab`/`aria-selected` en pestañas, `prefers-reduced-motion`.
+- [ ] **Recordatorios más confiables** — Notification Triggers / Periodic Background
+  Sync + centro de recordatorios auditable. (Pendiente: APIs experimentales.)
 
 ---
 

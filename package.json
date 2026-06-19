@@ -1,0 +1,16 @@
+{
+  "name": "vacupet",
+  "version": "1.0.0",
+  "description": "VacuPet — carné de salud para mascotas (PWA de un solo archivo)",
+  "private": true,
+  "scripts": {
+    "test": "node tests/run.mjs",
+    "e2e": "playwright test",
+    "e2e:install": "playwright install --with-deps chromium",
+    "serve": "python -m http.server 8080 --bind 127.0.0.1",
+    "build": "bash netlify-build.sh"
+  },
+  "devDependencies": {
+    "@playwright/test": "^1.49.0"
+  }
+}

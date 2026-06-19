@@ -30,7 +30,7 @@ code += `;globalThis.__VP = {
   setPin, checkPin, encryptBackup, decryptBackup,
   hasValidRabies, recentDeworm, checkReq, achievements, DESTINOS,
   nextAnniversary, freqLabel, CARE_KINDS, weightStatus,
-  buildTimeline, medFreqLabel,
+  buildTimeline, medFreqLabel, migrate, SCHEMA_VERSION,
   ACCENTS, accentColor, SPECIES_COLOR, albumHTML, docsHTML,
   getData:()=>data, setData:d=>{data=d}
 };`;
@@ -204,6 +204,20 @@ section('Línea de tiempo unificada');
   ok('timeline incluye los 6 eventos', tl.length===6);
   ok('timeline orden descendente (más reciente primero)', tl[0].fecha==='2024-05-01' && tl[tl.length-1].fecha==='2024-01-10');
   ok('timeline marca el tipo', tl.find(e=>e.kind==='visita').titulo==='Chequeo');
+}
+
+section('Migración versionada del esquema');
+{
+  // Documento antiguo (v1) sin owner ni meds.
+  const old = { v:1, lang:'es', remDays:30, activeId:'1',
+    pets:[{ info:{id:'1',nombre:'R',especie:'perro'}, vaccines:[], dewormings:[] }] };
+  const m = VP.migrate(old);
+  ok('sube a SCHEMA_VERSION', m.v===VP.SCHEMA_VERSION && VP.SCHEMA_VERSION===3);
+  ok('añade owner', m.owner && typeof m.owner==='object');
+  ok('añade meds a la mascota', Array.isArray(m.pets[0].meds));
+  ok('preserva datos existentes', m.pets[0].info.nombre==='R' && m.lang==='es');
+  ok('idempotente (2ª pasada estable)', VP.migrate(VP.migrate(old)).v===VP.SCHEMA_VERSION);
+  ok('basura → defaults con versión', VP.migrate(null).v===VP.SCHEMA_VERSION);
 }
 VP.setData({ v:1, activeId:'1', remDays:30, lang:'es', pets:[{info:{id:'1',nombre:'R',especie:'perro'},vaccines:[],dewormings:[],weights:[],vetVisits:[],cares:[{id:'c',kind:'bano',titulo:'Baño',fecha:iso(-10),cada:30,proxima:iso(5)}]}] });
 {
