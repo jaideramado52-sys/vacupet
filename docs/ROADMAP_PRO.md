@@ -23,19 +23,22 @@ Máximo impacto reutilizando la infraestructura existente.
 - [x] **Link de solo lectura por mascota** — ya existía (QR firmado ES256 +
   `viewShared`). Mantener.
 
-## Bloque 2 — Profundidad clínica  ⏳ (siguiente)
+## Bloque 2 — Profundidad clínica  ✅ (entregado, salvo esquema por país)
 
 Lo que diferencia VacuPet de "una libreta de notas".
 
-- [ ] **Medicamentos / tratamientos crónicos** — dosis, horario y recordatorio
-  recurrente (no solo vacunas/desparasitación). Reutiliza el motor de
-  recordatorios (push/email/.ics). Para displasia, diabetes, epilepsia…
-- [ ] **Historial de visitas enriquecido** — motivo, diagnóstico, peso de ese día
-  y adjuntar foto de receta/análisis (ya hay OCR + álbum).
+- [x] **Medicamentos / tratamientos crónicos** — `pet.meds` con nombre, dosis, vía,
+  frecuencia (diaria/cada N días/Nº veces), hora, inicio/fin y próxima dosis.
+  Sección propia en *Salud*, estado activo/finalizado, e integrado al motor de
+  recordatorios (`reminders()` kind `medicación`). Modal `medModal`.
+- [x] **Historial de visitas enriquecido** — la visita ahora guarda **peso de ese
+  día** y permite **adjuntar foto** de receta/análisis (reutiliza `compressImage`).
+  La fila muestra el peso y un clip si hay adjunto.
+- [x] **Línea de tiempo unificada** — `buildTimeline()` (puro) fusiona vacunas +
+  desparasitación + peso + visitas + medicación + cuidados en orden cronológico;
+  se abre como modal desde *Salud* (`timelineModal`).
 - [ ] **Esquema vacunal por país/normativa** — parametrizar `SCHEME` (hoy GT) para
-  respetar calendarios locales; el viaje internacional ya existe.
-- [ ] **Línea de tiempo unificada** — vacunas + desparasitación + peso + visitas +
-  medicación en una sola vista cronológica.
+  respetar calendarios locales. (Pendiente: mayor reestructuración de datos.)
 
 ## Bloque 3 — Robustez "pro" / técnica  ⏳
 

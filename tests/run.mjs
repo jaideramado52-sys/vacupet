@@ -30,6 +30,7 @@ code += `;globalThis.__VP = {
   setPin, checkPin, encryptBackup, decryptBackup,
   hasValidRabies, recentDeworm, checkReq, achievements, DESTINOS,
   nextAnniversary, freqLabel, CARE_KINDS, weightStatus,
+  buildTimeline, medFreqLabel,
   ACCENTS, accentColor, SPECIES_COLOR, albumHTML, docsHTML,
   getData:()=>data, setData:d=>{data=d}
 };`;
@@ -175,6 +176,35 @@ ok('por debajo → low', VP.weightStatus(22,25,30)==='low');
 ok('por encima → high', VP.weightStatus(33,25,30)==='high');
 ok('solo máximo, excede → high', VP.weightStatus(33,'',30)==='high');
 ok('límite exacto inferior → ok', VP.weightStatus(25,25,30)==='ok');
+
+section('Medicación y recordatorios');
+VP.getData().lang='es';
+ok('medFreqLabel cada día', VP.medFreqLabel({cada:1})==='Cada día');
+ok('medFreqLabel 2× al día', VP.medFreqLabel({veces:2})==='2× al día');
+ok('medFreqLabel una vez', VP.medFreqLabel({cada:0})==='Una vez');
+{
+  const pet={ vaccines:[], dewormings:[], weights:[], vetVisits:[], cares:[],
+    meds:[ {id:'m1',nombre:'Carprofeno',cada:1,proxima:iso(2),activo:true},
+           {id:'m2',nombre:'Viejo',cada:1,proxima:iso(-3),activo:false} ] };
+  const rem=VP.reminders(pet);
+  ok('reminders incluye med activo', rem.some(r=>r.kind==='medicación'&&r.nombre==='Carprofeno'));
+  ok('reminders excluye med inactivo', !rem.some(r=>r.nombre==='Viejo'));
+  ok('petSummary cuenta meds (2)', VP.petSummary(pet).aplicadas===2);
+}
+
+section('Línea de tiempo unificada');
+{
+  const pet={ vaccines:[{id:'v',nombre:'Rabia',fecha:'2024-01-10',dosis:'1ª'}],
+    dewormings:[{id:'d',tipo:'externa',producto:'Pipeta',fecha:'2024-03-01'}],
+    weights:[{id:'w',fecha:'2024-02-01',kg:5}],
+    vetVisits:[{id:'vi',fecha:'2024-04-01',motivo:'Chequeo',clinica:'X'}],
+    meds:[{id:'m',nombre:'Med',inicio:'2024-05-01',dosis:'1'}],
+    cares:[{id:'c',kind:'bano',titulo:'Baño',fecha:'2024-01-20'}] };
+  const tl=VP.buildTimeline(pet);
+  ok('timeline incluye los 6 eventos', tl.length===6);
+  ok('timeline orden descendente (más reciente primero)', tl[0].fecha==='2024-05-01' && tl[tl.length-1].fecha==='2024-01-10');
+  ok('timeline marca el tipo', tl.find(e=>e.kind==='visita').titulo==='Chequeo');
+}
 VP.setData({ v:1, activeId:'1', remDays:30, lang:'es', pets:[{info:{id:'1',nombre:'R',especie:'perro'},vaccines:[],dewormings:[],weights:[],vetVisits:[],cares:[{id:'c',kind:'bano',titulo:'Baño',fecha:iso(-10),cada:30,proxima:iso(5)}]}] });
 {
   const rem = VP.reminders(VP.getData().pets[0]);

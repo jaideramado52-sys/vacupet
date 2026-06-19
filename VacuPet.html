@@ -104,6 +104,7 @@ section.block{margin:22px 0 0}
 .c-blue{background:color-mix(in srgb,var(--blue) 13%,var(--surface));color:var(--blue)}
 .c-accent{background:color-mix(in srgb,var(--accent) 14%,var(--surface));color:var(--accent)}
 .c-violet{background:color-mix(in srgb,#7C3AED 13%,var(--surface));color:#7C3AED}
+.c-muted{background:color-mix(in srgb,var(--muted) 13%,var(--surface));color:var(--muted)}
 
 /* ---- Hero ---- */
 .hero{padding:18px;display:flex;gap:16px;align-items:center}
@@ -408,6 +409,9 @@ const I = {
   heart:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20s-7-4.5-9.2-8.6C1.2 8.3 2.6 5 6 5c2 0 3.2 1.2 4 2.3C10.8 6.2 12 5 14 5c3.4 0 4.8 3.3 3.2 6.4C19 15.5 12 20 12 20z"/></svg>',
   download:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v12m0 0 4-4m-4 4-4-4M5 21h14"/></svg>',
   upload:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 21V9m0 0 4 4m-4-4-4 4M5 3h14"/></svg>',
+  pill:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="8" width="18" height="8" rx="4" transform="rotate(45 12 12)"/><path d="m8.5 8.5 7 7"/></svg>',
+  clip:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 11.5 12.5 20a5 5 0 0 1-7-7l8.5-8.5a3.3 3.3 0 0 1 4.7 4.7L10.1 12.6a1.7 1.7 0 0 1-2.4-2.4l7.3-7.3"/></svg>',
+  clock:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>',
 };
 const SPECIES_EMOJI = { perro:'🐶', gato:'🐱', conejo:'🐰', huron:'🦦', ave:'🐦', tortuga:'🐢', otro:'🐾' };
 // Ilustración SVG por especie (avatar cuando no hay foto subida). Sin internet ni derechos.
@@ -519,6 +523,10 @@ const STR = {
     care_bano:'Baño', care_unas:'Corte de uñas', care_medic:'Medicación', care_grooming:'Peluquería', care_cumple:'Cumpleaños', care_otro:'Otro', care_cita:'Cita veterinaria', lbl_blood:'Grupo sanguíneo', lbl_allergies:'Alergias', lbl_conditions:'Condiciones', emerg_open:'Tarjeta de emergencia', emerg_open_sub:'Datos críticos de un toque', emerg_title:'Tarjeta de emergencia', emerg_vet24:'Buscar veterinaria 24h', emerg_none:'Sin datos', nudge_notif:'Activa los avisos para no perderte las próximas dosis', nudge_enable:'Activar', nudge_login:'Inicia sesión para recibir avisos con la app cerrada',
     sec_owner:'Dueño y contactos', owner_edit:'Datos del dueño', owner_edit_sub:'Para la tarjeta de emergencia', owner_title:'Dueño y contacto de emergencia', owner_name:'Tu nombre', owner_phone:'Tu teléfono', owner_alt:'Contacto alternativo', owner_alt_name:'Nombre', owner_alt_phone:'Teléfono', owner_saved:'Datos guardados', emerg_owner:'Dueño', emerg_call:'Llamar', emerg_lost:'Si me encuentras, contacta a:',
     wt_goal:'Peso objetivo (kg)', wt_min:'Mínimo', wt_max:'Máximo', wt_in_range:'En su peso ideal', wt_below:'Por debajo del objetivo', wt_above:'Por encima del objetivo', wt_goal_set:'Objetivo',
+    sec_meds:'Medicación', tile_med:'Medicamento', tile_med_sub:'Tratamiento o crónico', add_med:'Añadir medicamento', no_meds:'Sin medicación activa', reg_med:'Registrar medicamento', saved_med:'Medicamento guardado',
+    med_name:'Medicamento', med_dose:'Dosis', med_via:'Vía', med_freq:'Frecuencia', med_time:'Hora', med_start:'Inicio', med_end:'Fin (opcional)', med_ongoing:'Tratamiento en curso', med_ended:'Finalizado', med_active:'Activo', med_daily:'Cada día', med_x_daily:'{n}× al día', med_notes:'Indicaciones',
+    visit_weight:'Peso ese día (kg)', visit_attach:'Adjuntar receta / análisis', visit_attached:'Adjunto', visit_remove_att:'Quitar adjunto',
+    sec_timeline:'Línea de tiempo', timeline_open:'Línea de tiempo de salud', timeline_open_sub:'Todo en orden cronológico', timeline_empty:'Aún no hay eventos', ev_vacuna:'Vacuna', ev_desparasitacion:'Desparasitación', ev_peso:'Peso', ev_visita:'Visita', ev_medicacion:'Medicamento', ev_cuidado:'Cuidado',
     sec_appearance:'Apariencia', accent_color:'Color de acento', theme_label:'Tema', theme_auto:'Auto', theme_light:'Claro', theme_dark:'Oscuro',
     sec_album:'Álbum', add_photo:'Añadir foto', no_album:'Sin fotos todavía', album_saved:'Foto añadida', uploading:'Subiendo…',
     sec_docs:'Documentos', add_doc:'Adjuntar documento', no_docs:'Sin documentos', doc_saved:'Documento adjuntado', doc_big:'El archivo es muy grande para guardarlo localmente (máx. ~2 MB)',
@@ -609,6 +617,10 @@ const STR = {
     care_bano:'Bath', care_unas:'Nail trim', care_medic:'Medication', care_grooming:'Grooming', care_cumple:'Birthday', care_otro:'Other', care_cita:'Vet appointment', lbl_blood:'Blood type', lbl_allergies:'Allergies', lbl_conditions:'Conditions', emerg_open:'Emergency card', emerg_open_sub:'Critical info in one tap', emerg_title:'Emergency card', emerg_vet24:'Find a 24h vet', emerg_none:'No data', nudge_notif:'Turn on alerts so you never miss a dose', nudge_enable:'Turn on', nudge_login:'Sign in to get alerts when the app is closed',
     sec_owner:'Owner & contacts', owner_edit:'Owner details', owner_edit_sub:'For the emergency card', owner_title:'Owner & emergency contact', owner_name:'Your name', owner_phone:'Your phone', owner_alt:'Alternate contact', owner_alt_name:'Name', owner_alt_phone:'Phone', owner_saved:'Details saved', emerg_owner:'Owner', emerg_call:'Call', emerg_lost:'If you find me, please contact:',
     wt_goal:'Target weight (kg)', wt_min:'Min', wt_max:'Max', wt_in_range:'At ideal weight', wt_below:'Below target', wt_above:'Above target', wt_goal_set:'Target',
+    sec_meds:'Medication', tile_med:'Medication', tile_med_sub:'Treatment or chronic', add_med:'Add medication', no_meds:'No active medication', reg_med:'Add medication', saved_med:'Medication saved',
+    med_name:'Medication', med_dose:'Dose', med_via:'Route', med_freq:'Frequency', med_time:'Time', med_start:'Start', med_end:'End (optional)', med_ongoing:'Ongoing treatment', med_ended:'Ended', med_active:'Active', med_daily:'Every day', med_x_daily:'{n}× a day', med_notes:'Instructions',
+    visit_weight:'Weight that day (kg)', visit_attach:'Attach prescription / lab', visit_attached:'Attachment', visit_remove_att:'Remove attachment',
+    sec_timeline:'Timeline', timeline_open:'Health timeline', timeline_open_sub:'Everything in chronological order', timeline_empty:'No events yet', ev_vacuna:'Vaccine', ev_desparasitacion:'Deworming', ev_peso:'Weight', ev_visita:'Visit', ev_medicacion:'Medication', ev_cuidado:'Care',
     sec_appearance:'Appearance', accent_color:'Accent color', theme_label:'Theme', theme_auto:'Auto', theme_light:'Light', theme_dark:'Dark',
     sec_album:'Album', add_photo:'Add photo', no_album:'No photos yet', album_saved:'Photo added', uploading:'Uploading…',
     sec_docs:'Documents', add_doc:'Attach document', no_docs:'No documents', doc_saved:'Document attached', doc_big:'File too large to store locally (max ~2 MB)',
@@ -699,6 +711,10 @@ const STR = {
     care_bano:'Banho', care_unas:'Corte de unhas', care_medic:'Medicação', care_grooming:'Banho e tosa', care_cumple:'Aniversário', care_otro:'Outro', care_cita:'Consulta veterinária', lbl_blood:'Tipo sanguíneo', lbl_allergies:'Alergias', lbl_conditions:'Condições', emerg_open:'Cartão de emergência', emerg_open_sub:'Dados críticos num toque', emerg_title:'Cartão de emergência', emerg_vet24:'Buscar veterinário 24h', emerg_none:'Sem dados', nudge_notif:'Ative os avisos para não perder as próximas doses', nudge_enable:'Ativar', nudge_login:'Entre para receber avisos com o app fechado',
     sec_owner:'Dono e contatos', owner_edit:'Dados do dono', owner_edit_sub:'Para o cartão de emergência', owner_title:'Dono e contato de emergência', owner_name:'Seu nome', owner_phone:'Seu telefone', owner_alt:'Contato alternativo', owner_alt_name:'Nome', owner_alt_phone:'Telefone', owner_saved:'Dados salvos', emerg_owner:'Dono', emerg_call:'Ligar', emerg_lost:'Se me encontrar, contate:',
     wt_goal:'Peso alvo (kg)', wt_min:'Mín', wt_max:'Máx', wt_in_range:'No peso ideal', wt_below:'Abaixo do alvo', wt_above:'Acima do alvo', wt_goal_set:'Alvo',
+    sec_meds:'Medicação', tile_med:'Medicamento', tile_med_sub:'Tratamento ou crônico', add_med:'Adicionar medicamento', no_meds:'Sem medicação ativa', reg_med:'Registrar medicamento', saved_med:'Medicamento salvo',
+    med_name:'Medicamento', med_dose:'Dose', med_via:'Via', med_freq:'Frequência', med_time:'Hora', med_start:'Início', med_end:'Fim (opcional)', med_ongoing:'Tratamento em curso', med_ended:'Finalizado', med_active:'Ativo', med_daily:'Todo dia', med_x_daily:'{n}× ao dia', med_notes:'Indicações',
+    visit_weight:'Peso naquele dia (kg)', visit_attach:'Anexar receita / exame', visit_attached:'Anexo', visit_remove_att:'Remover anexo',
+    sec_timeline:'Linha do tempo', timeline_open:'Linha do tempo de saúde', timeline_open_sub:'Tudo em ordem cronológica', timeline_empty:'Ainda não há eventos', ev_vacuna:'Vacina', ev_desparasitacion:'Vermífugo', ev_peso:'Peso', ev_visita:'Visita', ev_medicacion:'Medicamento', ev_cuidado:'Cuidado',
     sec_appearance:'Aparência', accent_color:'Cor de destaque', theme_label:'Tema', theme_auto:'Auto', theme_light:'Claro', theme_dark:'Escuro',
     sec_album:'Álbum', add_photo:'Adicionar foto', no_album:'Sem fotos ainda', album_saved:'Foto adicionada', uploading:'Enviando…',
     sec_docs:'Documentos', add_doc:'Anexar documento', no_docs:'Sem documentos', doc_saved:'Documento anexado', doc_big:'Arquivo muito grande para salvar localmente (máx. ~2 MB)',
@@ -818,6 +834,7 @@ function migrate(d){
     p.dewormings = p.dewormings || [];
     p.weights = p.weights || [];
     p.vetVisits = p.vetVisits || [];
+    p.meds = p.meds || [];
     p.cares = p.cares || [];
     p.album = p.album || [];
     p.docs = p.docs || [];
@@ -877,8 +894,21 @@ function reminders(pet){
   (pet.vaccines||[]).forEach(v=>{ if(v.proxima) out.push({kind:'vacuna',nombre:v.nombre,fecha:v.proxima}); });
   (pet.dewormings||[]).forEach(d=>{ if(d.proxima) out.push({kind:'desparasitación',nombre:d.producto||(d.tipo==='externa'?'Antipulgas':'Interna'),fecha:d.proxima}); });
   (pet.cares||[]).forEach(c=>{ if(c.proxima) out.push({kind:'cuidado',nombre:c.titulo,fecha:c.proxima}); });
+  (pet.meds||[]).forEach(m=>{ if(m.proxima && m.activo!==false) out.push({kind:'medicación',nombre:m.nombre,fecha:m.proxima}); });
   out.sort((a,b)=>a.fecha<b.fecha?-1:1);
   return out;
+}
+// Línea de tiempo unificada (puro, testeable): todos los eventos en orden cronológico desc.
+function buildTimeline(pet){
+  const ev=[];
+  (pet.vaccines||[]).forEach(v=>{ if(v.fecha) ev.push({kind:'vacuna', fecha:v.fecha, titulo:v.nombre, sub:v.dosis||''}); });
+  (pet.dewormings||[]).forEach(d=>{ if(d.fecha) ev.push({kind:'desparasitacion', fecha:d.fecha, titulo:d.producto||(d.tipo==='externa'?'Externa':'Interna'), sub:''}); });
+  (pet.weights||[]).forEach(w=>{ if(w.fecha) ev.push({kind:'peso', fecha:w.fecha, titulo:`${w.kg} kg`, sub:''}); });
+  (pet.vetVisits||[]).forEach(v=>{ if(v.fecha) ev.push({kind:'visita', fecha:v.fecha, titulo:v.motivo||'Visita', sub:v.clinica||''}); });
+  (pet.meds||[]).forEach(m=>{ if(m.inicio) ev.push({kind:'medicacion', fecha:m.inicio, titulo:m.nombre, sub:m.dosis||''}); });
+  (pet.cares||[]).forEach(c=>{ if(c.fecha) ev.push({kind:'cuidado', fecha:c.fecha, titulo:c.titulo, sub:''}); });
+  ev.sort((a,b)=> a.fecha<b.fecha?1 : a.fecha>b.fecha?-1 : 0);
+  return ev;
 }
 function statusOf(fecha){
   const today=todayISO();
@@ -888,7 +918,7 @@ function statusOf(fecha){
 }
 function petSummary(pet){
   const rem = reminders(pet);
-  const aplicadas = (pet.vaccines||[]).length + (pet.dewormings||[]).length + (pet.cares||[]).length;
+  const aplicadas = (pet.vaccines||[]).length + (pet.dewormings||[]).length + (pet.cares||[]).length + (pet.meds||[]).length;
   let vencidas=0, proximas=0, next=null;
   rem.forEach(r=>{ const s=statusOf(r.fecha); if(s==='vencida') vencidas++; else if(s==='proxima') proximas++; if(r.fecha>=todayISO()&&!next) next=r; });
   let estado='aldia'; if(vencidas>0) estado='vencidas'; else if(proximas>0) estado='proximas';
@@ -1124,10 +1154,57 @@ function dewRow(d, ro){
     ${ro?'':`<button class="iconmini" data-del="desparasitacion" data-id="${d.id}" aria-label="${t('delete')}">${I.trash}</button>`}</div>`;
 }
 function visitRow(v, ro){
-  const sub=[fmt(v.fecha), v.clinica].filter(Boolean).join(' · ');
+  const sub=[fmt(v.fecha), v.clinica, v.pesoDia?`${v.pesoDia} kg`:''].filter(Boolean).join(' · ');
+  const clip=v.foto?`<span class="meta" title="${t('visit_attached')}">${I.clip}</span>`:'';
   return `<div class="rec"><span class="ic c-violet">${I.stetho}</span>
     <div class="rr"${ro?'':` data-edit="visita" data-id="${v.id}" style="cursor:pointer"`}><b>${esc(v.motivo||'Visita')}</b><span>${esc(sub)}${v.diagnostico?` · ${esc(v.diagnostico)}`:''}</span></div>
-    ${ro?'':`<button class="iconmini" data-del="visita" data-id="${v.id}" aria-label="${t('delete')}">${I.trash}</button>`}</div>`;
+    ${clip}${ro?'':`<button class="iconmini" data-del="visita" data-id="${v.id}" aria-label="${t('delete')}">${I.trash}</button>`}</div>`;
+}
+// Medicación / tratamientos crónicos
+function medFreqLabel(m){
+  if(m.veces && Number(m.veces)>1) return tf('med_x_daily',{n:Number(m.veces)});
+  const c=Number(m.cada); if(c===1) return t('med_daily'); if(c>0) return freqLabel(c); return t('care_freq_none');
+}
+function medRow(m, ro){
+  const ended = m.activo===false || (m.fin && m.fin<todayISO());
+  const sub=[m.dosis, medFreqLabel(m), m.hora].filter(Boolean).join(' · ');
+  const tag = ended ? `<span class="tagdue c-muted">${t('med_ended')}</span>` : dueTagFor(m.proxima);
+  return `<div class="rec" style="${ended?'opacity:.6':''}"><span class="ic ${ended?'c-muted':'c-red'}">${I.pill}</span>
+    <div class="rr"${ro?'':` data-edit="medicamento" data-id="${m.id}" style="cursor:pointer"`}><b>${esc(m.nombre)}</b><span>${esc(sub)}${(!ended&&m.proxima)?` · ${t('next').toLowerCase()} ${fmt(m.proxima)}`:''}</span></div>
+    <div class="meta">${tag}</div>
+    ${ro?'':`<button class="iconmini" data-del="medicamento" data-id="${m.id}" aria-label="${t('delete')}">${I.trash}</button>`}</div>`;
+}
+function medSection(pet){
+  const meds=(pet.meds||[]).slice().sort((a,b)=>((a.activo===false)-(b.activo===false))|| ((a.proxima||'9')<(b.proxima||'9')?-1:1));
+  return `<section class="block"><div class="block-title">${t('sec_meds')}</div>
+      ${meds.length?`<div class="card">${meds.map(m=>medRow(m,false)).join('')}</div>`:emptyBox(I.pill, t('no_meds'))}
+      <button class="btn btn-block" data-add="medicamento" style="margin-top:11px">${I.plus} ${t('add_med')}</button></section>`;
+}
+function medModal(existing){
+  const pet=activePet(); const e=existing||{};
+  const body=`
+    <div class="field" id="f-mnombre"><label>${t('med_name')} *</label><input id="md-nombre" value="${esc(e.nombre||'')}" placeholder="Carprofeno, Insulina…"><div class="errmsg">—</div></div>
+    <div class="two"><div class="field"><label>${t('med_dose')}</label><input id="md-dosis" value="${esc(e.dosis||'')}" placeholder="50 mg, 2 UI…"></div>
+      <div class="field"><label>${t('med_via')}</label><select id="md-via">${['','Oral','Subcutánea','Intramuscular','Tópica','Ótica','Oftálmica'].map(o=>`<option value="${o}" ${(e.via||'')===o?'selected':''}>${o||'—'}</option>`).join('')}</select></div></div>
+    <div class="two"><div class="field"><label>${t('med_freq')}</label><select id="md-cada"><option value="0">${t('care_freq_none')}</option><option value="1" ${Number(e.cada)===1?'selected':''}>${t('med_daily')}</option>${[2,3,7,14,30].map(n=>`<option value="${n}" ${Number(e.cada)===n?'selected':''}>${esc(freqLabel(n))}</option>`).join('')}</select></div>
+      <div class="field"><label>${t('med_time')}</label><input type="time" id="md-hora" value="${esc(e.hora||'')}"></div></div>
+    <div class="two"><div class="field"><label>${t('med_start')}</label><input type="date" id="md-inicio" value="${esc(e.inicio||todayISO())}"></div>
+      <div class="field"><label>${t('med_end')}</label><input type="date" id="md-fin" value="${esc(e.fin||'')}"></div></div>
+    <div class="field"><label>${t('next')}</label><input type="date" id="md-proxima" value="${esc(e.proxima||'')}"><div class="hint" id="md-sug"></div></div>
+    <div class="field"><label>${t('med_notes')}</label><textarea id="md-notas" placeholder="Con comida, ayuno…">${esc(e.notas||'')}</textarea></div>`;
+  openModal(modalShell(existing?t('edit'):t('reg_med'), body, FOOT('saveMed')));
+  const caEl=document.getElementById('md-cada'), inEl=document.getElementById('md-inicio'), pxEl=document.getElementById('md-proxima');
+  function recalc(){ const c=Number(caEl.value), base=val('md-inicio'); if(c>0 && base && !pxEl.value){ pxEl.value=toISO(addDays(parseISO(base), c)); }
+    document.getElementById('md-sug').textContent = c>0 ? `${{es:'Próxima dosis sugerida',en:'Suggested next dose',pt:'Próxima dose sugerida'}[data.lang||'es']}` : ''; }
+  caEl.addEventListener('change', ()=>{ pxEl.value=''; recalc(); }); inEl.addEventListener('change', ()=>{ pxEl.value=''; recalc(); }); recalc();
+  document.getElementById('saveMed').addEventListener('click', ()=>{
+    const nombre=val('md-nombre').trim(); if(!nombre){ document.getElementById('f-mnombre').classList.add('err'); return; }
+    const fin=val('md-fin'); const activo = !(fin && fin<todayISO());
+    const rec={ nombre, dosis:val('md-dosis').trim(), via:val('md-via'), cada:Number(val('md-cada')), hora:val('md-hora'),
+      inicio:val('md-inicio'), fin, proxima:val('md-proxima'), activo, notas:val('md-notas').trim() };
+    if(existing){ Object.assign(existing, rec); } else { pet.meds.push({ id:uid(), ...rec }); }
+    save(); closeModal(); toast(t('saved_med')); render();
+  });
 }
 // Estado del peso frente al objetivo (puro, testeable). Devuelve 'low'|'ok'|'high'|null.
 function weightStatus(latestKg, min, max){
@@ -1164,12 +1241,14 @@ function viewCard(){
   const car=(pet.cares||[]).slice().sort((a,b)=>(a.proxima||'9')<(b.proxima||'9')?-1:1);
   return `<div class="view">
     <h1 style="font-size:22px">${t('card_of')} ${esc(pet.info.nombre)}</h1>
-    <section class="block" style="margin-top:14px"><div class="block-title">${t('sec_vaccines')}</div>
+    <button class="tile" id="timelineOpen" style="margin-top:14px"><span class="ic c-blue">${I.clock}</span><span class="tt"><b>${t('timeline_open')}</b><span>${t('timeline_open_sub')}</span></span><span class="chev">${I.chev}</span></button>
+    <section class="block"><div class="block-title">${t('sec_vaccines')}</div>
       ${vac.length?`<div class="card">${vac.map(v=>vacRow(v,false)).join('')}</div>`:emptyBox(I.syringe, t('no_vac'))}
       <div class="row-actions"><button class="btn" style="flex:1" data-add="vacuna">${I.plus} ${t('add_vac')}</button><button class="btn" id="ocrScan">${I.camera} ${t('ocr_scan')}</button></div></section>
     <section class="block"><div class="block-title">${t('sec_deworm')}</div>
       ${dew.length?`<div class="card">${dew.map(d=>dewRow(d,false)).join('')}</div>`:emptyBox(I.bug, t('no_dew'))}
       <button class="btn btn-block" data-add="desparasitacion" style="margin-top:11px">${I.plus} ${t('add_dew')}</button></section>
+    ${medSection(pet)}
     <section class="block"><div class="block-title">${t('sec_cares')}</div>
       ${car.length?`<div class="card">${car.map(c=>careRow(c,false)).join('')}</div>`:emptyBox(I.heart, t('no_cares'))}
       <button class="btn btn-block" data-add="cuidado" style="margin-top:11px">${I.plus} ${t('add_care')}</button></section>
@@ -1475,19 +1554,31 @@ function weightModal(existing){
 }
 
 /* ---- Visita vet ---- */
+let visitFotoTmp=null;
 function visitModal(existing){
-  const pet=activePet(); const e=existing||{};
+  const pet=activePet(); const e=existing||{}; visitFotoTmp = e.foto || null;
   const body=`<div class="field" id="f-vmotivo"><label>Motivo *</label><input id="vt-motivo" placeholder="Revisión, urgencia, cirugía…" value="${esc(e.motivo||'')}"><div class="errmsg">Indica el motivo</div></div>
     <div class="two"><div class="field" id="f-vfecha2"><label>Fecha *</label><input type="date" id="vt-fecha" value="${esc(e.fecha||todayISO())}" max="${todayISO()}"><div class="errmsg">Fecha requerida</div></div>
       <div class="field"><label>Clínica</label><input id="vt-clinica" value="${esc(e.clinica||'')}"></div></div>
     <div class="field"><label>Diagnóstico</label><input id="vt-diag" value="${esc(e.diagnostico||'')}"></div>
+    <div class="field"><label>${t('visit_weight')}</label><input type="number" step="0.1" min="0" id="vt-peso" value="${esc(e.pesoDia||'')}" placeholder="0.0"></div>
+    <div class="field"><label>${t('visit_attach')}</label><div id="vt-attwrap">${visitAttachHTML()}</div></div>
     <div class="field"><label>Notas</label><textarea id="vt-notas">${esc(e.notas||'')}</textarea></div>`;
   openModal(modalShell(existing?t('edit'):t('reg_visit'), body, FOOT('saveVi')));
+  document.getElementById('vt-attwrap').addEventListener('click', ev=>{ const b=ev.target.closest('button'); if(!b) return;
+    if(b.dataset.act==='pick'){ const inp=document.getElementById('docInput'); inp.value=''; inp.accept='image/*';
+      inp.onchange=()=>{ const f=inp.files[0]; if(f) compressImage(f, u=>{ visitFotoTmp=u; document.getElementById('vt-attwrap').innerHTML=visitAttachHTML(); }, 1200); }; inp.click(); }
+    else if(b.dataset.act==='clear'){ visitFotoTmp=null; document.getElementById('vt-attwrap').innerHTML=visitAttachHTML(); } });
   document.getElementById('saveVi').addEventListener('click', ()=>{ let ok=true; const motivo=val('vt-motivo').trim(), fecha=val('vt-fecha');
     if(!motivo){document.getElementById('f-vmotivo').classList.add('err');ok=false;} if(!fecha){document.getElementById('f-vfecha2').classList.add('err');ok=false;} if(!ok) return;
-    const rec={ fecha, motivo, clinica:val('vt-clinica').trim(), diagnostico:val('vt-diag').trim(), notas:val('vt-notas').trim() };
+    const rec={ fecha, motivo, clinica:val('vt-clinica').trim(), diagnostico:val('vt-diag').trim(), pesoDia:val('vt-peso'), foto:visitFotoTmp||null, notas:val('vt-notas').trim() };
     if(existing){ Object.assign(existing, rec); } else { pet.vetVisits.push({id:uid(), ...rec}); }
     save(); closeModal(); toast(t('saved_visit')); render(); });
+}
+function visitAttachHTML(){
+  return visitFotoTmp
+    ? `<div style="display:flex;align-items:center;gap:10px"><img src="${visitFotoTmp}" style="width:54px;height:54px;border-radius:9px;object-fit:cover;border:1px solid var(--line)"><button type="button" class="btn btn-ghost" data-act="clear">${t('visit_remove_att')}</button></div>`
+    : `<button type="button" class="btn" data-act="pick">${I.clip} ${t('visit_attach')}</button>`;
 }
 
 /* ---- Abrir el editor del registro tocado ---- */
@@ -1497,6 +1588,7 @@ function openEdit(kind, id){
   else if(kind==='desparasitacion'){ const r=(pet.dewormings||[]).find(x=>x.id===id); if(r) dewormModal(r); }
   else if(kind==='cuidado'){ const r=(pet.cares||[]).find(x=>x.id===id); if(r) careModal(r); }
   else if(kind==='visita'){ const r=(pet.vetVisits||[]).find(x=>x.id===id); if(r) visitModal(r); }
+  else if(kind==='medicamento'){ const r=(pet.meds||[]).find(x=>x.id===id); if(r) medModal(r); }
   else if(kind==='peso'){ const r=(pet.weights||[]).find(x=>x.id===id); if(r) weightModal(r); }
 }
 
@@ -1649,10 +1741,12 @@ function exportPDF(){
   const dew=(pet.dewormings||[]).slice().sort((a,b)=>(a.fecha||'')<(b.fecha||'')?-1:1);
   const wts=(pet.weights||[]).slice().sort((a,b)=>(a.fecha||'')<(b.fecha||'')?-1:1);
   const vis=(pet.vetVisits||[]).slice().sort((a,b)=>(a.fecha||'')<(b.fecha||'')?-1:1);
+  const med=(pet.meds||[]).slice().sort((a,b)=>((a.activo===false)-(b.activo===false))||((a.inicio||'')<(b.inicio||'')?1:-1));
   const rowV=v=>`<tr><td>${esc(v.nombre)}</td><td>${fmt(v.fecha)}</td><td>${esc(v.dosis||'')}</td><td>${esc(v.lote||'')}</td><td>${esc(v.marca||'')}</td><td>${v.proxima?fmt(v.proxima):''}</td></tr>`;
   const rowD=d=>`<tr><td>${esc(d.producto||(d.tipo==='externa'?'Externa':'Interna'))}</td><td>${d.tipo==='externa'?'Externa':'Interna'}</td><td>${fmt(d.fecha)}</td><td>${d.peso?d.peso+' kg':''}</td><td>${d.proxima?fmt(d.proxima):''}</td></tr>`;
   const rowW=w=>`<tr><td>${fmt(w.fecha)}</td><td>${esc(w.kg)} kg</td></tr>`;
-  const rowI=v=>`<tr><td>${fmt(v.fecha)}</td><td>${esc(v.motivo||'')}</td><td>${esc(v.diagnostico||'')}</td><td>${esc(v.clinica||'')}</td></tr>`;
+  const rowI=v=>`<tr><td>${fmt(v.fecha)}</td><td>${esc(v.motivo||'')}</td><td>${esc(v.diagnostico||'')}</td><td>${v.pesoDia?esc(v.pesoDia)+' kg':''}</td><td>${esc(v.clinica||'')}</td></tr>`;
+  const rowM=m=>`<tr><td>${esc(m.nombre)}</td><td>${esc(m.dosis||'')}</td><td>${esc(medFreqLabel(m))}${m.hora?' · '+esc(m.hora):''}</td><td>${m.inicio?fmt(m.inicio):''}${m.fin?' → '+fmt(m.fin):''}</td><td>${m.activo===false?t('med_ended'):t('med_active')}</td></tr>`;
   document.getElementById('printArea').innerHTML=`<h1>🐾 ${t('card_of')} ${esc(info.nombre)}</h1>
     <div>${esc(cap(info.especie))}${info.raza?` · ${esc(info.raza)}`:''}${info.nacimiento?` · ${fmt(info.nacimiento)} (${ageText(info.nacimiento)})`:''}</div>
     <div>${info.microchip?`Microchip: ${esc(info.microchip)} · `:''}${info.esterilizado===true?'Esterilizado/a · ':''}${info.veterinario?`Vet: ${esc(info.veterinario)}`:''}</div>
@@ -1660,8 +1754,9 @@ function exportPDF(){
     ${(data.owner&&(data.owner.nombre||data.owner.telefono||data.owner.altTelefono))?`<div style="margin-top:4px">${t('emerg_lost')} ${[esc(data.owner.nombre||''),esc(data.owner.telefono||'')].filter(Boolean).join(' · ')}${data.owner.altTelefono?` · ${esc(data.owner.altNombre||t('owner_alt'))}: ${esc(data.owner.altTelefono)}`:''}</div>`:''}
     <h3>${t('sec_vaccines')}</h3>${vac.length?`<table><thead><tr><th>Vacuna</th><th>Fecha</th><th>Dosis</th><th>Lote</th><th>Marca</th><th>Próxima</th></tr></thead><tbody>${vac.map(rowV).join('')}</tbody></table>`:'<div>—</div>'}
     <h3>${t('sec_deworm')}</h3>${dew.length?`<table><thead><tr><th>Producto</th><th>Tipo</th><th>Fecha</th><th>Peso</th><th>Próxima</th></tr></thead><tbody>${dew.map(rowD).join('')}</tbody></table>`:'<div>—</div>'}
+    ${med.length?`<h3>${t('sec_meds')}</h3><table><thead><tr><th>${t('med_name')}</th><th>${t('med_dose')}</th><th>${t('med_freq')}</th><th>${t('med_start')}</th><th>${t('med_active')}</th></tr></thead><tbody>${med.map(rowM).join('')}</tbody></table>`:''}
     ${wts.length?`<h3>${t('sec_weight')}</h3><table><thead><tr><th>Fecha</th><th>Peso</th></tr></thead><tbody>${wts.map(rowW).join('')}</tbody></table>`:''}
-    ${vis.length?`<h3>${t('sec_visits')}</h3><table><thead><tr><th>Fecha</th><th>Motivo</th><th>Diagnóstico</th><th>Clínica</th></tr></thead><tbody>${vis.map(rowI).join('')}</tbody></table>`:''}
+    ${vis.length?`<h3>${t('sec_visits')}</h3><table><thead><tr><th>Fecha</th><th>Motivo</th><th>Diagnóstico</th><th>${t('sec_weight')}</th><th>Clínica</th></tr></thead><tbody>${vis.map(rowI).join('')}</tbody></table>`:''}
     <p style="margin-top:18px;font-size:11px;color:#666">VacuPet · ${fmt(todayISO())}. ${t('disc')}</p>`;
   setTimeout(()=>window.print(),60);
 }
@@ -2264,6 +2359,16 @@ function emergencyModal(){
   openModal(modalShell(t('emerg_title'), body, foot));
   document.getElementById('emergVet24').onclick=()=>openVets('veterinaria urgencias 24 horas');
 }
+function timelineModal(){
+  const pet=activePet(); if(!pet) return;
+  const ev=buildTimeline(pet);
+  const ICON={vacuna:I.syringe,desparasitacion:I.bug,peso:I.scale,visita:I.stetho,medicacion:I.pill,cuidado:I.heart};
+  const COL={vacuna:'c-accent',desparasitacion:'c-blue',peso:'c-green',visita:'c-violet',medicacion:'c-red',cuidado:'c-violet'};
+  const body = ev.length
+    ? `<div class="card">${ev.map(e=>`<div class="rec"><span class="ic ${COL[e.kind]}">${ICON[e.kind]||I.clock}</span><div class="rr"><b>${esc(e.titulo)}</b><span>${t('ev_'+e.kind)} · ${fmt(e.fecha)}${e.sub?` · ${esc(e.sub)}`:''}</span></div></div>`).join('')}</div>`
+    : emptyBox(I.clock, t('timeline_empty'));
+  openModal(modalShell(t('timeline_open'), body, `<button class="btn btn-block" data-close>${t('close')}</button>`));
+}
 function ownerModal(){
   const o=data.owner||{};
   const body=`
@@ -2432,7 +2537,7 @@ function demoFoto(c1, c2){
 function loadDemoPet(){
   const d = n => toISO(addDays(new Date(), n));
   const P = []; // helper para crear cada mascota con valores por defecto seguros
-  const add = (info, x) => P.push(Object.assign({ vaccines:[], dewormings:[], weights:[], vetVisits:[], cares:[], album:[], docs:[] }, x, { info: Object.assign({ id:uid(), demo:true }, info) }));
+  const add = (info, x) => P.push(Object.assign({ vaccines:[], dewormings:[], weights:[], vetVisits:[], meds:[], cares:[], album:[], docs:[] }, x, { info: Object.assign({ id:uid(), demo:true }, info) }));
 
   // 🐶 Rocky — perro, con DOSIS PRÓXIMA (estado ámbar) + datos completos
   add({ nombre:'Rocky', especie:'perro', raza:'Labrador', sexo:'m', nacimiento:'2022-03-10', microchip:'941000012345678', esterilizado:true, peso:28, foto:speciesArt('perro'), veterinario:'Clínica Patitas', sangre:'DEA 1.1+', alergias:'Pollo', condiciones:'Displasia leve de cadera', pesoMin:25, pesoMax:30 }, {
@@ -2442,7 +2547,9 @@ function loadDemoPet(){
     dewormings:[ { id:uid(), tipo:'externa', producto:'Pipeta antipulgas', fecha:d(-5), proxima:d(25) },
                  { id:uid(), tipo:'interna', producto:'Drontal', fecha:d(-30), proxima:d(60) } ],
     weights:[ { id:uid(), fecha:d(-100), kg:25 }, { id:uid(), fecha:d(-50), kg:27 }, { id:uid(), fecha:d(-8), kg:28 } ],
-    vetVisits:[ { id:uid(), fecha:d(-20), motivo:'Revisión anual', clinica:'Clínica Patitas', diagnostico:'Sano', notas:'' } ],
+    vetVisits:[ { id:uid(), fecha:d(-20), motivo:'Revisión anual', clinica:'Clínica Patitas', diagnostico:'Sano · cadera estable', pesoDia:28, notas:'Radiografía de control' } ],
+    meds:[ { id:uid(), nombre:'Carprofeno', dosis:'50 mg', via:'Oral', cada:1, hora:'08:00', inicio:d(-14), fin:'', proxima:d(1), activo:true, notas:'Con comida (antiinflamatorio para la cadera)' },
+           { id:uid(), nombre:'Condroprotector', dosis:'1 tableta', via:'Oral', cada:1, hora:'20:00', inicio:d(-60), fin:d(-5), proxima:'', activo:false, notas:'Ciclo terminado' } ],
     cares:[ { id:uid(), kind:'cita', titulo:'Cita: control de cadera', fecha:d(12), cada:0, proxima:d(12), notas:'Clínica Patitas' },
             { id:uid(), kind:'bano', titulo:'Baño', fecha:d(-12), cada:30, proxima:d(18), notas:'' },
             { id:uid(), kind:'cumple', titulo:'Cumpleaños', fecha:'2022-03-10', cada:365, proxima:nextAnniversary('2022-03-10'), notas:'' } ],
@@ -2516,7 +2623,7 @@ document.addEventListener('click', e=>{
   const pa=t0.closest('[data-pet]'); if(pa){ data.activeId=pa.dataset.pet; save(); render(); return; }
   const sw=t0.closest('[data-switch]'); if(sw){ data.activeId=sw.dataset.switch; save(); closeModal(); go('home'); return; }
   if(t0.closest('#switchPet')){ switchModal(); return; }
-  const add=t0.closest('[data-add]'); if(add){ const k=add.dataset.add; k==='vacuna'?vaccineModal():k==='desparasitacion'?dewormModal():k==='cuidado'?careModal():visitModal(); return; }
+  const add=t0.closest('[data-add]'); if(add){ const k=add.dataset.add; k==='vacuna'?vaccineModal():k==='desparasitacion'?dewormModal():k==='cuidado'?careModal():k==='medicamento'?medModal():visitModal(); return; }
   if(t0.closest('#addWeight')){ weightModal(); return; }
   const inf=t0.closest('[data-info]'); if(inf){ infoModal(inf.dataset.info); return; }
   if(t0.closest('#albumAdd')){ pickAlbumPhoto(); return; }
@@ -2533,6 +2640,7 @@ document.addEventListener('click', e=>{
     else if(k==='desparasitacion') pet.dewormings=pet.dewormings.filter(x=>x.id!==id);
     else if(k==='peso'){ pet.weights=pet.weights.filter(x=>x.id!==id); const l=pet.weights.slice().sort((a,b)=>a.fecha<b.fecha?1:-1)[0]; pet.info.peso=l?l.kg:pet.info.peso; }
     else if(k==='visita') pet.vetVisits=pet.vetVisits.filter(x=>x.id!==id);
+    else if(k==='medicamento') pet.meds=pet.meds.filter(x=>x.id!==id);
     else if(k==='cuidado') pet.cares=pet.cares.filter(x=>x.id!==id);
     save(); toast(t('deleted')); render(); return; }
   if(t0.closest('#pvLock')){ lockModal(); return; }
@@ -2543,6 +2651,7 @@ document.addEventListener('click', e=>{
   if(t0.closest('#nudgeEnable')){ if(cloudConfigured()&&!session){ authModal(); } else { enableNotifs(); } return; }
   if(t0.closest('#nudgeX')){ data.nudgeDismissed=true; save(); render(); return; }
   if(t0.closest('#emergOpen')){ emergencyModal(); return; }
+  if(t0.closest('#timelineOpen')){ timelineModal(); return; }
   if(t0.closest('#ownerEdit')){ ownerModal(); return; }
   if(t0.closest('#travelOpen')){ travelModal(); return; }
   if(t0.closest('#vetsOpen')){ openVets(); return; }
