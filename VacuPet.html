@@ -276,6 +276,40 @@ nav.tabbar button.on{color:var(--accent)}
   background:var(--ink);color:var(--bg);padding:11px 18px;border-radius:12px;font-size:14px;font-weight:600;
   box-shadow:var(--shadow-lg);opacity:0;pointer-events:none;transition:.25s;max-width:90vw;text-align:center}
 .toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+.toast{display:inline-flex;align-items:center;gap:8px}
+.toast .ti{display:inline-flex;width:18px;height:18px;flex:none}
+.toast .ti svg{width:18px;height:18px}
+.toast.t-success .ti{color:#34D399}
+.toast.t-error .ti{color:#FB7185}
+.toast.t-info .ti{color:#60A5FA}
+
+/* ====== Cosméticos: movimiento + deleite + pulido ====== */
+@media (prefers-reduced-motion: no-preference){
+  /* Cascada de entrada de las vistas */
+  .view > *{animation:rise .34s cubic-bezier(.2,.8,.2,1) both}
+  .view > *:nth-child(2){animation-delay:.04s}
+  .view > *:nth-child(3){animation-delay:.08s}
+  .view > *:nth-child(4){animation-delay:.12s}
+  .view > *:nth-child(5){animation-delay:.16s}
+  .view > *:nth-child(6){animation-delay:.20s}
+  .view > *:nth-child(n+7){animation-delay:.24s}
+  /* Fundido del fondo del modal */
+  .scrim{animation:scrimIn .2s ease both}
+  /* Latido de atención en recordatorios vencidos */
+  .tagdue.c-red{animation:pulseRed 2.4s ease-in-out infinite}
+}
+@keyframes rise{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
+@keyframes scrimIn{from{opacity:0}to{opacity:1}}
+@keyframes pulseRed{0%,100%{box-shadow:0 0 0 0 transparent}50%{box-shadow:0 0 0 4px color-mix(in srgb,var(--red) 22%,transparent)}}
+/* Microinteracción de "press" */
+.tile,.btn,.chip,.swatch{transition:transform .09s ease}
+.btn:active{transform:scale(.97)}
+/* Anillo de salud alrededor del avatar (perfil de mascota). box-shadow no lo recorta overflow:hidden. */
+.av.healthring{box-shadow:0 0 0 3px var(--surface),0 0 0 6px var(--hr,var(--accent))}
+/* Skeleton shimmer (carga) */
+.skel{position:relative;overflow:hidden;background:var(--surface-2);border-radius:10px}
+.skel::after{content:"";position:absolute;inset:0;background:linear-gradient(90deg,transparent,color-mix(in srgb,var(--ink) 8%,transparent),transparent);transform:translateX(-100%);animation:shimmer 1.3s infinite}
+@keyframes shimmer{100%{transform:translateX(100%)}}
 
 /* ---- Foto ---- */
 .photo-pick{display:flex;align-items:center;gap:14px}
@@ -905,7 +939,7 @@ function migrate(d){
 function save(doSync=true){
   if(doSync) data.updatedAt = new Date().toISOString();
   try{ localStorage.setItem(KEY, JSON.stringify(data)); }
-  catch(e){ toast('No se pudo guardar (almacenamiento lleno).'); console.error(e); }
+  catch(e){ toast('No se pudo guardar (almacenamiento lleno).','error'); console.error(e); }
   if(doSync) scheduleSync();
 }
 function activePet(){ return data.pets.find(p=>p.info.id===data.activeId) || data.pets[0] || null; }
@@ -1113,6 +1147,7 @@ function render(){
   else if(currentTab==='pet') app.innerHTML = viewPet();
   else app.innerHTML = viewMore();
   if(typeof hydrateStorage==='function') hydrateStorage();
+  runCountUps();
 }
 
 /* ---- Onboarding ---- */
@@ -1175,10 +1210,10 @@ function viewHome(){
     </div>
 
     <div class="chips">
-      <div class="chip" data-go="card"><div class="n">${s.aplicadas}</div><div class="l">${t('chip_records')}</div></div>
-      <div class="chip" data-go="card"><div class="n" style="color:var(--amber)">${s.proximas}</div><div class="l">${t('chip_upcoming')}</div></div>
-      <div class="chip" data-go="card"><div class="n" style="color:var(--red)">${s.vencidas}</div><div class="l">${t('chip_overdue')}</div></div>
-      <div class="chip" data-go="pet"><div class="n" style="color:var(--green)">${logros}</div><div class="l">${t('sec_achievements')}</div></div>
+      <div class="chip" data-go="card"><div class="n" data-count="${s.aplicadas}">${s.aplicadas}</div><div class="l">${t('chip_records')}</div></div>
+      <div class="chip" data-go="card"><div class="n" data-count="${s.proximas}" style="color:var(--amber)">${s.proximas}</div><div class="l">${t('chip_upcoming')}</div></div>
+      <div class="chip" data-go="card"><div class="n" data-count="${s.vencidas}" style="color:var(--red)">${s.vencidas}</div><div class="l">${t('chip_overdue')}</div></div>
+      <div class="chip" data-go="pet"><div class="n" data-count="${logros}" style="color:var(--green)">${logros}</div><div class="l">${t('sec_achievements')}</div></div>
     </div>
     ${banner}
     ${nudge}
@@ -1351,9 +1386,10 @@ function viewPet(){
     [t('lbl_conditions'), info.condiciones],
     ['Veterinario', info.veterinario],
   ].filter(r=>r[1]);
+  const hr = stateMeta()[petSummary(pet).estado].color;
   return `<div class="view">
     <div class="card pad" style="display:flex;align-items:center;gap:16px">
-      <div class="av" style="width:72px;height:72px;font-size:32px;border-radius:50%;overflow:hidden;background:var(--surface-2);border:1px solid var(--line);display:grid;place-items:center;flex:none">${av}</div>
+      <div class="av healthring" style="width:72px;height:72px;font-size:32px;border-radius:50%;overflow:hidden;background:var(--surface-2);display:grid;place-items:center;flex:none;--hr:${hr}">${av}</div>
       <div style="flex:1"><h2>${esc(info.nombre)}</h2><div class="sub" style="color:var(--muted)">${SPECIES_EMOJI[info.especie]||'🐾'} ${esc(cap(info.especie))}${info.raza?` · ${esc(info.raza)}`:''}${info.esterilizado===true?' · ✓':''}</div></div>
     </div>
     <div class="card" style="margin-top:14px">
@@ -1709,7 +1745,7 @@ async function shareModal(){
     }catch(e){ console.warn('share token:', e); }
   }
   // Sin sesión (o si falló): el carné viaja codificado en el propio enlace (#v=).
-  if(!link){ try{ link = location.origin+location.pathname+'#v='+b64urlEncode(JSON.stringify(payload)); }catch(e){ toast('No se pudo generar el enlace'); return; } }
+  if(!link){ try{ link = location.origin+location.pathname+'#v='+b64urlEncode(JSON.stringify(payload)); }catch(e){ toast('No se pudo generar el enlace','error'); return; } }
 
   const body=`<p class="hint">${t('m_share_sub')}</p>
     <div class="qrbox" id="qrbox"><span class="hint">QR…</span></div>
@@ -1722,9 +1758,17 @@ async function shareModal(){
 }
 
 // Carga un carné compartido por TOKEN (#s=<uuid>) vía RPC get_share (lectura pública si no ha caducado).
+function skeletonView(){
+  const bar=(w,h)=>`<div class="skel" style="height:${h}px;width:${w};margin:9px 0"></div>`;
+  return `<div class="view">
+    <div class="card pad" style="display:flex;align-items:center;gap:14px"><div class="skel" style="width:60px;height:60px;border-radius:50%;flex:none"></div><div style="flex:1">${bar('55%',18)}${bar('38%',12)}</div></div>
+    <div class="card pad">${bar('100%',13)}${bar('92%',13)}${bar('68%',13)}</div>
+    <div class="card pad">${bar('100%',13)}${bar('80%',13)}</div>
+  </div>`;
+}
 async function loadSharedToken(token){
   renderChrome();
-  document.getElementById('app').innerHTML = `<div class="view"><div class="card pad empty">${t('loading')}</div></div>`;
+  document.getElementById('app').innerHTML = skeletonView();
   const c = await ensureSupabase();
   if(!c){ document.getElementById('app').innerHTML = `<div class="view"><div class="card pad empty">${t('shared_bad')}</div></div>`; return; }
   try{
@@ -1753,7 +1797,7 @@ function compressImage(file, cb, max=512){
       const w=Math.round(img.width*scale), h=Math.round(img.height*scale);
       const cv=document.createElement('canvas'); cv.width=w; cv.height=h; cv.getContext('2d').drawImage(img,0,0,w,h);
       cb(cv.toDataURL('image/jpeg',0.78)); };
-    img.onerror=()=>toast('No se pudo leer la imagen'); img.src=e.target.result; };
+    img.onerror=()=>toast('No se pudo leer la imagen','error'); img.src=e.target.result; };
   reader.readAsDataURL(file);
 }
 
@@ -1815,7 +1859,7 @@ async function runShareVerify(){
    ====================================================================== */
 function exportICS(){
   const pet=activePet(); const rems=reminders(pet).filter(r=>r.fecha>=todayISO());
-  if(!rems.length){ toast('No hay próximas fechas que exportar'); return; }
+  if(!rems.length){ toast('No hay próximas fechas que exportar','info'); return; }
   const pad=n=>String(n).padStart(2,'0'); const fmtICS=s=>{ const d=parseISO(s); return `${d.getFullYear()}${pad(d.getMonth()+1)}${pad(d.getDate())}`; };
   let ics='BEGIN:VCALENDAR\r\nVERSION:2.0\r\nPRODID:-//VacuPet//ES\r\nCALSCALE:GREGORIAN\r\n';
   rems.forEach((r,i)=>{ ics+=`BEGIN:VEVENT\r\nUID:vacupet-${pet.info.id}-${i}@local\r\nDTSTART;VALUE=DATE:${fmtICS(r.fecha)}\r\nSUMMARY:${pet.info.nombre}: ${r.kind} — ${r.nombre}\r\nDESCRIPTION:VacuPet (orientativo)\r\nEND:VEVENT\r\n`; });
@@ -1862,7 +1906,7 @@ function importJSON(){
     r.onload=()=>{ try{ const d=JSON.parse(r.result); if(!d||!Array.isArray(d.pets)) throw new Error('bad');
       if(!confirm('Esto reemplazará tus datos actuales por los del respaldo. ¿Continuar?')) return;
       data=migrate(d); if(!data.activeId&&data.pets[0]) data.activeId=data.pets[0].info.id; save(); toast(t('m_import')); go('home');
-    }catch(err){ toast('Archivo inválido'); console.error(err); } }; r.readAsText(f); };
+    }catch(err){ toast('Archivo inválido','error'); console.error(err); } }; r.readAsText(f); };
   inp.click();
 }
 function download(name, content, type){ const b=new Blob([content],{type}); const u=URL.createObjectURL(b); const a=document.createElement('a'); a.href=u; a.download=name; a.click(); setTimeout(()=>URL.revokeObjectURL(u),1000); }
@@ -1873,7 +1917,23 @@ function slug(s){ return String(s).toLowerCase().normalize('NFD').replace(/[̀-�
    ====================================================================== */
 function val(id){ const el=document.getElementById(id); return el?el.value:''; }
 let toastT=null;
-function toast(msg){ const el=document.getElementById('toast'); el.textContent=msg; el.classList.add('show'); clearTimeout(toastT); toastT=setTimeout(()=>el.classList.remove('show'),2200); }
+function toast(msg, type='success'){
+  const el=document.getElementById('toast');
+  const icon = type==='success' ? I.check : I.info;
+  el.className = 'toast t-'+type;
+  el.innerHTML = `<span class="ti">${icon}</span><span>${esc(msg)}</span>`;
+  el.classList.add('show'); clearTimeout(toastT); toastT=setTimeout(()=>el.classList.remove('show'),2200);
+}
+// Animación count-up de los números marcados con [data-count] (respeta reduced-motion).
+function runCountUps(){
+  if(reduceMotion()) return;
+  document.querySelectorAll('[data-count]').forEach(el=>{
+    const end=Number(el.dataset.count)||0; if(end<=0){ el.textContent=String(end); return; }
+    const dur=560, t0=performance.now();
+    const step=(now)=>{ const k=Math.min(1,(now-t0)/dur); el.textContent=String(Math.round(end*(1-Math.pow(1-k,3)))); if(k<1) requestAnimationFrame(step); };
+    requestAnimationFrame(step);
+  });
+}
 
 /* ======================================================================
    Nube (Supabase) — auth por email/OTP + sync de vacupet_state.
@@ -2014,7 +2074,7 @@ function authModal(){
     }
   });
 }
-async function syncNow(){ toast(t('loading')); await pullState(); await pushState(false); }
+async function syncNow(){ toast(t('loading'),'info'); await pullState(); await pushState(false); }
 async function signOut(){ const c=await ensureSupabase(); if(c){ try{ await c.auth.signOut(); }catch(_){} } session=null; toast(t('signed_out')); render(); }
 
 /* ======================================================================
