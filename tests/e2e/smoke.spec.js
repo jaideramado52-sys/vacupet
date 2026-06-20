@@ -51,6 +51,16 @@ test.describe('VacuPet — humo', () => {
     await expect(page.getByText('Rocky').first()).toBeVisible();
   });
 
+  test('toggle sol/luna cambia el tema', async ({ page }) => {
+    await seedDemo(page);
+    const before = await page.evaluate(() => { try { return JSON.parse(localStorage.getItem('vacupet:data:v1')).theme || 'auto'; } catch { return 'auto'; } });
+    await page.locator('#themeToggle').click();
+    await page.waitForTimeout(350);
+    const after = await page.evaluate(() => JSON.parse(localStorage.getItem('vacupet:data:v1')).theme);
+    expect(['light', 'dark']).toContain(after);
+    expect(after).not.toBe(before);
+  });
+
   test('selector de país ajusta la normativa de rabia', async ({ page }) => {
     await seedDemo(page);
     await page.locator('[data-tab="more"]').click();
