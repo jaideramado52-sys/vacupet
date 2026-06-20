@@ -37,8 +37,10 @@ Lo que diferencia VacuPet de "una libreta de notas".
 - [x] **Línea de tiempo unificada** — `buildTimeline()` (puro) fusiona vacunas +
   desparasitación + peso + visitas + medicación + cuidados en orden cronológico;
   se abre como modal desde *Salud* (`timelineModal`).
-- [ ] **Esquema vacunal por país/normativa** — parametrizar `SCHEME` (hoy GT) para
-  respetar calendarios locales. (Pendiente: mayor reestructuración de datos.)
+- [x] **Esquema vacunal por país/normativa** — `COUNTRIES` (11 países) con frecuencia
+  del refuerzo de rabia (12 meses LatAm/ES, 36 EE. UU./Canadá) y nota legal. El
+  recomendador (`suggestProxima`) y `hasValidRabies` respetan el país; selector en
+  *Más › Región y normativa*. El esquema base (serie de cachorro) sigue universal.
 
 ## Bloque 3 — Robustez "pro" / técnica  ✅ (entregado, salvo recordatorios-triggers)
 
@@ -55,8 +57,12 @@ Lo que diferencia VacuPet de "una libreta de notas".
   idempotentes (corrigió un bug real de TDZ en el arranque). 6 tests.
 - [x] **Accesibilidad AA** — `:focus-visible` en inputs, Escape cierra modales, foco
   al abrir diálogo, `role=tab`/`aria-selected` en pestañas, `prefers-reduced-motion`.
-- [ ] **Recordatorios más confiables** — Notification Triggers / Periodic Background
-  Sync + centro de recordatorios auditable. (Pendiente: APIs experimentales.)
+- [x] **Recordatorios más confiables** — **Centro de recordatorios** (`remindersCenterModal`)
+  que audita lo que viene de TODAS las mascotas (`allReminders` puro), agrupado por
+  estado (vencidas/próximas/más adelante) y con el canal de aviso (local/nube) y si el
+  navegador soporta programación. **Notification Triggers** (best-effort,
+  feature-detected con `TimestampTrigger`): programa avisos a futuro vía el SW cuando
+  el navegador lo soporta; reprograma al conceder permiso y al arrancar.
 
 ---
 

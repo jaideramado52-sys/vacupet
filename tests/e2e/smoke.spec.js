@@ -42,4 +42,21 @@ test.describe('VacuPet — humo', () => {
     await expect(page.locator('.scrim')).toBeVisible();
     await expect(page.getByText('Ana López')).toBeVisible();
   });
+
+  test('centro de recordatorios lista próximas fechas', async ({ page }) => {
+    await seedDemo(page);
+    await page.locator('[data-tab="more"]').click();
+    await page.locator('#rcOpen').click();
+    await expect(page.locator('.modal-head h3')).toHaveText('Centro de recordatorios');
+    await expect(page.getByText('Rocky').first()).toBeVisible();
+  });
+
+  test('selector de país ajusta la normativa de rabia', async ({ page }) => {
+    await seedDemo(page);
+    await page.locator('[data-tab="more"]').click();
+    await page.locator('#paisSel').selectOption('US');
+    await expect(page.locator('#paisSel')).toBeVisible();
+    // Tras elegir EE. UU., la nota debe indicar el refuerzo cada 3 años.
+    await expect(page.getByText('cada 3 años')).toBeVisible();
+  });
 });

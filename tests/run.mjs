@@ -34,6 +34,7 @@ code += `;globalThis.__VP = {
   hasValidRabies, recentDeworm, checkReq, achievements, DESTINOS,
   nextAnniversary, freqLabel, CARE_KINDS, weightStatus,
   buildTimeline, medFreqLabel, migrate, SCHEMA_VERSION,
+  allReminders, COUNTRIES, rabiesMonths,
   ACCENTS, accentColor, SPECIES_COLOR, albumHTML, docsHTML,
   getData:()=>data, setData:d=>{data=d}
 };`;
@@ -44,7 +45,9 @@ const VP = globalThis.__VP;
 let pass = 0, fail = 0;
 const section = (n) => console.log('\n— ' + n);
 const ok = (n, c) => { if (c) { pass++; } else { fail++; console.log('  ✗ ' + n); } };
-const iso = (d) => new Date(Date.now() + d * 86400000).toISOString().slice(0, 10);
+// Fecha LOCAL (igual que toISO() de la app) para evitar desfases de zona horaria
+// en el límite de medianoche (la app usa fechas locales en todos lados).
+const iso = (d) => { const x = new Date(Date.now() + d * 86400000); const y = x.getFullYear(), m = String(x.getMonth()+1).padStart(2,'0'), da = String(x.getDate()).padStart(2,'0'); return `${y}-${m}-${da}`; };
 
 // =========================================================================
 section('Esquema vacunal por especie');
@@ -215,12 +218,44 @@ section('Migración versionada del esquema');
   const old = { v:1, lang:'es', remDays:30, activeId:'1',
     pets:[{ info:{id:'1',nombre:'R',especie:'perro'}, vaccines:[], dewormings:[] }] };
   const m = VP.migrate(old);
-  ok('sube a SCHEMA_VERSION', m.v===VP.SCHEMA_VERSION && VP.SCHEMA_VERSION===3);
+  ok('sube a SCHEMA_VERSION', m.v===VP.SCHEMA_VERSION && VP.SCHEMA_VERSION===4);
   ok('añade owner', m.owner && typeof m.owner==='object');
+  ok('añade pais por defecto (GT)', m.pais==='GT');
   ok('añade meds a la mascota', Array.isArray(m.pets[0].meds));
   ok('preserva datos existentes', m.pets[0].info.nombre==='R' && m.lang==='es');
   ok('idempotente (2ª pasada estable)', VP.migrate(VP.migrate(old)).v===VP.SCHEMA_VERSION);
   ok('basura → defaults con versión', VP.migrate(null).v===VP.SCHEMA_VERSION);
+}
+
+section('Esquema vacunal por país (normativa de rabia)');
+{
+  const d=VP.getData();
+  d.pais='GT';
+  ok('rabia GT = 12 meses', VP.rabiesMonths()===12);
+  ok('sugerencia rabia GT (+12m)', VP.suggestProxima('perro','Rabia','2024-01-01','2020-01-01')==='2025-01-01');
+  d.pais='US';
+  ok('rabia US = 36 meses', VP.rabiesMonths()===36);
+  ok('sugerencia rabia US (+36m)', VP.suggestProxima('perro','Rabia','2024-01-01','2020-01-01')==='2027-01-01');
+  ok('serie de cachorro NO cambia por país', VP.suggestProxima('perro','Polivalente (quíntuple/séxtuple)','2024-01-01','2023-11-01')==='2024-01-22');
+  // rabia aplicada hace 500 días: caduca en GT (12m) pero vigente en US (36m)
+  const petR={ vaccines:[{id:'x',nombre:'Rabia',fecha:iso(-500)}] };
+  d.pais='GT'; ok('rabia -500d caduca en GT', VP.hasValidRabies(petR)===false);
+  d.pais='US'; ok('rabia -500d vigente en US', VP.hasValidRabies(petR)===true);
+  ok('país inválido → cae a GT', (()=>{ d.pais='ZZ'; const r=VP.rabiesMonths(); d.pais='GT'; return r===12; })());
+  d.pais='GT';
+}
+
+section('Centro de recordatorios (todas las mascotas)');
+{
+  VP.setData({ v:4, pais:'GT', lang:'es', remDays:30, activeId:'1', pets:[
+    { info:{id:'1',nombre:'Rocky',especie:'perro'}, vaccines:[{id:'a',nombre:'Rabia',fecha:iso(-10),proxima:iso(-2)}], dewormings:[], weights:[], vetVisits:[], cares:[], meds:[] },
+    { info:{id:'2',nombre:'Luna',especie:'gato'}, vaccines:[{id:'b',nombre:'FVRCP',fecha:iso(-10),proxima:iso(5)}], dewormings:[], weights:[], vetVisits:[], cares:[], meds:[] },
+  ] });
+  const all=VP.allReminders();
+  ok('agrega ambas mascotas', all.length===2);
+  ok('ordenado por fecha asc', all[0].fecha<all[1].fecha);
+  ok('incluye nombre de la mascota', all[0].petName==='Rocky' && all[0].status==='vencida');
+  ok('segunda es próxima', all[1].petName==='Luna' && all[1].status==='proxima');
 }
 VP.setData({ v:1, activeId:'1', remDays:30, lang:'es', pets:[{info:{id:'1',nombre:'R',especie:'perro'},vaccines:[],dewormings:[],weights:[],vetVisits:[],cares:[{id:'c',kind:'bano',titulo:'Baño',fecha:iso(-10),cada:30,proxima:iso(5)}]}] });
 {
