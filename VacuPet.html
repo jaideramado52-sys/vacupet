@@ -307,6 +307,12 @@ nav.tabbar button.on{color:var(--accent)}
 .btn:active{transform:scale(.97)}
 /* Anillo de salud alrededor del avatar (perfil de mascota). box-shadow no lo recorta overflow:hidden. */
 .av.healthring{box-shadow:0 0 0 3px var(--surface),0 0 0 6px var(--hr,var(--accent))}
+/* Ofertas / recomendaciones de partners */
+.offer{display:flex;align-items:center;gap:12px;padding:13px 14px;background:var(--surface);border:1px solid var(--line);border-radius:15px;box-shadow:var(--shadow)}
+.offer .rr{flex:1;min-width:0;display:flex;flex-direction:column;gap:2px}
+.offer .rr b{font-size:14.5px}
+.offer .rr span{font-size:12.5px;color:var(--muted)}
+.offer-tag{display:inline-block;font-size:10px;font-weight:700;letter-spacing:.02em;text-transform:uppercase;color:var(--accent);background:color-mix(in srgb,var(--accent) 14%,var(--surface));padding:1px 6px;border-radius:6px;vertical-align:middle}
 /* Paywall (monetización) */
 .pwhero{text-align:center;padding:6px 4px 2px}
 .pwhero h2{margin-top:10px;font-size:20px}
@@ -578,6 +584,7 @@ const STR = {
     pw_title:'VacuPet Premium', pw_sub:'Desbloquea todo el cuidado de tus mascotas.', pw_note:'Lo esencial (vacunas, rabia y avisos básicos) siempre es gratis. Premium añade comodidad y extras.', pw_cta:'Hazte Premium', pw_soon:'Pagos disponibles muy pronto', pw_redeem:'Canjear código', pw_redeem_ph:'Código de activación', pw_redeem_ok:'¡Premium activado! 🎉', pw_redeem_bad:'Código no válido', pw_active:'Premium activo', pw_get:'Hazte Premium', pw_manage:'Gestionar suscripción',
     pf_pets:'Mascotas ilimitadas', pf_sync:'Sincronización en la nube', pf_reminders:'Recordatorios push y por email', pf_pdf:'Exportar carné en PDF', pf_docs:'Bóveda de documentos', pf_travel:'Módulo de viaje internacional',
     plan_lifetime:'De por vida', plan_yearly:'Anual', plan_monthly:'Mensual', plan_premium:'Premium', plan_until:'hasta',
+    sec_offers:'Recomendados', partner_label:'Recomendado', partner_cta:'Ver', partner_disclaimer:'Enlaces de afiliados: podemos ganar una comisión si compras, sin coste extra para ti. Son opcionales.',
     sec_appearance:'Apariencia', accent_color:'Color de acento', theme_label:'Tema', theme_auto:'Auto', theme_light:'Claro', theme_dark:'Oscuro',
     accent_auto:'Por mascota', accent_manual:'Manual', accent_auto_hint:'El color de la app se adapta a la mascota activa.',
     sec_album:'Álbum', add_photo:'Añadir foto', no_album:'Sin fotos todavía', album_saved:'Foto añadida', uploading:'Subiendo…',
@@ -679,6 +686,7 @@ const STR = {
     pw_title:'VacuPet Premium', pw_sub:'Unlock everything for your pets’ care.', pw_note:'The essentials (vaccines, rabies and basic alerts) are always free. Premium adds convenience and extras.', pw_cta:'Go Premium', pw_soon:'Payments coming very soon', pw_redeem:'Redeem code', pw_redeem_ph:'Activation code', pw_redeem_ok:'Premium activated! 🎉', pw_redeem_bad:'Invalid code', pw_active:'Premium active', pw_get:'Go Premium', pw_manage:'Manage subscription',
     pf_pets:'Unlimited pets', pf_sync:'Cloud sync', pf_reminders:'Push & email reminders', pf_pdf:'Export PDF record', pf_docs:'Document vault', pf_travel:'International travel module',
     plan_lifetime:'Lifetime', plan_yearly:'Yearly', plan_monthly:'Monthly', plan_premium:'Premium', plan_until:'until',
+    sec_offers:'Recommended', partner_label:'Recommended', partner_cta:'View', partner_disclaimer:'Affiliate links: we may earn a commission if you buy, at no extra cost to you. They are optional.',
     sec_appearance:'Appearance', accent_color:'Accent color', theme_label:'Theme', theme_auto:'Auto', theme_light:'Light', theme_dark:'Dark',
     accent_auto:'By pet', accent_manual:'Manual', accent_auto_hint:'The app color adapts to the active pet.',
     sec_album:'Album', add_photo:'Add photo', no_album:'No photos yet', album_saved:'Photo added', uploading:'Uploading…',
@@ -780,6 +788,7 @@ const STR = {
     pw_title:'VacuPet Premium', pw_sub:'Desbloqueie todo o cuidado dos seus pets.', pw_note:'O essencial (vacinas, raiva e avisos básicos) é sempre grátis. Premium adiciona comodidade e extras.', pw_cta:'Seja Premium', pw_soon:'Pagamentos em breve', pw_redeem:'Resgatar código', pw_redeem_ph:'Código de ativação', pw_redeem_ok:'Premium ativado! 🎉', pw_redeem_bad:'Código inválido', pw_active:'Premium ativo', pw_get:'Seja Premium', pw_manage:'Gerenciar assinatura',
     pf_pets:'Pets ilimitados', pf_sync:'Sincronização na nuvem', pf_reminders:'Lembretes push e por email', pf_pdf:'Exportar carteira em PDF', pf_docs:'Cofre de documentos', pf_travel:'Módulo de viagem internacional',
     plan_lifetime:'Vitalício', plan_yearly:'Anual', plan_monthly:'Mensal', plan_premium:'Premium', plan_until:'até',
+    sec_offers:'Recomendados', partner_label:'Recomendado', partner_cta:'Ver', partner_disclaimer:'Links de afiliados: podemos ganhar uma comissão se você comprar, sem custo extra para você. São opcionais.',
     sec_appearance:'Aparência', accent_color:'Cor de destaque', theme_label:'Tema', theme_auto:'Auto', theme_light:'Claro', theme_dark:'Escuro',
     accent_auto:'Por pet', accent_manual:'Manual', accent_auto_hint:'A cor do app se adapta ao pet ativo.',
     sec_album:'Álbum', add_photo:'Adicionar foto', no_album:'Sem fotos ainda', album_saved:'Foto adicionada', uploading:'Enviando…',
@@ -1255,6 +1264,7 @@ function viewHome(){
     </div>
     ${banner}
     ${nudge}
+    ${partnersOn()?offerCard(topOffer('home'),{dismiss:true,style:'margin-top:14px'}):''}
 
     <section class="block">
       <div class="block-title">${t('sec_mypet')}</div>
@@ -1466,6 +1476,11 @@ function viewMore(){
       ${isPremium()
         ? `<button class="tile" id="premiumStatus"><span class="ic c-green">${I.shield}</span><span class="tt"><b>${t('pw_active')}</b><span>${premiumPlanLabel()}</span></span><span class="chev">${I.chev}</span></button>`
         : `<button class="tile" id="goPremium"><span class="ic c-accent">${I.shield}</span><span class="tt"><b>${t('pw_get')}</b><span>${t('pw_sub')}</span></span><span class="chev">${I.chev}</span></button>`}
+    </section>`:''}
+
+    ${(partnersOn() && partnerOffers('more').length)?`<section class="block"><div class="block-title">${t('sec_offers')}</div>
+      <div style="display:grid;gap:10px">${partnerOffers('more').map(o=>offerCard(o,{})).join('')}</div>
+      <div class="hint" style="margin-top:8px">${t('partner_disclaimer')}</div>
     </section>`:''}
 
     <section class="block"><div class="block-title">${t('sec_owner')}</div>
@@ -2070,6 +2085,44 @@ async function redeemCode(code){
   }catch(_){}
   if(features().devCode && code===features().devCode){ data.premium = { active:true, plan:'lifetime', source:'code' }; save(); return true; }
   return false;
+}
+/* ======================================================================
+   Partners / recomendaciones (Fase 2 — afiliación + leads de seguro).
+   Detrás de window.VACUPET_PARTNERS.enabled (false por defecto). No envía
+   datos: solo enlaces contextuales con utm. Transparente ("Recomendado").
+   ====================================================================== */
+function partners(){ return window.VACUPET_PARTNERS || {}; }
+function partnersOn(){ return !!partners().enabled && Array.isArray(partners().offers); }
+function offerCountry(){ return partners().country || data.pais || 'GT'; }
+// Ofertas relevantes para un contexto (puro, testeable): habilitadas, con url,
+// que casan país y contexto, y no descartadas por el usuario.
+function partnerOffers(context){
+  if(!partnersOn()) return [];
+  const co = offerCountry(); const dismissed = data.offersDismissed || [];
+  return (partners().offers||[]).filter(o =>
+    o && o.url &&
+    (!o.contexts  || o.contexts.includes(context)) &&
+    (!o.countries || o.countries.includes('*') || o.countries.includes(co)) &&
+    !dismissed.includes(o.id)
+  );
+}
+function topOffer(context){ return partnerOffers(context)[0] || null; }
+function dismissOffer(id){ data.offersDismissed = data.offersDismissed || []; if(!data.offersDismissed.includes(id)) data.offersDismissed.push(id); save(); render(); }
+function partnerOpen(id){
+  const o = (partners().offers||[]).find(x=>x.id===id); if(!o || !o.url) return;
+  try{ const k='vacupet:offers'; const m=JSON.parse(localStorage.getItem(k)||'{}'); m[id]=(m[id]||0)+1; localStorage.setItem(k,JSON.stringify(m)); }catch(_){}
+  const url = o.url + (o.url.includes('?')?'&':'?') + 'utm_source=vacupet&utm_medium=app';
+  try{ window.open(url,'_blank'); }catch(_){ location.href=url; }
+}
+const OFFER_ICON = { insurance:()=>I.shield, product:()=>I.heart, service:()=>I.stetho };
+function offerCard(o, opts){
+  if(!o) return ''; opts = opts || {};
+  const ic = (OFFER_ICON[o.type] || (()=>I.info))();
+  const x = opts.dismiss ? `<button class="iconbtn" data-offerx="${esc(o.id)}" style="width:30px;height:30px;flex:none" aria-label="${t('close')}">${I.x}</button>` : '';
+  return `<div class="offer" style="${opts.style||''}">
+    <span class="ic c-accent">${ic}</span>
+    <div class="rr"><b>${esc(o.title)} <span class="offer-tag">${t('partner_label')}</span></b><span>${esc(o.sub||'')}</span></div>
+    <button class="btn btn-primary" data-offer="${esc(o.id)}" style="height:36px;padding:0 13px;flex:none">${esc(o.cta||t('partner_cta'))}</button>${x}</div>`;
 }
 function premiumManageModal(){
   const url = features().manageUrl;
@@ -2962,6 +3015,8 @@ document.addEventListener('click', e=>{
   if(t0.closest('#rcOpen')){ remindersCenterModal(); return; }
   if(t0.closest('#goPremium')){ paywallModal('more'); return; }
   if(t0.closest('#premiumStatus')){ premiumManageModal(); return; }
+  const ofx=t0.closest('[data-offerx]'); if(ofx){ dismissOffer(ofx.dataset.offerx); return; }
+  const ofo=t0.closest('[data-offer]'); if(ofo){ partnerOpen(ofo.dataset.offer); return; }
   const sw0=t0.closest('[data-accent]'); if(sw0){ data.accent=sw0.dataset.accent; save(); render(); return; }
   if(t0.closest('#themeToggle')){ toggleTheme(); return; }
   const th0=t0.closest('[data-theme-set]'); if(th0){ data.theme=th0.dataset.themeSet; save(); render(); return; }
@@ -3094,9 +3149,13 @@ function remindersCenterModal(){
     <div style="display:flex;align-items:center;gap:9px"><span class="ic ${notif?'c-green':'c-muted'}" style="width:30px;height:30px;border-radius:9px;display:grid;place-items:center;flex:none">${I.bell}</span><span style="font-size:13px">${notif?t('rc_channel_local'):t('rc_channel_off')}</span></div>
     ${cloud?`<div style="display:flex;align-items:center;gap:9px"><span class="ic c-blue" style="width:30px;height:30px;border-radius:9px;display:grid;place-items:center;flex:none">${I.shield}</span><span style="font-size:13px">${t('rc_channel_cloud')}</span></div>`:''}
     <div class="hint">${sched?t('rc_sched_on'):t('rc_sched_off')}</div></div>`;
+  // Oferta contextual: si hay una desparasitación en la lista, prioriza 'deworm'.
+  const hasDeworm = all.some(r=>r.kind==='desparasitación');
+  const offer = partnersOn() ? (hasDeworm ? topOffer('deworm') : null) || topOffer('reminders') : null;
+  const offerHTML = offer ? `<div style="margin-top:14px">${offerCard(offer,{dismiss:true})}</div>` : '';
   const body = all.length
-    ? statusCard + grp('grp_overdue','vencida') + grp('grp_soon','proxima') + grp('grp_future','futura')
-    : statusCard + emptyBox(I.bell, t('rc_empty'));
+    ? statusCard + grp('grp_overdue','vencida') + grp('grp_soon','proxima') + grp('grp_future','futura') + offerHTML
+    : statusCard + emptyBox(I.bell, t('rc_empty')) + offerHTML;
   const foot = notif
     ? `<button class="btn btn-block" data-close>${t('close')}</button>`
     : `<button class="btn btn-primary" style="flex:1" id="rcEnable">${t('rc_enable')}</button><button class="btn" data-close style="flex:none">${t('close')}</button>`;

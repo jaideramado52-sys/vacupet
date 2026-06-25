@@ -41,6 +41,26 @@ window.VACUPET_FEATURES = {
   devCode: ""
 };
 
+// ------------------------------------------------------------
+//  Partners / recomendaciones (Fase 2 — afiliación + leads).
+//  APAGADO por defecto (enabled:false → no se muestra nada).
+//  Cada oferta lleva un enlace de afiliado; la app le añade utm_source.
+//  contexts: dónde puede aparecer ('home','reminders','more','deworm').
+//  countries: ['*'] = todos, o lista de códigos ('GT','MX'...).
+//  Pon enabled:true y rellena url cuando tengas acuerdos.
+// ------------------------------------------------------------
+window.VACUPET_PARTNERS = {
+  enabled: false,
+  country: "GT",
+  offers: [
+    // Ejemplos (descomenta y pon tu url de afiliado):
+    // { id:"seguro-gt",  type:"insurance", contexts:["home","more"],        countries:["GT","*"],
+    //   title:"Protege a tu mascota", sub:"Seguro veterinario desde QXX/mes", cta:"Ver planes", url:"" },
+    // { id:"antipulgas", type:"product",   contexts:["deworm","reminders","more"], countries:["*"],
+    //   title:"Antipulgas y garrapatas", sub:"Pipetas y collares recomendados",   cta:"Comprar",   url:"" }
+  ]
+};
+
 window.VACUPET_AI = (function () {
   var base = window.VACUPET_SUPABASE.url ? window.VACUPET_SUPABASE.url.replace(/\/$/, "") : null;
   return {

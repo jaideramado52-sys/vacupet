@@ -179,3 +179,56 @@ servicios de servidor sin pagar.
 5. Añadir el enforcement de servidor en push/email/storage.
 
 Hasta el paso 3, **todo sigue gratis y sin cambios** para los usuarios.
+
+---
+
+# Fase 2 — Afiliación + leads de seguro (ingreso pasivo)
+
+Recomendaciones contextuales de socios (seguro, antiparasitarios, etc.) con
+enlaces de afiliado. **Apagado por defecto** (`enabled:false` → no se muestra
+nada). No envía datos: solo abre enlaces con `utm_source=vacupet`.
+
+## Config (`supabase-config.js`)
+```js
+window.VACUPET_PARTNERS = {
+  enabled: false,          // ← true para mostrar recomendaciones
+  country: "GT",           // se cruza con offer.countries
+  offers: [
+    { id:"seguro-gt", type:"insurance", contexts:["home","more"], countries:["GT","*"],
+      title:"Protege a tu mascota", sub:"Seguro veterinario desde QXX/mes",
+      cta:"Ver planes", url:"https://socio.com/ref/TUID" },
+    { id:"antipulgas", type:"product", contexts:["deworm","reminders","more"], countries:["*"],
+      title:"Antipulgas y garrapatas", sub:"Pipetas y collares recomendados",
+      cta:"Comprar", url:"https://tienda.com/aff/TUID" }
+  ]
+};
+```
+- `type`: `insurance` | `product` | `service` (define el icono).
+- `contexts`: dónde puede aparecer — `home` (tarjeta descartable en Inicio),
+  `reminders` (centro de recordatorios; `deworm` prioriza si hay desparasitación
+  pendiente), `more` (sección "Recomendados").
+- `countries`: `["*"]` = todos, o lista de códigos.
+
+## Dónde aparece (no intrusivo)
+- **Inicio**: una tarjeta descartable bajo el aviso de recordatorios.
+- **Centro de recordatorios**: oferta contextual (prioriza antiparasitario si
+  hay una desparasitación pendiente).
+- **Más › Recomendados**: lista navegable + aviso de afiliados.
+
+## Transparencia y confianza (importante)
+- Cada oferta lleva la etiqueta visible **"Recomendado"**.
+- La sección *Recomendados* muestra el aviso: *"Enlaces de afiliados: podemos
+  ganar una comisión si compras, sin coste extra para ti. Son opcionales."*
+- El usuario puede **descartar** ofertas (se guardan en `data.offersDismissed`).
+- No se comparten datos de la mascota ni del usuario con el socio; el enlace solo
+  lleva `utm_source`. Los clics se cuentan localmente (`vacupet:offers`) para tu
+  propia analítica, sin red.
+
+## Cómo activar
+1. Firmar el/los programa(s) de afiliados (seguro, tienda) y obtener tus enlaces.
+2. En `supabase-config.js`: `enabled:true` y rellenar `offers[].url`.
+3. (Opcional) Segmentar por país con `countries`.
+
+Sugerencia de socios: comparadores/aseguradoras de mascotas (alto valor por
+lead) y tiendas de antiparasitarios/alimento (volumen). Empieza con 1–2 ofertas
+muy relevantes; menos es más.

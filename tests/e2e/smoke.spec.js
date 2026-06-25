@@ -71,6 +71,20 @@ test.describe('VacuPet — humo', () => {
     await expect(page.locator('.modal-head h3')).toHaveText('VacuPet Premium');
   });
 
+  test('oferta de partner aparece y se descarta (flag on)', async ({ page }) => {
+    await seedDemo(page);
+    await page.evaluate(() => {
+      window.VACUPET_PARTNERS = { enabled: true, country: 'GT', offers: [
+        { id: 'seguro', type: 'insurance', contexts: ['home'], countries: ['*'], title: 'Seguro veterinario', sub: 'Desde QXX/mes', cta: 'Ver planes', url: 'https://example.com/seguro' }
+      ] };
+    });
+    await page.locator('[data-tab="home"]').click();
+    await expect(page.locator('.offer')).toBeVisible();
+    await expect(page.getByText('Seguro veterinario')).toBeVisible();
+    await page.locator('[data-offerx]').click();
+    await expect(page.locator('.offer')).toHaveCount(0);
+  });
+
   test('selector de país ajusta la normativa de rabia', async ({ page }) => {
     await seedDemo(page);
     await page.locator('[data-tab="more"]').click();

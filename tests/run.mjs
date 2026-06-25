@@ -36,6 +36,7 @@ code += `;globalThis.__VP = {
   buildTimeline, medFreqLabel, migrate, SCHEMA_VERSION,
   allReminders, COUNTRIES, rabiesMonths,
   isPremium, canAddPet, monetizeOn, freePetLimit,
+  partnersOn, partnerOffers, topOffer,
   ACCENTS, accentColor, SPECIES_COLOR, albumHTML, docsHTML,
   getData:()=>data, setData:d=>{data=d}
 };`;
@@ -286,6 +287,29 @@ section('Monetización (freemium, feature flag)');
   VP.getData().premium = { active:true, plan:'monthly', until: iso(10) };
   ok('suscripción vigente → isPremium true', VP.isPremium()===true);
   delete w.VACUPET_FEATURES; // restaurar para el resto de la suite
+}
+
+section('Partners / recomendaciones (afiliación, feature flag)');
+{
+  const w = globalThis.window;
+  delete w.VACUPET_PARTNERS;
+  VP.setData({ v:4, pais:'GT', lang:'es', remDays:30, pets:[] });
+  ok('flag off → partnersOn false', VP.partnersOn()===false);
+  ok('flag off → sin ofertas', VP.partnerOffers('home').length===0);
+  // Encendido con dos ofertas
+  w.VACUPET_PARTNERS = { enabled:true, country:'GT', offers:[
+    { id:'seguro', type:'insurance', contexts:['home','more'], countries:['GT','*'], title:'Seguro', sub:'', cta:'Ver', url:'https://ej.com/seguro' },
+    { id:'flea',   type:'product',   contexts:['deworm'],       countries:['MX'],     title:'Antipulgas', sub:'', cta:'Comprar', url:'https://ej.com/flea' },
+    { id:'sinurl', type:'product',   contexts:['home'],         countries:['*'],      title:'Sin URL', sub:'', cta:'x', url:'' },
+  ]};
+  ok('home devuelve la oferta de seguro', VP.topOffer('home') && VP.topOffer('home').id==='seguro');
+  ok('filtra por país (flea es MX, usuario GT)', VP.partnerOffers('deworm').length===0);
+  ok('ignora ofertas sin url', !VP.partnerOffers('home').some(o=>o.id==='sinurl'));
+  ok('contexto inexistente → vacío', VP.partnerOffers('xyz').length===0);
+  // Descartada por el usuario
+  VP.getData().offersDismissed = ['seguro'];
+  ok('respeta descartadas', VP.topOffer('home')===null);
+  delete w.VACUPET_PARTNERS; // restaurar
 }
 VP.setData({ v:1, activeId:'1', remDays:30, lang:'es', pets:[{info:{id:'1',nombre:'R',especie:'perro'},vaccines:[],dewormings:[],weights:[],vetVisits:[],cares:[{id:'c',kind:'bano',titulo:'Baño',fecha:iso(-10),cada:30,proxima:iso(5)}]}] });
 {
