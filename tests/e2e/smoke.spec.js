@@ -61,6 +61,16 @@ test.describe('VacuPet — humo', () => {
     expect(after).not.toBe(before);
   });
 
+  test('paywall aparece con el flag activo al superar el límite', async ({ page }) => {
+    await seedDemo(page); // 6 mascotas de ejemplo
+    // Activar la monetización en runtime (en prod el flag está apagado).
+    await page.evaluate(() => { window.VACUPET_FEATURES.monetize = true; window.VACUPET_FEATURES.freePetLimit = 2; });
+    await page.locator('[data-tab="home"]').click();
+    await page.locator('#addPet').click();
+    await expect(page.locator('.scrim')).toBeVisible();
+    await expect(page.locator('.modal-head h3')).toHaveText('VacuPet Premium');
+  });
+
   test('selector de país ajusta la normativa de rabia', async ({ page }) => {
     await seedDemo(page);
     await page.locator('[data-tab="more"]').click();

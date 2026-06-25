@@ -35,6 +35,7 @@ code += `;globalThis.__VP = {
   nextAnniversary, freqLabel, CARE_KINDS, weightStatus,
   buildTimeline, medFreqLabel, migrate, SCHEMA_VERSION,
   allReminders, COUNTRIES, rabiesMonths,
+  isPremium, canAddPet, monetizeOn, freePetLimit,
   ACCENTS, accentColor, SPECIES_COLOR, albumHTML, docsHTML,
   getData:()=>data, setData:d=>{data=d}
 };`;
@@ -256,6 +257,35 @@ section('Centro de recordatorios (todas las mascotas)');
   ok('ordenado por fecha asc', all[0].fecha<all[1].fecha);
   ok('incluye nombre de la mascota', all[0].petName==='Rocky' && all[0].status==='vencida');
   ok('segunda es próxima', all[1].petName==='Luna' && all[1].status==='proxima');
+}
+
+section('Monetización (freemium, feature flag)');
+{
+  const w = globalThis.window;
+  // Flag APAGADO → todo desbloqueado (comportamiento actual, no rompe nada)
+  delete w.VACUPET_FEATURES;
+  VP.setData({ v:4, pais:'GT', lang:'es', remDays:30, pets:[{info:{id:'1'}},{info:{id:'2'}},{info:{id:'3'}}] });
+  ok('flag off → monetizeOn false', VP.monetizeOn()===false);
+  ok('flag off → isPremium true', VP.isPremium()===true);
+  ok('flag off → canAddPet true (sin límite)', VP.canAddPet()===true);
+  // Flag ENCENDIDO, usuario gratis
+  w.VACUPET_FEATURES = { monetize:true, freePetLimit:2 };
+  VP.setData({ v:4, pais:'GT', lang:'es', remDays:30, pets:[] });
+  ok('flag on, gratis → isPremium false', VP.isPremium()===false);
+  ok('límite respeta config (2)', VP.freePetLimit()===2);
+  ok('bajo el límite → canAddPet true', VP.canAddPet()===true);
+  VP.getData().pets=[{info:{id:'1'}},{info:{id:'2'}}];
+  ok('en el límite → canAddPet false', VP.canAddPet()===false);
+  // Premium lifetime
+  VP.getData().premium = { active:true, plan:'lifetime' };
+  ok('premium → isPremium true', VP.isPremium()===true);
+  ok('premium → canAddPet true (ilimitado)', VP.canAddPet()===true);
+  // Suscripción expirada vs vigente
+  VP.getData().premium = { active:true, plan:'monthly', until: iso(-1) };
+  ok('suscripción expirada → isPremium false', VP.isPremium()===false);
+  VP.getData().premium = { active:true, plan:'monthly', until: iso(10) };
+  ok('suscripción vigente → isPremium true', VP.isPremium()===true);
+  delete w.VACUPET_FEATURES; // restaurar para el resto de la suite
 }
 VP.setData({ v:1, activeId:'1', remDays:30, lang:'es', pets:[{info:{id:'1',nombre:'R',especie:'perro'},vaccines:[],dewormings:[],weights:[],vetVisits:[],cares:[{id:'c',kind:'bano',titulo:'Baño',fecha:iso(-10),cada:30,proxima:iso(5)}]}] });
 {

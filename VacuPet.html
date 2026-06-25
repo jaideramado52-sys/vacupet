@@ -307,6 +307,12 @@ nav.tabbar button.on{color:var(--accent)}
 .btn:active{transform:scale(.97)}
 /* Anillo de salud alrededor del avatar (perfil de mascota). box-shadow no lo recorta overflow:hidden. */
 .av.healthring{box-shadow:0 0 0 3px var(--surface),0 0 0 6px var(--hr,var(--accent))}
+/* Paywall (monetización) */
+.pwhero{text-align:center;padding:6px 4px 2px}
+.pwhero h2{margin-top:10px;font-size:20px}
+.pwhero p{color:var(--muted);margin-top:6px;font-size:13.5px}
+.pwbadge{display:inline-flex;align-items:center;gap:6px;font-size:12px;font-weight:700;padding:5px 12px;border-radius:999px;background:color-mix(in srgb,var(--accent) 15%,var(--surface));color:var(--accent)}
+.pwbadge svg{width:15px;height:15px}
 /* Skeleton shimmer (carga) */
 .skel{position:relative;overflow:hidden;background:var(--surface-2);border-radius:10px}
 .skel::after{content:"";position:absolute;inset:0;background:linear-gradient(90deg,transparent,color-mix(in srgb,var(--ink) 8%,transparent),transparent);transform:translateX(-100%);animation:shimmer 1.3s infinite}
@@ -569,6 +575,9 @@ const STR = {
     diag_title:'Diagnóstico', diag_open:'Diagnóstico', diag_open_sub:'Errores recientes (solo en tu dispositivo)', diag_empty:'Sin errores registrados', diag_hint:'Estos datos se guardan solo en tu dispositivo. Cópialos si necesitas reportar un problema.', diag_clear:'Limpiar', diag_copy:'Copiar', diag_copied:'Copiado al portapapeles',
     sec_region:'Región y normativa', region_label:'País', region_rabies:'Refuerzo de rabia', region_law:'suele ser obligatoria por ley', rabies_3y:'cada 3 años', rabies_n_months:'cada {n} meses', region_hint:'Ajusta la frecuencia sugerida del refuerzo de rabia y las notas legales según tu país. El esquema base (serie de cachorro) es universal.',
     rc_open:'Centro de recordatorios', rc_open_sub:'Todo lo que viene, en un sitio', rc_title:'Centro de recordatorios', rc_empty:'No hay próximas fechas', rc_all_pets:'Todas las mascotas', rc_channel_local:'Avisos en este dispositivo activos', rc_channel_off:'Avisos desactivados', rc_channel_cloud:'Avisos por la nube (sesión iniciada)', rc_enable:'Activar avisos', rc_sched_on:'Programación local de avisos: compatible', rc_sched_off:'Programación local: no compatible en este navegador', rc_sched_done:'{n} avisos programados', grp_overdue:'Vencidas', grp_soon:'Próximas', grp_future:'Más adelante',
+    pw_title:'VacuPet Premium', pw_sub:'Desbloquea todo el cuidado de tus mascotas.', pw_note:'Lo esencial (vacunas, rabia y avisos básicos) siempre es gratis. Premium añade comodidad y extras.', pw_cta:'Hazte Premium', pw_soon:'Pagos disponibles muy pronto', pw_redeem:'Canjear código', pw_redeem_ph:'Código de activación', pw_redeem_ok:'¡Premium activado! 🎉', pw_redeem_bad:'Código no válido', pw_active:'Premium activo', pw_get:'Hazte Premium', pw_manage:'Gestionar suscripción',
+    pf_pets:'Mascotas ilimitadas', pf_sync:'Sincronización en la nube', pf_reminders:'Recordatorios push y por email', pf_pdf:'Exportar carné en PDF', pf_docs:'Bóveda de documentos', pf_travel:'Módulo de viaje internacional',
+    plan_lifetime:'De por vida', plan_yearly:'Anual', plan_monthly:'Mensual', plan_premium:'Premium', plan_until:'hasta',
     sec_appearance:'Apariencia', accent_color:'Color de acento', theme_label:'Tema', theme_auto:'Auto', theme_light:'Claro', theme_dark:'Oscuro',
     accent_auto:'Por mascota', accent_manual:'Manual', accent_auto_hint:'El color de la app se adapta a la mascota activa.',
     sec_album:'Álbum', add_photo:'Añadir foto', no_album:'Sin fotos todavía', album_saved:'Foto añadida', uploading:'Subiendo…',
@@ -667,6 +676,9 @@ const STR = {
     diag_title:'Diagnostics', diag_open:'Diagnostics', diag_open_sub:'Recent errors (on this device only)', diag_empty:'No errors logged', diag_hint:'This data is stored only on your device. Copy it if you need to report a problem.', diag_clear:'Clear', diag_copy:'Copy', diag_copied:'Copied to clipboard',
     sec_region:'Region & rules', region_label:'Country', region_rabies:'Rabies booster', region_law:'usually required by law', rabies_3y:'every 3 years', rabies_n_months:'every {n} months', region_hint:'Adjusts the suggested rabies booster frequency and legal notes for your country. The base schedule (puppy/kitten series) is universal.',
     rc_open:'Reminders center', rc_open_sub:'Everything coming up, in one place', rc_title:'Reminders center', rc_empty:'No upcoming dates', rc_all_pets:'All pets', rc_channel_local:'On-device alerts enabled', rc_channel_off:'Alerts disabled', rc_channel_cloud:'Cloud alerts (signed in)', rc_enable:'Enable alerts', rc_sched_on:'Local alert scheduling: supported', rc_sched_off:'Local scheduling: not supported in this browser', rc_sched_done:'{n} alerts scheduled', grp_overdue:'Overdue', grp_soon:'Upcoming', grp_future:'Later',
+    pw_title:'VacuPet Premium', pw_sub:'Unlock everything for your pets’ care.', pw_note:'The essentials (vaccines, rabies and basic alerts) are always free. Premium adds convenience and extras.', pw_cta:'Go Premium', pw_soon:'Payments coming very soon', pw_redeem:'Redeem code', pw_redeem_ph:'Activation code', pw_redeem_ok:'Premium activated! 🎉', pw_redeem_bad:'Invalid code', pw_active:'Premium active', pw_get:'Go Premium', pw_manage:'Manage subscription',
+    pf_pets:'Unlimited pets', pf_sync:'Cloud sync', pf_reminders:'Push & email reminders', pf_pdf:'Export PDF record', pf_docs:'Document vault', pf_travel:'International travel module',
+    plan_lifetime:'Lifetime', plan_yearly:'Yearly', plan_monthly:'Monthly', plan_premium:'Premium', plan_until:'until',
     sec_appearance:'Appearance', accent_color:'Accent color', theme_label:'Theme', theme_auto:'Auto', theme_light:'Light', theme_dark:'Dark',
     accent_auto:'By pet', accent_manual:'Manual', accent_auto_hint:'The app color adapts to the active pet.',
     sec_album:'Album', add_photo:'Add photo', no_album:'No photos yet', album_saved:'Photo added', uploading:'Uploading…',
@@ -765,6 +777,9 @@ const STR = {
     diag_title:'Diagnóstico', diag_open:'Diagnóstico', diag_open_sub:'Erros recentes (só no seu dispositivo)', diag_empty:'Sem erros registrados', diag_hint:'Estes dados ficam só no seu dispositivo. Copie-os se precisar relatar um problema.', diag_clear:'Limpar', diag_copy:'Copiar', diag_copied:'Copiado para a área de transferência',
     sec_region:'Região e normas', region_label:'País', region_rabies:'Reforço de raiva', region_law:'costuma ser obrigatória por lei', rabies_3y:'a cada 3 anos', rabies_n_months:'a cada {n} meses', region_hint:'Ajusta a frequência sugerida do reforço de raiva e as notas legais conforme o país. O esquema base (série de filhote) é universal.',
     rc_open:'Central de lembretes', rc_open_sub:'Tudo que vem, num só lugar', rc_title:'Central de lembretes', rc_empty:'Sem próximas datas', rc_all_pets:'Todos os pets', rc_channel_local:'Avisos neste dispositivo ativos', rc_channel_off:'Avisos desativados', rc_channel_cloud:'Avisos pela nuvem (sessão iniciada)', rc_enable:'Ativar avisos', rc_sched_on:'Agendamento local de avisos: compatível', rc_sched_off:'Agendamento local: não compatível neste navegador', rc_sched_done:'{n} avisos agendados', grp_overdue:'Vencidas', grp_soon:'Próximas', grp_future:'Mais adiante',
+    pw_title:'VacuPet Premium', pw_sub:'Desbloqueie todo o cuidado dos seus pets.', pw_note:'O essencial (vacinas, raiva e avisos básicos) é sempre grátis. Premium adiciona comodidade e extras.', pw_cta:'Seja Premium', pw_soon:'Pagamentos em breve', pw_redeem:'Resgatar código', pw_redeem_ph:'Código de ativação', pw_redeem_ok:'Premium ativado! 🎉', pw_redeem_bad:'Código inválido', pw_active:'Premium ativo', pw_get:'Seja Premium', pw_manage:'Gerenciar assinatura',
+    pf_pets:'Pets ilimitados', pf_sync:'Sincronização na nuvem', pf_reminders:'Lembretes push e por email', pf_pdf:'Exportar carteira em PDF', pf_docs:'Cofre de documentos', pf_travel:'Módulo de viagem internacional',
+    plan_lifetime:'Vitalício', plan_yearly:'Anual', plan_monthly:'Mensal', plan_premium:'Premium', plan_until:'até',
     sec_appearance:'Aparência', accent_color:'Cor de destaque', theme_label:'Tema', theme_auto:'Auto', theme_light:'Claro', theme_dark:'Escuro',
     accent_auto:'Por pet', accent_manual:'Manual', accent_auto_hint:'A cor do app se adapta ao pet ativo.',
     sec_album:'Álbum', add_photo:'Adicionar foto', no_album:'Sem fotos ainda', album_saved:'Foto adicionada', uploading:'Enviando…',
@@ -1447,6 +1462,12 @@ function viewMore(){
        :`<button class="tile" id="signIn"><span class="ic c-accent">${I.user}</span><span class="tt"><b>${t('acc_signin')}</b><span>${t('acc_signin_sub')}</span></span><span class="chev">${I.chev}</span></button>`}
     </section>`:''}
 
+    ${monetizeOn()?`<section class="block"><div class="block-title">Premium</div>
+      ${isPremium()
+        ? `<button class="tile" id="premiumStatus"><span class="ic c-green">${I.shield}</span><span class="tt"><b>${t('pw_active')}</b><span>${premiumPlanLabel()}</span></span><span class="chev">${I.chev}</span></button>`
+        : `<button class="tile" id="goPremium"><span class="ic c-accent">${I.shield}</span><span class="tt"><b>${t('pw_get')}</b><span>${t('pw_sub')}</span></span><span class="chev">${I.chev}</span></button>`}
+    </section>`:''}
+
     <section class="block"><div class="block-title">${t('sec_owner')}</div>
       <button class="tile" id="ownerEdit"><span class="ic c-accent">${I.user}</span><span class="tt"><b>${t('owner_edit')}</b><span>${(data.owner&&(data.owner.nombre||data.owner.telefono))?esc([data.owner.nombre,data.owner.telefono].filter(Boolean).join(' · ')):t('owner_edit_sub')}</span></span><span class="chev">${I.chev}</span></button>
     </section>
@@ -1969,6 +1990,94 @@ function runCountUps(){
    ====================================================================== */
 const SB = window.VACUPET_SUPABASE || {};
 function cloudConfigured(){ return !!(SB.url && SB.anonKey); }
+
+/* ======================================================================
+   Monetización (Fase 1 — freemium). Detrás de un feature flag: con
+   monetize:false, isPremium() siempre es true → nada cambia para los
+   usuarios actuales. La fuente de verdad real es el servidor (tabla
+   entitlements); data.premium es la copia local que refleja ese estado.
+   ====================================================================== */
+function features(){ return window.VACUPET_FEATURES || {}; }
+function monetizeOn(){ return !!features().monetize; }
+function freePetLimit(){ const n=Number(features().freePetLimit); return n>0?n:2; }
+function isPremium(){
+  if(!monetizeOn()) return true;            // monetización apagada → todo libre
+  const p = data.premium;
+  if(!p || !p.active) return false;
+  if(p.until && p.until < todayISO()) return false;  // suscripción expirada
+  return true;
+}
+function canAddPet(){ return isPremium() || (data.pets||[]).length < freePetLimit(); }
+function requirePremium(feature){ if(isPremium()) return true; paywallModal(feature); return false; }
+function premiumPlanLabel(){
+  const p=data.premium||{}; const k=p.plan;
+  const lbl = k==='lifetime'?t('plan_lifetime') : k==='yearly'?t('plan_yearly') : k==='monthly'?t('plan_monthly') : t('plan_premium');
+  return p.until ? `${lbl} · ${t('plan_until')} ${fmt(p.until)}` : lbl;
+}
+// Lee el entitlement del servidor (si la nube está configurada y hay sesión).
+async function pullEntitlement(){
+  try{
+    if(!monetizeOn()) return;
+    const c = await ensureSupabase(); if(!c || !session) return;
+    const { data:row, error } = await c.from('entitlements').select('active,plan,valid_until').eq('user_id', session.user.id).maybeSingle();
+    if(error) return;   // la tabla puede no existir todavía: degradar en silencio
+    if(row){ data.premium = { active:!!row.active, plan:row.plan||'premium', until:row.valid_until||null, source:'server' }; save(false); render(); }
+  }catch(_){}
+}
+const PREMIUM_FEATURES = [
+  { icon:()=>I.paw,    key:'pf_pets' },
+  { icon:()=>I.upload, key:'pf_sync' },
+  { icon:()=>I.bell,   key:'pf_reminders' },
+  { icon:()=>I.pdf,    key:'pf_pdf' },
+  { icon:()=>I.clip,   key:'pf_docs' },
+  { icon:()=>I.shield, key:'pf_travel' },
+];
+function paywallModal(trigger){
+  const items = PREMIUM_FEATURES.map(f=>`<div class="rec"><span class="ic c-accent">${f.icon()}</span><div class="rr"><b>${t(f.key)}</b></div></div>`).join('');
+  const body = `
+    <div class="pwhero"><span class="pwbadge">${I.shield} Premium</span>
+      <h2>${t('pw_title')}</h2><p>${t('pw_sub')}</p></div>
+    <div class="card" style="margin-top:14px">${items}</div>
+    <p class="hint" style="margin-top:12px">${t('pw_note')}</p>`;
+  const foot = `<button class="btn btn-ghost" id="pwRedeem" style="flex:none">${t('pw_redeem')}</button><button class="btn btn-primary btn-block" id="pwBuy">${t('pw_cta')}</button>`;
+  openModal(modalShell(t('pw_title'), body, foot));
+  document.getElementById('pwBuy').onclick = startCheckout;
+  document.getElementById('pwRedeem').onclick = redeemModal;
+}
+function startCheckout(){
+  const url = features().checkoutUrl;
+  if(url){ const u = url + (url.includes('?')?'&':'?') + 'app=vacupet'; try{ window.open(u,'_blank'); }catch(_){ location.href=u; } }
+  else toast(t('pw_soon'),'info');
+}
+function redeemModal(){
+  const body = `<div class="field"><label>${t('pw_redeem_ph')}</label><input id="rdCode" placeholder="XXXX-XXXX" autocomplete="off"></div>`;
+  openModal(modalShell(t('pw_redeem'), body, `<button class="btn btn-ghost" data-close style="flex:none">${t('cancel')}</button><button class="btn btn-primary btn-block" id="rdGo">${t('pw_redeem')}</button>`));
+  document.getElementById('rdGo').onclick = async ()=>{
+    const ok = await redeemCode(val('rdCode'));
+    if(ok){ closeModal(); toast(t('pw_redeem_ok')); render(); } else toast(t('pw_redeem_bad'),'error');
+  };
+}
+// Canjea un código. Validación en servidor (RPC redeem_code) cuando hay nube;
+// si no, acepta el código de desarrollo de la config (ventas manuales tempranas).
+async function redeemCode(code){
+  code = (code||'').trim(); if(!code) return false;
+  try{
+    const c = await ensureSupabase();
+    if(c && session){
+      const { data:res, error } = await c.rpc('redeem_code', { p_code: code });
+      if(!error && res && res.active){ data.premium = { active:true, plan:res.plan||'lifetime', until:res.valid_until||null, source:'code' }; save(); return true; }
+    }
+  }catch(_){}
+  if(features().devCode && code===features().devCode){ data.premium = { active:true, plan:'lifetime', source:'code' }; save(); return true; }
+  return false;
+}
+function premiumManageModal(){
+  const url = features().manageUrl;
+  const body = `<div class="card pad" style="display:flex;align-items:center;gap:12px"><span class="ic c-green">${I.shield}</span><div style="flex:1"><b>${t('pw_active')}</b><div class="hint">${premiumPlanLabel()}</div></div></div>`;
+  const foot = url ? `<button class="btn btn-primary btn-block" id="pmManage">${t('pw_manage')}</button>` : `<button class="btn btn-block" data-close>${t('close')}</button>`;
+  openModal(modalShell('Premium', body, foot));
+  const mg=document.getElementById('pmManage'); if(mg) mg.onclick=()=>{ try{ window.open(url,'_blank'); }catch(_){ location.href=url; } };
+}
 let supa = null;     // cliente
 let session = null;  // sesión actual
 let syncT = null;    // debounce del push
@@ -1989,7 +2098,7 @@ async function ensureSupabase(){
     session = s || null;
     supa.auth.onAuthStateChange((evt, s2)=>{
       session = s2;
-      if(evt==='SIGNED_IN'){ closeModal(); if(window.Notification && Notification.permission==='granted') trySubscribePush(); pullState().then(()=>render()); }
+      if(evt==='SIGNED_IN'){ closeModal(); if(window.Notification && Notification.permission==='granted') trySubscribePush(); pullState().then(()=>render()); pullEntitlement(); }
       else if(!shared) render();
     });
     return supa;
@@ -2804,7 +2913,7 @@ document.addEventListener('click', e=>{
   const goEl=t0.closest('[data-go]'); if(goEl){ go(goEl.dataset.go); return; }
   if(t0.closest('#hdrAccount')){ if(session) go('more'); else authModal(); return; }
   if(t0.closest('#btnBackup')){ go('more'); return; }
-  if(t0.closest('#onbAdd')||t0.closest('#addPet')){ petModal(null); return; }
+  if(t0.closest('#onbAdd')||t0.closest('#addPet')){ if(canAddPet()) petModal(null); else paywallModal('pets'); return; }
   if(t0.closest('#onbDemo')){ loadDemoPet(); return; }
   const pa=t0.closest('[data-pet]'); if(pa){ data.activeId=pa.dataset.pet; save(); render(); return; }
   const sw=t0.closest('[data-switch]'); if(sw){ data.activeId=sw.dataset.switch; save(); closeModal(); go('home'); return; }
@@ -2815,7 +2924,7 @@ document.addEventListener('click', e=>{
   if(t0.closest('#albumAdd')){ pickAlbumPhoto(); return; }
   const gph=t0.closest('[data-photo]'); if(gph){ viewPhoto(gph.dataset.photo); return; }
   const dph=t0.closest('[data-delphoto]'); if(dph){ const pet=activePet(); const ph=(pet.album||[]).find(x=>x.id===dph.dataset.delphoto); if(ph&&ph.path) sbRemove(ph.path); pet.album=pet.album.filter(x=>x.id!==dph.dataset.delphoto); save(); closeModal(); toast(t('deleted')); render(); return; }
-  if(t0.closest('#docAdd')){ pickDoc(); return; }
+  if(t0.closest('#docAdd')){ if(requirePremium('docs')) pickDoc(); return; }
   const ddoc=t0.closest('[data-deldoc]'); if(ddoc){ const pet=activePet(); const dc=(pet.docs||[]).find(x=>x.id===ddoc.dataset.deldoc); if(dc&&dc.path) sbRemove(dc.path); pet.docs=pet.docs.filter(x=>x.id!==ddoc.dataset.deldoc); save(); toast(t('deleted')); render(); return; }
   const odoc=t0.closest('[data-opendoc]'); if(odoc){ openDoc(odoc.dataset.opendoc); return; }
   if(t0.closest('#editPet')){ petModal(activePet().info); return; }
@@ -2839,7 +2948,7 @@ document.addEventListener('click', e=>{
   if(t0.closest('#emergOpen')){ emergencyModal(); return; }
   if(t0.closest('#timelineOpen')){ timelineModal(); return; }
   if(t0.closest('#ownerEdit')){ ownerModal(); return; }
-  if(t0.closest('#travelOpen')){ travelModal(); return; }
+  if(t0.closest('#travelOpen')){ if(requirePremium('travel')) travelModal(); return; }
   if(t0.closest('#vetsOpen')){ openVets(); return; }
   if(t0.closest('#newsOpen')){ newsModal(); return; }
   if(t0.closest('#ocrScan')){ ocrStart(); return; }
@@ -2851,13 +2960,15 @@ document.addEventListener('click', e=>{
   if(t0.closest('#a11yBig')){ data.bigText=!data.bigText; save(); render(); return; }
   if(t0.closest('#diagOpen')){ diagModal(); return; }
   if(t0.closest('#rcOpen')){ remindersCenterModal(); return; }
+  if(t0.closest('#goPremium')){ paywallModal('more'); return; }
+  if(t0.closest('#premiumStatus')){ premiumManageModal(); return; }
   const sw0=t0.closest('[data-accent]'); if(sw0){ data.accent=sw0.dataset.accent; save(); render(); return; }
   if(t0.closest('#themeToggle')){ toggleTheme(); return; }
   const th0=t0.closest('[data-theme-set]'); if(th0){ data.theme=th0.dataset.themeSet; save(); render(); return; }
   const aa=t0.closest('[data-accentauto]'); if(aa){ data.accentAuto = aa.dataset.accentauto==='1'; save(); render(); return; }
   if(t0.closest('#shareCard')){ shareModal(); return; }
   if(t0.closest('#expIcs')){ exportICS(); return; }
-  if(t0.closest('#expPdf')){ exportPDF(); return; }
+  if(t0.closest('#expPdf')){ if(requirePremium('pdf')) exportPDF(); return; }
   if(t0.closest('#expCsv')){ exportCSV(); return; }
   if(t0.closest('#expJson')){ exportJSON(); return; }
   if(t0.closest('#impJson')){ importJSON(); return; }

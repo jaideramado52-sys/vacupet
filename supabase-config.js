@@ -25,6 +25,22 @@ window.VACUPET_SUPABASE = {
 //  usa el endpoint remoto (con tu consentimiento).
 //  Si la url está vacía, todo degrada a modo 100% local/offline.
 // ------------------------------------------------------------
+// ------------------------------------------------------------
+//  Monetización (Fase 1 — freemium). APAGADO por defecto:
+//  con monetize:false todo está desbloqueado (comportamiento actual,
+//  los usuarios no notan ningún cambio). Pon monetize:true para activar
+//  el paywall. checkoutUrl = enlace de pago (Lemon Squeezy / Recurrente);
+//  si está vacío, el botón muestra "próximamente". devCode = código de
+//  desbloqueo local para pruebas / ventas manuales tempranas.
+// ------------------------------------------------------------
+window.VACUPET_FEATURES = {
+  monetize: false,
+  freePetLimit: 2,
+  checkoutUrl: "",
+  manageUrl: "",
+  devCode: ""
+};
+
 window.VACUPET_AI = (function () {
   var base = window.VACUPET_SUPABASE.url ? window.VACUPET_SUPABASE.url.replace(/\/$/, "") : null;
   return {
