@@ -85,6 +85,25 @@ test.describe('VacuPet — humo', () => {
     await expect(page.locator('.offer')).toHaveCount(0);
   });
 
+  test('chapa: marcar perdido y abrir la página de hallazgo', async ({ page }) => {
+    await seedDemo(page);
+    await page.locator('[data-tab="pet"]').click();
+    await page.locator('#tagOpen').click();
+    await page.locator('#tagLost').click();            // abre el modal de perdido
+    await page.locator('#lo-rw').fill('Q500');
+    await page.locator('#loMark').click();             // marca como perdido
+    await page.locator('#tagOpen').click();            // reabre la chapa (enlace ya con "perdido")
+    const link = await page.locator('#tagLink').inputValue();
+    expect(link).toContain('#e=');
+    // Escanear el QR abre una carga nueva; goto con solo cambio de hash no recarga,
+    // así que forzamos un reload para que el arranque procese #e=.
+    await page.goto(link);
+    await page.reload();
+    await expect(page.getByText('¡Estoy perdido!')).toBeVisible();
+    await expect(page.getByText('Ana López')).toBeVisible();
+    await expect(page.getByText('Q500')).toBeVisible();
+  });
+
   test('selector de país ajusta la normativa de rabia', async ({ page }) => {
     await seedDemo(page);
     await page.locator('[data-tab="more"]').click();

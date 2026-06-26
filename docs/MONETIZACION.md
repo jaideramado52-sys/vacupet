@@ -232,3 +232,78 @@ window.VACUPET_PARTNERS = {
 Sugerencia de socios: comparadores/aseguradoras de mascotas (alto valor por
 lead) y tiendas de antiparasitarios/alimento (volumen). Empieza con 1–2 ofertas
 muy relevantes; menos es más.
+
+---
+
+# Fase 3 — Chapas NFC/QR para el collar (producto físico)
+
+El software ya está construido (no requiere despliegue nuevo). Vende una **chapa
+NFC/QR** que enlaza a la **página de hallazgo** de la mascota.
+
+## Lo que ya hay en la app (gratis, refuerza el propósito)
+- **Modo "mascota perdida"** (`pet.lost`): recompensa, visto por última vez y
+  nota. Botón *Marcar como perdido / Encontrado* desde el perfil y la chapa.
+- **Página de hallazgo autocontenida** (`#e=...`): quien escanea ve un banner
+  "¡Estoy perdido!", el contacto del dueño con **Llamar + WhatsApp**, recompensa
+  y los **datos médicos críticos** (alergias, condiciones, grupo sanguíneo). Sin
+  barra de navegación: es una página pública limpia.
+- **Chapa para el collar**: genera el **QR imprimible** del enlace de hallazgo
+  (sección en el perfil → *Chapa para el collar*, con copiar e imprimir).
+
+El enlace `#e=` lleva los datos **embebidos** (funciona offline, sin servidor).
+Limitación: es una foto fija — si cambias el contacto o el estado "perdido",
+regeneras/reimprimes el QR.
+
+## El producto que vendes
+- **Chapa física NFC + QR grabado** (metal/silicona, resistente al agua).
+  Margen de hardware. La chapa lleva el QR/NFC que abre la página de hallazgo.
+- **Modelos de ingreso**:
+  - Venta única de la chapa (margen físico).
+  - + Suscripción del perfil de la chapa (cambiar contacto, modo perdido con
+    alerta, historial de escaneos) → recurrencia.
+- **Validar sin inventario**: preventa / crowdfunding antes de fabricar.
+
+## Upgrade recomendado: chapa con enlace MUTABLE (servidor)
+Para que la MISMA chapa refleje cambios sin reimprimir (cambiar teléfono, activar
+"perdido" al instante, contar escaneos), usa un token estable en vez de `#e=`:
+
+```sql
+create table if not exists public.tags (
+  id          text primary key,             -- id corto grabado en la chapa (ej. 'VP-7QK2')
+  user_id     uuid references auth.users(id) on delete set null,
+  pet_id      text,                          -- mascota vinculada
+  emergency   jsonb,                         -- payload de hallazgo (igual que #e=)
+  lost        boolean not null default false,
+  scans       int not null default 0,
+  updated_at  timestamptz not null default now()
+);
+alter table public.tags enable row level security;
+create policy "dueño gestiona su chapa" on public.tags
+  for all using (auth.uid() = user_id) with check (auth.uid() = user_id);
+
+-- Lectura pública de la página de hallazgo (incrementa el contador de escaneos).
+create or replace function public.scan_tag(p_id text)
+returns jsonb language plpgsql security definer set search_path = public as $$
+declare v jsonb;
+begin
+  update tags set scans = scans + 1, updated_at = now() where id = p_id
+    returning emergency || jsonb_build_object('lost', lost) into v;
+  return v;   -- null si no existe
+end; $$;
+grant execute on function public.scan_tag(text) to anon, authenticated;
+```
+
+- La chapa graba una URL corta: `https://vacupet…/#t=VP-7QK2`.
+- La app, al ver `#t=`, llama a `scan_tag(id)` y pinta la misma `viewFound`.
+- El dueño edita su contacto / activa "perdido" desde la app (update en `tags`),
+  y la chapa ya refleja el cambio **sin reimprimir**.
+- `scans` te da analítica (cuántas veces se escaneó, útil si la mascota se pierde).
+
+## Pasos para lanzar
+1. Diseñar la chapa (QR + NFC) y elegir proveedor de grabado.
+2. (Para mutable) crear la tabla `tags` + `scan_tag` y añadir el lector `#t=`.
+3. Tienda simple (incluso un formulario + pago manual o el checkout de la Fase 1).
+4. Empaque con instrucciones: "escanéame si me encuentras".
+
+Hasta lanzar la chapa física, el modo perdido + la página de hallazgo + el QR
+imprimible **ya aportan valor** (cualquiera puede imprimir el QR en papel).

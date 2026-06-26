@@ -307,6 +307,11 @@ nav.tabbar button.on{color:var(--accent)}
 .btn:active{transform:scale(.97)}
 /* Anillo de salud alrededor del avatar (perfil de mascota). box-shadow no lo recorta overflow:hidden. */
 .av.healthring{box-shadow:0 0 0 3px var(--surface),0 0 0 6px var(--hr,var(--accent))}
+/* Mascota perdida (banner de hallazgo) */
+.lostbig{display:flex;align-items:center;gap:12px;padding:14px 16px;border-radius:15px;background:color-mix(in srgb,var(--red) 13%,var(--surface));border:1px solid color-mix(in srgb,var(--red) 32%,transparent)}
+.lostbig svg{width:26px;height:26px;flex:none;color:var(--red)}
+.lostbig b{display:block;font-size:15px;color:var(--red)}
+.lostbig span{display:block;font-size:12.5px;color:var(--muted);margin-top:1px}
 /* Ofertas / recomendaciones de partners */
 .offer{display:flex;align-items:center;gap:12px;padding:13px 14px;background:var(--surface);border:1px solid var(--line);border-radius:15px;box-shadow:var(--shadow)}
 .offer .rr{flex:1;min-width:0;display:flex;flex-direction:column;gap:2px}
@@ -585,6 +590,9 @@ const STR = {
     pf_pets:'Mascotas ilimitadas', pf_sync:'Sincronización en la nube', pf_reminders:'Recordatorios push y por email', pf_pdf:'Exportar carné en PDF', pf_docs:'Bóveda de documentos', pf_travel:'Módulo de viaje internacional',
     plan_lifetime:'De por vida', plan_yearly:'Anual', plan_monthly:'Mensual', plan_premium:'Premium', plan_until:'hasta',
     sec_offers:'Recomendados', partner_label:'Recomendado', partner_cta:'Ver', partner_disclaimer:'Enlaces de afiliados: podemos ganar una comisión si compras, sin coste extra para ti. Son opcionales.',
+    found_lost_title:'¡Estoy perdido!', found_lost_sub:'Si me encuentras, contacta a mi familia, por favor.', found_contact:'Contacto', found_call:'Llamar', found_medical:'Datos médicos', found_nocontact:'Sin contacto disponible', found_openapp:'¿Tienes mascotas? Abre VacuPet', found_footer:'Página de hallazgo · hecha con VacuPet',
+    lost_title:'Mascota perdida', lost_intro:'Activa el modo perdido para que tu chapa muestre un aviso y tu contacto a quien la encuentre.', lost_reward:'Recompensa', lost_reward_ph:'Ej: Q500', lost_lastseen:'Visto por última vez', lost_lastseen_ph:'Ej: Zona 10, hoy', lost_note:'Nota', lost_note_ph:'Señas, comportamiento, collar…', lost_mark:'Marcar como perdido', lost_marked:'Modo perdido activado', lost_found:'Encontrado', lost_found_msg:'¡Qué bueno que apareció! 🎉', lost_on:'Mascota perdida activa', lost_manage:'Gestionar', lost_tap_manage:'Toca para gestionar', lost_found_label:'Encontrada',
+    tag_open:'Chapa para el collar', tag_open_sub:'QR de emergencia para imprimir', tag_open_lost:'Modo perdido activo · QR listo', tag_title:'Chapa para el collar', tag_intro:'Imprime este QR y ponlo en el collar. Quien encuentre a tu mascota verá tu contacto y sus datos críticos.', tag_note:'Consejo: una chapa NFC duradera resiste mejor el agua y el roce que el papel.', tag_print:'Imprimir', tag_print_cap:'Escanéame si me encuentras · VacuPet',
     sec_appearance:'Apariencia', accent_color:'Color de acento', theme_label:'Tema', theme_auto:'Auto', theme_light:'Claro', theme_dark:'Oscuro',
     accent_auto:'Por mascota', accent_manual:'Manual', accent_auto_hint:'El color de la app se adapta a la mascota activa.',
     sec_album:'Álbum', add_photo:'Añadir foto', no_album:'Sin fotos todavía', album_saved:'Foto añadida', uploading:'Subiendo…',
@@ -687,6 +695,9 @@ const STR = {
     pf_pets:'Unlimited pets', pf_sync:'Cloud sync', pf_reminders:'Push & email reminders', pf_pdf:'Export PDF record', pf_docs:'Document vault', pf_travel:'International travel module',
     plan_lifetime:'Lifetime', plan_yearly:'Yearly', plan_monthly:'Monthly', plan_premium:'Premium', plan_until:'until',
     sec_offers:'Recommended', partner_label:'Recommended', partner_cta:'View', partner_disclaimer:'Affiliate links: we may earn a commission if you buy, at no extra cost to you. They are optional.',
+    found_lost_title:'I am lost!', found_lost_sub:'If you found me, please contact my family.', found_contact:'Contact', found_call:'Call', found_medical:'Medical info', found_nocontact:'No contact available', found_openapp:'Have pets? Open VacuPet', found_footer:'Found page · made with VacuPet',
+    lost_title:'Lost pet', lost_intro:'Turn on lost mode so your tag shows an alert and your contact to whoever finds it.', lost_reward:'Reward', lost_reward_ph:'e.g. $50', lost_lastseen:'Last seen', lost_lastseen_ph:'e.g. Downtown, today', lost_note:'Note', lost_note_ph:'Markings, behavior, collar…', lost_mark:'Mark as lost', lost_marked:'Lost mode on', lost_found:'Found', lost_found_msg:'So glad they’re back! 🎉', lost_on:'Lost mode active', lost_manage:'Manage', lost_tap_manage:'Tap to manage', lost_found_label:'Found',
+    tag_open:'Collar tag', tag_open_sub:'Printable emergency QR', tag_open_lost:'Lost mode active · QR ready', tag_title:'Collar tag', tag_intro:'Print this QR and put it on the collar. Whoever finds your pet sees your contact and critical info.', tag_note:'Tip: a durable NFC tag resists water and wear better than paper.', tag_print:'Print', tag_print_cap:'Scan me if you found me · VacuPet',
     sec_appearance:'Appearance', accent_color:'Accent color', theme_label:'Theme', theme_auto:'Auto', theme_light:'Light', theme_dark:'Dark',
     accent_auto:'By pet', accent_manual:'Manual', accent_auto_hint:'The app color adapts to the active pet.',
     sec_album:'Album', add_photo:'Add photo', no_album:'No photos yet', album_saved:'Photo added', uploading:'Uploading…',
@@ -789,6 +800,9 @@ const STR = {
     pf_pets:'Pets ilimitados', pf_sync:'Sincronização na nuvem', pf_reminders:'Lembretes push e por email', pf_pdf:'Exportar carteira em PDF', pf_docs:'Cofre de documentos', pf_travel:'Módulo de viagem internacional',
     plan_lifetime:'Vitalício', plan_yearly:'Anual', plan_monthly:'Mensal', plan_premium:'Premium', plan_until:'até',
     sec_offers:'Recomendados', partner_label:'Recomendado', partner_cta:'Ver', partner_disclaimer:'Links de afiliados: podemos ganhar uma comissão se você comprar, sem custo extra para você. São opcionais.',
+    found_lost_title:'Estou perdido!', found_lost_sub:'Se me encontrou, contate minha família, por favor.', found_contact:'Contato', found_call:'Ligar', found_medical:'Dados médicos', found_nocontact:'Sem contato disponível', found_openapp:'Tem pets? Abra o VacuPet', found_footer:'Página de achados · feita com VacuPet',
+    lost_title:'Pet perdido', lost_intro:'Ative o modo perdido para que sua plaquinha mostre um aviso e seu contato a quem encontrar.', lost_reward:'Recompensa', lost_reward_ph:'Ex: R$100', lost_lastseen:'Visto por último', lost_lastseen_ph:'Ex: Centro, hoje', lost_note:'Nota', lost_note_ph:'Marcas, comportamento, coleira…', lost_mark:'Marcar como perdido', lost_marked:'Modo perdido ativado', lost_found:'Encontrado', lost_found_msg:'Que bom que voltou! 🎉', lost_on:'Modo perdido ativo', lost_manage:'Gerenciar', lost_tap_manage:'Toque para gerenciar', lost_found_label:'Encontrado',
+    tag_open:'Plaquinha da coleira', tag_open_sub:'QR de emergência para imprimir', tag_open_lost:'Modo perdido ativo · QR pronto', tag_title:'Plaquinha da coleira', tag_intro:'Imprima este QR e coloque na coleira. Quem encontrar seu pet verá seu contato e dados críticos.', tag_note:'Dica: uma plaquinha NFC durável resiste melhor à água e ao desgaste que o papel.', tag_print:'Imprimir', tag_print_cap:'Escaneie-me se me encontrou · VacuPet',
     sec_appearance:'Aparência', accent_color:'Cor de destaque', theme_label:'Tema', theme_auto:'Auto', theme_light:'Claro', theme_dark:'Escuro',
     accent_auto:'Por pet', accent_manual:'Manual', accent_auto_hint:'A cor do app se adapta ao pet ativo.',
     sec_album:'Álbum', add_photo:'Adicionar foto', no_album:'Sem fotos ainda', album_saved:'Foto adicionada', uploading:'Enviando…',
@@ -943,6 +957,7 @@ window.addEventListener('unhandledrejection', e=>{ logError('promise', (e.reason
 
 let data = load();
 let shared = null; // si !=null, estamos en vista de carné compartido (solo lectura)
+let found = null;  // si !=null, estamos en la página pública de hallazgo (#e=)
 
 function load(){
   try{
@@ -1158,13 +1173,13 @@ function renderChrome(){
   applyTheme();
   document.documentElement.classList.toggle('bigtext', !!data.bigText);
   document.getElementById('brandLogo').innerHTML = I.paw;
-  document.getElementById('btnBackup').innerHTML = I.settings;
+  const bk=document.getElementById('btnBackup'); bk.innerHTML = I.settings; bk.classList.toggle('hide', !!(shared||found));
   const tt=document.getElementById('themeToggle');
   if(tt){ const eff=effectiveTheme(); tt.innerHTML = eff==='dark' ? I.sun : I.moon; tt.setAttribute('aria-label', t(eff==='dark'?'theme_light':'theme_dark')); tt.classList.toggle('hide', !!shared); }
   // Botón de cuenta en la cabecera (visible si hay nube): login si no hay sesión, cuenta si la hay.
   const acc = document.getElementById('hdrAccount');
   if(acc){
-    const showAcc = !shared && cloudConfigured();
+    const showAcc = !shared && !found && cloudConfigured();
     acc.classList.toggle('hide', !showAcc);
     if(showAcc){
       acc.innerHTML = session ? I.userOk : I.user;
@@ -1174,12 +1189,12 @@ function renderChrome(){
   }
   document.getElementById('langsw').innerHTML = ['es','en','pt'].map(l=>
     `<button data-lang="${l}" class="${(data.lang||'es')===l?'on':''}" aria-pressed="${(data.lang||'es')===l}">${l.toUpperCase()}</button>`).join('');
-  document.getElementById('tabbar').innerHTML = shared ? '' : tabs().map(t0=>
+  document.getElementById('tabbar').innerHTML = (shared||found) ? '' : tabs().map(t0=>
     `<button data-tab="${t0.id}" role="tab" aria-selected="${currentTab===t0.id}" class="${currentTab===t0.id?'on':''}">${t0.icon}<span>${t0.label}</span></button>`
   ).join('');
   const fab = document.getElementById('fab');
   fab.innerHTML = I.spark;
-  fab.classList.toggle('hide', shared || data.pets.length===0);
+  fab.classList.toggle('hide', shared || found || data.pets.length===0);
 }
 
 /* ---------------------------- Render principal ---------------------------- */
@@ -1187,6 +1202,7 @@ function render(){
   document.documentElement.lang = data.lang||'es';
   renderChrome();
   const app = document.getElementById('app');
+  if(found){ app.innerHTML = viewFound(); return; }
   if(shared){ app.innerHTML = viewShared(); if(sharedSig) setTimeout(runShareVerify, 0); return; }
   if(data.pets.length===0){ app.innerHTML = viewOnboarding(); return; }
   if(currentTab==='home') app.innerHTML = viewHome();
@@ -1436,6 +1452,7 @@ function viewPet(){
   ].filter(r=>r[1]);
   const hr = stateMeta()[petSummary(pet).estado].color;
   return `<div class="view">
+    ${isLost(pet)?`<button class="lostbig" id="lostBanner" style="width:100%;border:0;text-align:left;cursor:pointer">${I.shield}<div><b>${t('lost_on')}</b><span>${t('lost_tap_manage')}</span></div></button>`:''}
     <div class="card pad" style="display:flex;align-items:center;gap:16px">
       <div class="av healthring" style="width:72px;height:72px;font-size:32px;border-radius:50%;overflow:hidden;background:var(--surface-2);display:grid;place-items:center;flex:none;--hr:${hr}">${av}</div>
       <div style="flex:1"><h2>${esc(info.nombre)}</h2><div class="sub" style="color:var(--muted)">${SPECIES_EMOJI[info.especie]||'🐾'} ${esc(cap(info.especie))}${info.raza?` · ${esc(info.raza)}`:''}${info.esterilizado===true?' · ✓':''}</div></div>
@@ -1446,6 +1463,7 @@ function viewPet(){
     </div>
 
     <button class="tile" id="emergOpen" style="margin-top:14px"><span class="ic c-red">${I.shield}</span><span class="tt"><b>${t('emerg_open')}</b><span>${t('emerg_open_sub')}</span></span><span class="chev">${I.chev}</span></button>
+    <button class="tile" id="tagOpen" style="margin-top:11px"><span class="ic c-accent">${I.paw}</span><span class="tt"><b>${t('tag_open')}</b><span>${isLost(pet)?t('tag_open_lost'):t('tag_open_sub')}</span></span><span class="chev">${I.chev}</span></button>
 
     <section class="block"><div class="block-title">${t('sec_album')}</div>${albumHTML(pet)}</section>
 
@@ -2696,6 +2714,86 @@ function emergencyModal(){
   openModal(modalShell(t('emerg_title'), body, foot));
   document.getElementById('emergVet24').onclick=()=>openVets('veterinaria urgencias 24 horas');
 }
+
+/* ======================================================================
+   Mascota perdida + chapa del collar (Fase 3). Genera una página de hallazgo
+   autocontenida (#e=...) con el contacto del dueño y el estado "perdido", lista
+   para imprimir como QR en el collar. Reutiliza b64url + el lector de QR.
+   ====================================================================== */
+function telLink(num){ const n=String(num||'').replace(/[^0-9+]/g,''); return n?`tel:${n}`:''; }
+function waLink(num){ const n=String(num||'').replace(/[^0-9]/g,''); return n?`https://wa.me/${n}`:''; }
+function isLost(pet){ return !!(pet && pet.lost && pet.lost.active); }
+function emergencyPayload(pet){
+  const i=pet.info||{}, o=data.owner||{};
+  const p={ app:'vacupet', e:1, n:i.nombre||'', sp:i.especie||'otro', rz:i.raza||'', mc:i.microchip||'',
+    al:i.alergias||'', co:i.condiciones||'', sa:i.sangre||'', on:o.nombre||'', op:o.telefono||'', an:o.altNombre||'', ap:o.altTelefono||'' };
+  if(isLost(pet)) p.lost={ rw:(pet.lost.reward||''), ls:(pet.lost.lastSeen||''), nt:(pet.lost.note||'') };
+  return p;
+}
+function emergencyLink(pet){ return location.origin+location.pathname+'#e='+b64urlEncode(JSON.stringify(emergencyPayload(pet))); }
+function decodeEmergency(h){ try{ const o=JSON.parse(b64urlDecode(h)); return (o && o.app==='vacupet' && o.e) ? o : null; }catch(e){ return null; } }
+function viewFound(){
+  const f=found, lost=!!f.lost;
+  const art=speciesArt(f.sp||'otro');
+  const med=[ [t('lbl_allergies'),f.al], [t('lbl_conditions'),f.co], [t('lbl_blood'),f.sa], ['Microchip',f.mc] ].filter(r=>r[1]);
+  const contact=(name,phone)=>{ if(!phone) return ''; const wa=waLink(phone);
+    return `<div class="card pad" style="display:flex;align-items:center;gap:10px;margin-top:10px"><div style="flex:1;min-width:0"><b>${esc(name||t('emerg_owner'))}</b><div class="hint">${esc(phone)}</div></div>
+      <a class="btn btn-primary" href="${telLink(phone)}" style="flex:none">${t('found_call')}</a>${wa?`<a class="btn" href="${wa}" target="_blank" rel="noopener" style="flex:none">WhatsApp</a>`:''}</div>`; };
+  return `<div class="view">
+    ${lost?`<div class="lostbig">${I.shield}<div><b>${t('found_lost_title')}</b><span>${t('found_lost_sub')}</span></div></div>`:''}
+    <div class="card pad" style="display:flex;align-items:center;gap:14px;margin-top:14px">
+      <div class="av" style="width:64px;height:64px;border-radius:50%;overflow:hidden;border:1px solid var(--line);flex:none"><img src="${art}" style="width:100%;height:100%;object-fit:cover"></div>
+      <div><h2>${esc(f.n||'')}</h2><div class="sub" style="color:var(--muted)">${SPECIES_EMOJI[f.sp]||'🐾'} ${esc(cap(f.sp||''))}${f.rz?` · ${esc(f.rz)}`:''}</div></div>
+    </div>
+    ${lost && (f.lost.rw||f.lost.ls||f.lost.nt)?`<div class="card" style="margin-top:12px">
+      ${f.lost.rw?`<div class="rec"><div class="rr"><span>${t('lost_reward')}</span></div><div class="meta" style="font-weight:700;color:var(--accent)">${esc(f.lost.rw)}</div></div>`:''}
+      ${f.lost.ls?`<div class="rec"><div class="rr"><span>${t('lost_lastseen')}</span></div><div class="meta" style="font-weight:600;color:var(--ink)">${esc(f.lost.ls)}</div></div>`:''}
+      ${f.lost.nt?`<div class="rec"><div class="rr"><b style="font-weight:500;margin-top:2px">${esc(f.lost.nt)}</b></div></div>`:''}</div>`:''}
+    <div class="block-title" style="margin:16px 2px 6px">${t('found_contact')}</div>
+    ${contact(f.on,f.op)||`<div class="card pad empty">${t('found_nocontact')}</div>`}${contact(f.an,f.ap)}
+    ${med.length?`<div class="block-title" style="margin:16px 2px 6px">${t('found_medical')}</div><div class="card">${med.map(r=>`<div class="rec"><div class="rr"><span>${esc(r[0])}</span></div><div class="meta" style="font-weight:600;color:var(--ink)">${esc(r[1])}</div></div>`).join('')}</div>`:''}
+    <button class="btn btn-ghost btn-block" id="openMine" style="margin-top:18px">${t('found_openapp')}</button>
+    <p class="disclaimer">${t('found_footer')}</p>
+  </div>`;
+}
+function lostModal(){
+  const pet=activePet(); if(!pet) return; const l=pet.lost||{}; const active=isLost(pet);
+  const body=`${active?`<div class="lostbig" style="margin-bottom:12px">${I.shield}<div><b>${t('lost_on')}</b><span>${t('found_lost_sub')}</span></div></div>`:`<p class="hint">${t('lost_intro')}</p>`}
+    <div class="field"><label>${t('lost_reward')}</label><input id="lo-rw" value="${esc(l.reward||'')}" placeholder="${t('lost_reward_ph')}"></div>
+    <div class="field"><label>${t('lost_lastseen')}</label><input id="lo-ls" value="${esc(l.lastSeen||'')}" placeholder="${t('lost_lastseen_ph')}"></div>
+    <div class="field"><label>${t('lost_note')}</label><textarea id="lo-nt" placeholder="${t('lost_note_ph')}">${esc(l.note||'')}</textarea></div>`;
+  const foot=active
+    ? `<button class="btn btn-ghost" id="loFound" style="flex:none">${t('lost_found')}</button><button class="btn btn-primary btn-block" id="loSave">${t('save')}</button>`
+    : `<button class="btn btn-ghost" data-close style="flex:none">${t('cancel')}</button><button class="btn btn-danger btn-block" id="loMark">${t('lost_mark')}</button>`;
+  openModal(modalShell(t('lost_title'), body, foot));
+  const collect=()=>({ active:true, since:(pet.lost&&pet.lost.since)||todayISO(), reward:val('lo-rw').trim(), lastSeen:val('lo-ls').trim(), note:val('lo-nt').trim() });
+  const mk=document.getElementById('loMark'); if(mk) mk.onclick=()=>{ pet.lost=collect(); save(); closeModal(); toast(t('lost_marked'),'info'); render(); };
+  const sv=document.getElementById('loSave'); if(sv) sv.onclick=()=>{ pet.lost=collect(); save(); closeModal(); toast(t('saved')); render(); };
+  const fd=document.getElementById('loFound'); if(fd) fd.onclick=()=>{ pet.lost={active:false}; save(); closeModal(); toast(t('lost_found_msg')); render(); };
+}
+function tagModal(){
+  const pet=activePet(); if(!pet) return; const link=emergencyLink(pet);
+  const body=`<p class="hint">${t('tag_intro')}</p>
+    <div class="qrbox" id="tagqr"><span class="hint">QR…</span></div>
+    <div class="linkbox"><input id="tagLink" readonly value="${esc(link)}"><button class="btn" id="tagCopy" aria-label="${t('copied')}">${I.copy}</button></div>
+    <p class="hint" style="margin-top:10px">${t('tag_note')}</p>`;
+  const foot=`<button class="btn btn-ghost" id="tagPrint" style="flex:none">${t('tag_print')}</button><button class="btn ${isLost(pet)?'btn-primary':'btn-danger'} btn-block" id="tagLost">${isLost(pet)?t('lost_manage'):t('lost_mark')}</button>`;
+  openModal(modalShell(t('tag_title'), body, foot));
+  document.getElementById('tagCopy').onclick=async()=>{ try{ await navigator.clipboard.writeText(link); }catch(_){ const i=document.getElementById('tagLink'); i.select(); document.execCommand&&document.execCommand('copy'); } toast(t('copied')); };
+  document.getElementById('tagLost').onclick=()=>lostModal();
+  document.getElementById('tagPrint').onclick=()=>printTag(pet, link);
+  ensureQR(ok=>{ const box=document.getElementById('tagqr'); if(!box) return; if(ok&&window.qrcode){ try{ const qr=window.qrcode(0,'M'); qr.addData(link); qr.make(); box.innerHTML=qr.createImgTag(5,0); }catch(e){ box.innerHTML='<span class="hint">QR…</span>'; } } else box.innerHTML='<span class="hint">QR no disponible offline</span>'; });
+}
+function printTag(pet, link){
+  ensureQR(ok=>{
+    let qrimg=''; if(ok&&window.qrcode){ try{ const qr=window.qrcode(0,'M'); qr.addData(link); qr.make(); qrimg=qr.createImgTag(6,0); }catch(e){} }
+    document.getElementById('printArea').innerHTML=`<div style="text-align:center;font-family:system-ui,sans-serif">
+      <h1 style="font-size:20px;margin-bottom:6px">🐾 ${esc(pet.info.nombre)}</h1>
+      <div>${qrimg||''}</div>
+      <p style="font-size:12px;color:#444;margin-top:6px">${esc(t('tag_print_cap'))}</p></div>`;
+    setTimeout(()=>window.print(),60);
+  });
+}
 function timelineModal(){
   const pet=activePet(); if(!pet) return;
   const ev=buildTimeline(pet);
@@ -2960,8 +3058,8 @@ document.addEventListener('click', e=>{
   // idioma
   const lg=t0.closest('[data-lang]'); if(lg){ data.lang=lg.dataset.lang; save(); render(); return; }
   // compartido: abrir mi app
-  if(t0.closest('#openMine')){ shared=null; history.replaceState(null,'',location.pathname); go('home'); return; }
-  if(shared) return; // en vista compartida no hay más acciones
+  if(t0.closest('#openMine')){ shared=null; found=null; history.replaceState(null,'',location.pathname); go('home'); return; }
+  if(shared||found) return; // en vista compartida / de hallazgo no hay más acciones
   const tab=t0.closest('[data-tab]'); if(tab){ go(tab.dataset.tab); return; }
   const goEl=t0.closest('[data-go]'); if(goEl){ go(goEl.dataset.go); return; }
   if(t0.closest('#hdrAccount')){ if(session) go('more'); else authModal(); return; }
@@ -2999,6 +3097,8 @@ document.addEventListener('click', e=>{
   if(t0.closest('#nudgeEnable')){ if(cloudConfigured()&&!session){ authModal(); } else { enableNotifs(); } return; }
   if(t0.closest('#nudgeX')){ data.nudgeDismissed=true; save(); render(); return; }
   if(t0.closest('#emergOpen')){ emergencyModal(); return; }
+  if(t0.closest('#tagOpen')){ tagModal(); return; }
+  if(t0.closest('#lostBanner')){ lostModal(); return; }
   if(t0.closest('#timelineOpen')){ timelineModal(); return; }
   if(t0.closest('#ownerEdit')){ ownerModal(); return; }
   if(t0.closest('#travelOpen')){ if(requirePremium('travel')) travelModal(); return; }
@@ -3173,10 +3273,14 @@ function urlB64ToUint8(b64){
 /* ---------------------------- Arranque ---------------------------- */
 const hash0 = location.hash || '';
 const tokenMatch = hash0.match(/^#s=([0-9a-fA-F-]{8,})/);   // carné compartido por token
+const foundMatch = hash0.match(/^#e=(.+)$/);                // página pública de hallazgo
+found = foundMatch ? decodeEmergency(foundMatch[1]) : null;
 shared = readShareHash();                                   // carné compartido en el hash (#v=)
 let pendingAdd = null;
 
-if(tokenMatch){
+if(found){
+  render();
+} else if(tokenMatch){
   // Vista de solo lectura cargada de forma asíncrona vía RPC.
   if(!data.activeId && data.pets[0]) data.activeId = data.pets[0].info.id;
   loadSharedToken(tokenMatch[1]);

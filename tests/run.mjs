@@ -37,6 +37,7 @@ code += `;globalThis.__VP = {
   allReminders, COUNTRIES, rabiesMonths,
   isPremium, canAddPet, monetizeOn, freePetLimit,
   partnersOn, partnerOffers, topOffer,
+  emergencyPayload, decodeEmergency, isLost, telLink, waLink,
   ACCENTS, accentColor, SPECIES_COLOR, albumHTML, docsHTML,
   getData:()=>data, setData:d=>{data=d}
 };`;
@@ -310,6 +311,28 @@ section('Partners / recomendaciones (afiliación, feature flag)');
   VP.getData().offersDismissed = ['seguro'];
   ok('respeta descartadas', VP.topOffer('home')===null);
   delete w.VACUPET_PARTNERS; // restaurar
+}
+
+section('Mascota perdida + página de hallazgo (Fase 3)');
+{
+  ok('isLost true', VP.isLost({lost:{active:true}})===true);
+  ok('isLost false (sin lost)', VP.isLost({})===false);
+  ok('isLost false (active false)', VP.isLost({lost:{active:false}})===false);
+  ok('telLink limpia el número', VP.telLink('+502 5555 1234')==='tel:+50255551234');
+  ok('waLink quita el +', VP.waLink('+502 5555 1234')==='https://wa.me/50255551234');
+  ok('telLink vacío → ""', VP.telLink('')==='');
+  VP.setData({ v:4, lang:'es', remDays:30, owner:{ nombre:'Ana', telefono:'+502 5555 1234', altNombre:'Carlos', altTelefono:'5555 9876' }, pets:[] });
+  const pet={ info:{ nombre:'Rocky', especie:'perro', raza:'Labrador', alergias:'Pollo', microchip:'941' }, lost:{ active:true, reward:'Q500', lastSeen:'Zona 10', note:'collar rojo' } };
+  const pl=VP.emergencyPayload(pet);
+  ok('payload lleva identidad', pl.n==='Rocky' && pl.sp==='perro');
+  ok('payload lleva contacto del dueño', pl.on==='Ana' && pl.op==='+502 5555 1234');
+  ok('payload lleva estado perdido', pl.lost && pl.lost.rw==='Q500' && pl.lost.ls==='Zona 10');
+  // Round-trip por el enlace (#e=): codifica → decodifica
+  const dec = VP.decodeEmergency(VP.b64urlEncode(JSON.stringify(pl)));
+  ok('decode round-trip', dec && dec.n==='Rocky' && dec.al==='Pollo' && dec.lost.nt==='collar rojo');
+  ok('decode rechaza basura', VP.decodeEmergency('xxx')===null);
+  // No perdido → sin bloque lost
+  ok('sin perdido no incluye lost', !VP.emergencyPayload({info:{nombre:'X',especie:'gato'}}).lost);
 }
 VP.setData({ v:1, activeId:'1', remDays:30, lang:'es', pets:[{info:{id:'1',nombre:'R',especie:'perro'},vaccines:[],dewormings:[],weights:[],vetVisits:[],cares:[{id:'c',kind:'bano',titulo:'Baño',fecha:iso(-10),cada:30,proxima:iso(5)}]}] });
 {
