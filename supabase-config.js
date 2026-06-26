@@ -61,6 +61,24 @@ window.VACUPET_PARTNERS = {
   ]
 };
 
+// ------------------------------------------------------------
+//  Marca blanca / co-branding para clínicas (Fase 4 — Nivel 1).
+//  APAGADO por defecto (enabled:false → la app es "VacuPet" normal).
+//  Con enabled:true, la clínica pone su nombre, logo, color y contacto.
+//  logo: una URL o data-URL (SVG/PNG); accent: color hex de la clínica.
+// ------------------------------------------------------------
+window.VACUPET_BRAND = {
+  enabled: false,
+  name: "",            // nombre que reemplaza a "VacuPet" en la cabecera/título
+  logo: "",            // URL o data-URL del logo (vacío = patita por defecto)
+  accent: "",          // color de acento de la clínica (hex)
+  clinicName: "",      // nombre de la clínica (tarjeta "Mi clínica")
+  clinicPhone: "",     // teléfono (botón Llamar)
+  clinicWhatsApp: "",  // WhatsApp (solo dígitos o con +)
+  bookUrl: "",         // enlace para agendar cita
+  web: ""              // sitio web de la clínica
+};
+
 window.VACUPET_AI = (function () {
   var base = window.VACUPET_SUPABASE.url ? window.VACUPET_SUPABASE.url.replace(/\/$/, "") : null;
   return {

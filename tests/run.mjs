@@ -38,6 +38,7 @@ code += `;globalThis.__VP = {
   isPremium, canAddPet, monetizeOn, freePetLimit,
   partnersOn, partnerOffers, topOffer,
   emergencyPayload, decodeEmergency, isLost, telLink, waLink,
+  brandOn, appName, hasClinic,
   ACCENTS, accentColor, SPECIES_COLOR, albumHTML, docsHTML,
   getData:()=>data, setData:d=>{data=d}
 };`;
@@ -333,6 +334,29 @@ section('Mascota perdida + página de hallazgo (Fase 3)');
   ok('decode rechaza basura', VP.decodeEmergency('xxx')===null);
   // No perdido → sin bloque lost
   ok('sin perdido no incluye lost', !VP.emergencyPayload({info:{nombre:'X',especie:'gato'}}).lost);
+}
+
+section('Marca blanca / co-branding (Fase 4 Nivel 1, feature flag)');
+{
+  const w = globalThis.window;
+  delete w.VACUPET_BRAND;
+  ok('flag off → brandOn false', VP.brandOn()===false);
+  ok('flag off → appName VacuPet', VP.appName()==='VacuPet');
+  ok('flag off → hasClinic false', VP.hasClinic()===false);
+  // Con marca de clínica
+  w.VACUPET_BRAND = { enabled:true, name:'PatitasApp', accent:'#0EA5E9', clinicName:'Clínica Patitas', clinicPhone:'+502 5555 0000' };
+  ok('brandOn true', VP.brandOn()===true);
+  ok('appName usa el nombre de marca', VP.appName()==='PatitasApp');
+  ok('hasClinic true (hay contacto)', VP.hasClinic()===true);
+  // Marca apaga las ofertas de afiliados
+  w.VACUPET_PARTNERS = { enabled:true, country:'GT', offers:[{ id:'x', contexts:['home'], countries:['*'], title:'X', url:'https://e.com' }] };
+  VP.setData({ v:4, lang:'es', remDays:30, pets:[] });
+  ok('marca apaga partnersOn', VP.partnersOn()===false);
+  ok('marca → sin ofertas', VP.partnerOffers('home').length===0);
+  // Sin nombre de marca → cae a VacuPet
+  w.VACUPET_BRAND = { enabled:true };
+  ok('marca sin nombre → VacuPet', VP.appName()==='VacuPet');
+  delete w.VACUPET_BRAND; delete w.VACUPET_PARTNERS; // restaurar
 }
 VP.setData({ v:1, activeId:'1', remDays:30, lang:'es', pets:[{info:{id:'1',nombre:'R',especie:'perro'},vaccines:[],dewormings:[],weights:[],vetVisits:[],cares:[{id:'c',kind:'bano',titulo:'Baño',fecha:iso(-10),cada:30,proxima:iso(5)}]}] });
 {

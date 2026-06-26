@@ -104,6 +104,17 @@ test.describe('VacuPet — humo', () => {
     await expect(page.getByText('Q500')).toBeVisible();
   });
 
+  test('marca blanca: nombre y tarjeta de clínica (flag on)', async ({ page }) => {
+    await seedDemo(page);
+    await page.evaluate(() => {
+      window.VACUPET_BRAND = { enabled: true, name: 'PatitasApp', accent: '#0EA5E9', clinicName: 'Clínica Patitas', clinicPhone: '+502 5555 0000', clinicWhatsApp: '50255550000', bookUrl: 'https://example.com/agenda' };
+    });
+    await page.locator('[data-tab="home"]').click();
+    await expect(page.locator('#brandName')).toHaveText('PatitasApp');
+    await expect(page.getByText('Clínica Patitas')).toBeVisible();
+    await expect(page.getByText('Tu clínica, a un toque')).toBeVisible();
+  });
+
   test('selector de país ajusta la normativa de rabia', async ({ page }) => {
     await seedDemo(page);
     await page.locator('[data-tab="more"]').click();

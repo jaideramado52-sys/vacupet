@@ -307,3 +307,64 @@ grant execute on function public.scan_tag(text) to anon, authenticated;
 
 Hasta lanzar la chapa física, el modo perdido + la página de hallazgo + el QR
 imprimible **ya aportan valor** (cualquiera puede imprimir el QR en papel).
+
+---
+
+# Fase 4 — White-label para clínicas (Nivel 1: co-branding)
+
+Cada clínica tiene "su" VacuPet (nombre, logo, color y contacto) y se lo regala a
+sus clientes; tú cobras una cuota mensual por clínica (SaaS B2B). **Apagado por
+defecto** (`enabled:false` → la app es "VacuPet" normal).
+
+## Config (`supabase-config.js`)
+```js
+window.VACUPET_BRAND = {
+  enabled: true,
+  name: "PatitasApp",                 // reemplaza "VacuPet" en cabecera/título
+  logo: "https://.../logo.svg",       // URL o data-URL (vacío = patita)
+  accent: "#0EA5E9",                  // color de la clínica
+  clinicName: "Clínica Patitas",
+  clinicPhone: "+502 5555 0000",
+  clinicWhatsApp: "50255550000",
+  bookUrl: "https://patitas.com/agenda",
+  web: "https://patitas.com"
+};
+```
+
+## Qué cambia con la marca activa
+- **Cabecera y título**: el nombre y el logo de la clínica.
+- **Color de la app**: el acento de la clínica (si el usuario no eligió otro;
+  el acento por especie sigue teniendo prioridad si lo activa).
+- **Tarjeta "Mi clínica"** en Inicio: Llamar + WhatsApp + Agendar + Web.
+- **PDF del carné**: cabecera con logo/nombre de la clínica y pie con su marca.
+- **Página de hallazgo**: pie "Atendido por <clínica>".
+- **Ofertas de afiliados (Fase 2) desactivadas** automáticamente (sin competencia).
+- (Opcional recomendado) bundlear **Premium** (Fase 1) en el paquete de la clínica.
+
+## Arquitectura de despliegue
+- **Por clínica (recomendado para empezar)**: cada clínica = un despliegue con su
+  `VACUPET_BRAND`. Lo más simple; un subdominio por clínica
+  (`clinicapatitas.vacupet.app`). Aislado, sin riesgo entre clínicas.
+- **Multi-tenant (con tracción)**: una sola app; la clínica se detecta por
+  subdominio o `?clinic=ID` y la config se baja de una tabla `clinics`.
+
+## Alta de una clínica (Nivel 1)
+1. Pedir a la clínica: nombre, logo, color, teléfono/WhatsApp, enlace de agenda, web.
+2. Crear su `supabase-config.js` con `VACUPET_BRAND` (o su entrada en `clinics`).
+3. Desplegar en su subdominio (otro proyecto de Pages/Netlify reutilizando el build).
+4. Entregar QR/enlace para que la clínica lo comparta con sus clientes.
+
+## Niveles 2 y 3 (cuando haya demanda)
+- **Nivel 2**: dominio propio + app instalable (TWA con icono de la clínica).
+- **Nivel 3 (panel de clínica)**: tablas `clinics` + `clinic_clients` (RLS), y una
+  vista de administración donde la clínica ve sus clientes, próximos recordatorios
+  y envía campañas push. Es el grueso del trabajo B2B; justifícalo con clientes
+  que ya pagan el Nivel 1.
+
+## Pricing orientativo (B2B)
+- Nivel 1 (co-branding): ~Q150–400/mes (USD 20–50) por clínica.
+- Nivel 2: + recargo por dominio/instalable.
+- Nivel 3 (panel): ~Q600+/mes, según nº de clientes.
+
+Hasta poner `enabled:true` en un despliegue concreto, **la app pública sigue
+siendo VacuPet sin cambios**.
