@@ -314,6 +314,18 @@ nav.tabbar button.on{color:var(--accent)}
 .lostbig span{display:block;font-size:12.5px;color:var(--muted);margin-top:1px}
 .petav .av{position:relative}
 .lostdot{position:absolute;top:-2px;right:-2px;width:20px;height:20px;border-radius:50%;background:var(--red);color:#fff;font-weight:800;font-size:13px;display:grid;place-items:center;border:2px solid var(--surface);z-index:2}
+/* Perfil de mascota (pestaña Mascota) */
+.petprofile{text-align:center}
+.petprofile .av.big{width:104px;height:104px;font-size:44px;margin:2px auto 12px}
+.petprofile .av.big img{width:100%;height:100%;object-fit:cover}
+.petprofile h2{font-size:22px;letter-spacing:-.01em}
+.petprofile .sub{color:var(--muted);font-size:13.5px;margin-top:5px}
+.actiongrid{display:grid;grid-template-columns:1fr 1fr;gap:11px}
+.actcard{display:flex;flex-direction:column;align-items:center;gap:9px;padding:16px 10px;background:var(--surface);border:1px solid var(--line);border-radius:16px;box-shadow:var(--shadow);text-align:center;transition:transform .09s ease}
+.actcard:active{transform:scale(.97)}
+.actcard .ic{width:44px;height:44px;border-radius:13px;display:grid;place-items:center}
+.actcard .ic svg{width:22px;height:22px}
+.actcard b{font-size:13px;font-weight:650;line-height:1.2}
 /* Ofertas / recomendaciones de partners */
 .offer{display:flex;align-items:center;gap:12px;padding:13px 14px;background:var(--surface);border:1px solid var(--line);border-radius:15px;box-shadow:var(--shadow)}
 .offer .rr{flex:1;min-width:0;display:flex;flex-direction:column;gap:2px}
@@ -596,6 +608,7 @@ const STR = {
     lost_title:'Mascota perdida', lost_intro:'Activa el modo perdido para que tu chapa muestre un aviso y tu contacto a quien la encuentre.', lost_reward:'Recompensa', lost_reward_ph:'Ej: Q500', lost_lastseen:'Visto por última vez', lost_lastseen_ph:'Ej: Zona 10, hoy', lost_note:'Nota', lost_note_ph:'Señas, comportamiento, collar…', lost_mark:'Marcar como perdido', lost_marked:'Modo perdido activado', lost_found:'Encontrado', lost_found_msg:'¡Qué bueno que apareció! 🎉', lost_on:'Mascota perdida activa', lost_manage:'Gestionar', lost_tap_manage:'Toca para gestionar', lost_found_label:'Encontrada',
     tag_open:'Chapa para el collar', tag_open_sub:'QR de emergencia para imprimir', tag_open_lost:'Modo perdido activo · QR listo', tag_title:'Chapa para el collar', tag_intro:'Imprime este QR y ponlo en el collar. Quien encuentre a tu mascota verá tu contacto y sus datos críticos.', tag_note:'Consejo: una chapa NFC duradera resiste mejor el agua y el roce que el papel.', tag_print:'Imprimir', tag_print_cap:'Escanéame si me encuentras · VacuPet',
     found_by:'Atendido por', clinic_call:'Llamar', clinic_book:'Agendar', clinic_card_sub:'Tu clínica, a un toque',
+    sec_actions:'Acciones', sec_data:'Datos de la mascota', lbl_sterilized:'esterilizado', lbl_notes:'Notas',
     sec_appearance:'Apariencia', accent_color:'Color de acento', theme_label:'Tema', theme_auto:'Auto', theme_light:'Claro', theme_dark:'Oscuro',
     accent_auto:'Por mascota', accent_manual:'Manual', accent_auto_hint:'El color de la app se adapta a la mascota activa.',
     sec_album:'Álbum', add_photo:'Añadir foto', no_album:'Sin fotos todavía', album_saved:'Foto añadida', uploading:'Subiendo…',
@@ -702,6 +715,7 @@ const STR = {
     lost_title:'Lost pet', lost_intro:'Turn on lost mode so your tag shows an alert and your contact to whoever finds it.', lost_reward:'Reward', lost_reward_ph:'e.g. $50', lost_lastseen:'Last seen', lost_lastseen_ph:'e.g. Downtown, today', lost_note:'Note', lost_note_ph:'Markings, behavior, collar…', lost_mark:'Mark as lost', lost_marked:'Lost mode on', lost_found:'Found', lost_found_msg:'So glad they’re back! 🎉', lost_on:'Lost mode active', lost_manage:'Manage', lost_tap_manage:'Tap to manage', lost_found_label:'Found',
     tag_open:'Collar tag', tag_open_sub:'Printable emergency QR', tag_open_lost:'Lost mode active · QR ready', tag_title:'Collar tag', tag_intro:'Print this QR and put it on the collar. Whoever finds your pet sees your contact and critical info.', tag_note:'Tip: a durable NFC tag resists water and wear better than paper.', tag_print:'Print', tag_print_cap:'Scan me if you found me · VacuPet',
     found_by:'Cared for by', clinic_call:'Call', clinic_book:'Book', clinic_card_sub:'Your clinic, one tap away',
+    sec_actions:'Actions', sec_data:'Pet details', lbl_sterilized:'neutered', lbl_notes:'Notes',
     sec_appearance:'Appearance', accent_color:'Accent color', theme_label:'Theme', theme_auto:'Auto', theme_light:'Light', theme_dark:'Dark',
     accent_auto:'By pet', accent_manual:'Manual', accent_auto_hint:'The app color adapts to the active pet.',
     sec_album:'Album', add_photo:'Add photo', no_album:'No photos yet', album_saved:'Photo added', uploading:'Uploading…',
@@ -808,6 +822,7 @@ const STR = {
     lost_title:'Pet perdido', lost_intro:'Ative o modo perdido para que sua plaquinha mostre um aviso e seu contato a quem encontrar.', lost_reward:'Recompensa', lost_reward_ph:'Ex: R$100', lost_lastseen:'Visto por último', lost_lastseen_ph:'Ex: Centro, hoje', lost_note:'Nota', lost_note_ph:'Marcas, comportamento, coleira…', lost_mark:'Marcar como perdido', lost_marked:'Modo perdido ativado', lost_found:'Encontrado', lost_found_msg:'Que bom que voltou! 🎉', lost_on:'Modo perdido ativo', lost_manage:'Gerenciar', lost_tap_manage:'Toque para gerenciar', lost_found_label:'Encontrado',
     tag_open:'Plaquinha da coleira', tag_open_sub:'QR de emergência para imprimir', tag_open_lost:'Modo perdido ativo · QR pronto', tag_title:'Plaquinha da coleira', tag_intro:'Imprima este QR e coloque na coleira. Quem encontrar seu pet verá seu contato e dados críticos.', tag_note:'Dica: uma plaquinha NFC durável resiste melhor à água e ao desgaste que o papel.', tag_print:'Imprimir', tag_print_cap:'Escaneie-me se me encontrou · VacuPet',
     found_by:'Atendido por', clinic_call:'Ligar', clinic_book:'Agendar', clinic_card_sub:'Sua clínica, a um toque',
+    sec_actions:'Ações', sec_data:'Dados do pet', lbl_sterilized:'castrado', lbl_notes:'Notas',
     sec_appearance:'Aparência', accent_color:'Cor de destaque', theme_label:'Tema', theme_auto:'Auto', theme_light:'Claro', theme_dark:'Escuro',
     accent_auto:'Por pet', accent_manual:'Manual', accent_auto_hint:'A cor do app se adapta ao pet ativo.',
     sec_album:'Álbum', add_photo:'Adicionar foto', no_album:'Sem fotos ainda', album_saved:'Foto adicionada', uploading:'Enviando…',
@@ -1464,22 +1479,30 @@ function viewPet(){
     ['Veterinario', info.veterinario],
   ].filter(r=>r[1]);
   const hr = stateMeta()[petSummary(pet).estado].color;
+  const heroSub = [`${SPECIES_EMOJI[info.especie]||'🐾'} ${esc(cap(info.especie))}`, info.raza?esc(info.raza):'', info.sexo?sexLbl[info.sexo]:'', info.nacimiento?ageText(info.nacimiento):''].filter(Boolean).join(' · ');
   return `<div class="view">
     ${isLost(pet)?`<button class="lostbig" id="lostBanner" style="width:100%;border:0;text-align:left;cursor:pointer">${I.shield}<div><b>${t('lost_on')}</b><span>${t('lost_tap_manage')}</span></div></button>`:''}
-    <div class="card pad" style="display:flex;align-items:center;gap:16px">
-      <div class="av healthring" style="width:72px;height:72px;font-size:32px;border-radius:50%;overflow:hidden;background:var(--surface-2);display:grid;place-items:center;flex:none;--hr:${hr}">${av}</div>
-      <div style="flex:1"><h2>${esc(info.nombre)}</h2><div class="sub" style="color:var(--muted)">${SPECIES_EMOJI[info.especie]||'🐾'} ${esc(cap(info.especie))}${info.raza?` · ${esc(info.raza)}`:''}${info.esterilizado===true?' · ✓':''}</div></div>
-    </div>
-    <div class="card" style="margin-top:14px">
-      ${rows.map(r=>`<div class="rec"><div class="rr"><span>${esc(r[0])}</span></div><div class="meta" style="font-weight:600;color:var(--ink)">${esc(r[1])}</div></div>`).join('')||`<div class="pad empty">—</div>`}
-      ${info.notas?`<div class="rec"><div class="rr"><span>Notas</span><b style="font-weight:500;margin-top:3px">${esc(info.notas)}</b></div></div>`:''}
+    <div class="card pad petprofile">
+      <div class="av healthring big" style="border-radius:50%;overflow:hidden;background:var(--surface-2);display:grid;place-items:center;--hr:${hr}">${av}</div>
+      <h2>${esc(info.nombre)}</h2>
+      <div class="sub">${heroSub}${info.esterilizado===true?` · ✓ ${t('lbl_sterilized')}`:''}</div>
     </div>
 
-    <button class="tile" id="emergOpen" style="margin-top:14px"><span class="ic c-red">${I.shield}</span><span class="tt"><b>${t('emerg_open')}</b><span>${t('emerg_open_sub')}</span></span><span class="chev">${I.chev}</span></button>
-    <button class="tile" id="tagOpen" style="margin-top:11px"><span class="ic c-accent">${I.paw}</span><span class="tt"><b>${t('tag_open')}</b><span>${isLost(pet)?t('tag_open_lost'):t('tag_open_sub')}</span></span><span class="chev">${I.chev}</span></button>
+    <div class="block-title" style="margin:18px 2px 8px">${t('sec_actions')}</div>
+    <div class="actiongrid">
+      <button class="actcard" id="emergOpen"><span class="ic c-red">${I.shield}</span><b>${t('emerg_open')}</b></button>
+      <button class="actcard" id="tagOpen"><span class="ic c-accent">${I.paw}</span><b>${t('tag_open')}</b></button>
+      <button class="actcard" id="shareCard"><span class="ic c-blue">${I.share}</span><b>${t('m_share')}</b></button>
+      <button class="actcard" id="ownerEdit"><span class="ic c-violet">${I.user}</span><b>${t('owner_edit')}</b></button>
+    </div>
+
+    <div class="block-title" style="margin:18px 2px 8px">${t('sec_data')}</div>
+    <div class="card">
+      ${rows.map(r=>`<div class="rec"><div class="rr"><span>${esc(r[0])}</span></div><div class="meta" style="font-weight:600;color:var(--ink)">${esc(r[1])}</div></div>`).join('')||`<div class="pad empty">—</div>`}
+      ${info.notas?`<div class="rec"><div class="rr"><span>${t('lbl_notes')}</span><b style="font-weight:500;margin-top:3px">${esc(info.notas)}</b></div></div>`:''}
+    </div>
 
     <section class="block"><div class="block-title">${t('sec_album')}</div>${albumHTML(pet)}</section>
-
     <section class="block"><div class="block-title">${t('sec_achievements')}</div>${achievementsHTML(pet)}</section>
 
     <div class="row-actions" style="margin-top:22px">
