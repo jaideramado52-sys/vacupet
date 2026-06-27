@@ -312,6 +312,8 @@ nav.tabbar button.on{color:var(--accent)}
 .lostbig svg{width:26px;height:26px;flex:none;color:var(--red)}
 .lostbig b{display:block;font-size:15px;color:var(--red)}
 .lostbig span{display:block;font-size:12.5px;color:var(--muted);margin-top:1px}
+.petav .av{position:relative}
+.lostdot{position:absolute;top:-2px;right:-2px;width:20px;height:20px;border-radius:50%;background:var(--red);color:#fff;font-weight:800;font-size:13px;display:grid;place-items:center;border:2px solid var(--surface);z-index:2}
 /* Ofertas / recomendaciones de partners */
 .offer{display:flex;align-items:center;gap:12px;padding:13px 14px;background:var(--surface);border:1px solid var(--line);border-radius:15px;box-shadow:var(--shadow)}
 .offer .rr{flex:1;min-width:0;display:flex;flex-direction:column;gap:2px}
@@ -1254,9 +1256,11 @@ function viewHome(){
   const pets = data.pets.map(p=>{
     const ps = petSummary(p); const col = stateMeta()[ps.estado].color;
     return `<button class="petav ${p.info.id===data.activeId?'active':''}" data-pet="${p.info.id}">
-      <div class="av"><img src="${petFoto(p.info)}" alt=""><span class="ringmini">${ringSVG(ps.pct,col,70,4)}</span></div>
+      <div class="av"><img src="${petFoto(p.info)}" alt=""><span class="ringmini">${ringSVG(ps.pct,col,70,4)}</span>${isLost(p)?`<span class="lostdot" title="${t('lost_on')}">!</span>`:''}</div>
       <div class="nm">${esc(p.info.nombre)}</div></button>`;
   }).join('');
+  // Aviso prominente en Inicio si la mascota activa está perdida.
+  const lostBn = isLost(pet) ? `<button class="lostbig" id="lostHome" style="width:100%;border:0;text-align:left;cursor:pointer;margin-top:14px">${I.shield}<div><b>${esc(pet.info.nombre)}: ${t('lost_on')}</b><span>${t('lost_tap_manage')}</span></div></button>` : '';
 
   const logros = achievements(pet).filter(a=>a.got).length;
   // Aviso: hay próxima dosis pero los avisos no están activados.
@@ -1285,6 +1289,7 @@ function viewHome(){
       <div class="chip" data-go="card"><div class="n" data-count="${s.vencidas}" style="color:var(--red)">${s.vencidas}</div><div class="l">${t('chip_overdue')}</div></div>
       <div class="chip" data-go="pet"><div class="n" data-count="${logros}" style="color:var(--green)">${logros}</div><div class="l">${t('sec_achievements')}</div></div>
     </div>
+    ${lostBn}
     ${banner}
     ${nudge}
     ${clinicCard()}
@@ -3018,6 +3023,7 @@ function loadDemoPet(){
 
   // 🐶 Rocky — perro, con DOSIS PRÓXIMA (estado ámbar) + datos completos
   add({ nombre:'Rocky', especie:'perro', raza:'Labrador', sexo:'m', nacimiento:'2022-03-10', microchip:'941000012345678', esterilizado:true, peso:28, foto:speciesArt('perro'), veterinario:'Clínica Patitas', sangre:'DEA 1.1+', alergias:'Pollo', condiciones:'Displasia leve de cadera', pesoMin:25, pesoMax:30 }, {
+    lost:{ active:true, since:d(0), reward:'Q500', lastSeen:'Zona 10, esta mañana', note:'Lleva collar; responde a su nombre.' },
     vaccines:[ { id:uid(), nombre:'Rabia', fecha:d(-190), proxima:d(5), source:'manual' },
                { id:uid(), nombre:'Polivalente (quíntuple/séxtuple)', fecha:d(-220), proxima:d(40), source:'manual' },
                { id:uid(), nombre:'Leptospirosis', fecha:d(-220), proxima:d(140), source:'manual' } ],
@@ -3129,7 +3135,7 @@ document.addEventListener('click', e=>{
   if(t0.closest('#nudgeX')){ data.nudgeDismissed=true; save(); render(); return; }
   if(t0.closest('#emergOpen')){ emergencyModal(); return; }
   if(t0.closest('#tagOpen')){ tagModal(); return; }
-  if(t0.closest('#lostBanner')){ lostModal(); return; }
+  if(t0.closest('#lostBanner')||t0.closest('#lostHome')){ lostModal(); return; }
   if(t0.closest('#timelineOpen')){ timelineModal(); return; }
   if(t0.closest('#ownerEdit')){ ownerModal(); return; }
   if(t0.closest('#travelOpen')){ if(requirePremium('travel')) travelModal(); return; }

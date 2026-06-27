@@ -85,14 +85,12 @@ test.describe('VacuPet — humo', () => {
     await expect(page.locator('.offer')).toHaveCount(0);
   });
 
-  test('chapa: marcar perdido y abrir la página de hallazgo', async ({ page }) => {
+  test('chapa: la página de hallazgo muestra la mascota perdida', async ({ page }) => {
     await seedDemo(page);
+    // El demo trae a Rocky en modo perdido → aviso en Inicio y en su perfil.
+    await expect(page.locator('#lostHome')).toBeVisible();
     await page.locator('[data-tab="pet"]').click();
     await page.locator('#tagOpen').click();
-    await page.locator('#tagLost').click();            // abre el modal de perdido
-    await page.locator('#lo-rw').fill('Q500');
-    await page.locator('#loMark').click();             // marca como perdido
-    await page.locator('#tagOpen').click();            // reabre la chapa (enlace ya con "perdido")
     const link = await page.locator('#tagLink').inputValue();
     expect(link).toContain('#e=');
     // Escanear el QR abre una carga nueva; goto con solo cambio de hash no recarga,
