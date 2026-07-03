@@ -113,6 +113,23 @@ test.describe('VacuPet — humo', () => {
     await expect(page.getByText('Tu clínica, a un toque')).toBeVisible();
   });
 
+  test('herramienta: detector de tóxicos filtra', async ({ page }) => {
+    await seedDemo(page);
+    await page.locator('[data-tab="more"]').click();
+    await page.locator('#toxOpen').click();
+    await expect(page.locator('.modal-head h3')).toHaveText('Detector de tóxicos');
+    await page.locator('#toxQ').fill('chocolate');
+    await expect(page.getByText('Chocolate').first()).toBeVisible();
+  });
+
+  test('perfil muestra etapa de vida y abre las guías', async ({ page }) => {
+    await seedDemo(page);
+    await page.locator('[data-tab="pet"]').click();
+    await expect(page.locator('#guideStage').first()).toBeVisible();
+    await page.locator('.stagepill#guideStage').click();
+    await expect(page.locator('.modal-head h3')).toHaveText('Guías por etapa');
+  });
+
   test('selector de país ajusta la normativa de rabia', async ({ page }) => {
     await seedDemo(page);
     await page.locator('[data-tab="more"]').click();

@@ -320,12 +320,19 @@ nav.tabbar button.on{color:var(--accent)}
 .petprofile .av.big img{width:100%;height:100%;object-fit:cover}
 .petprofile h2{font-size:22px;letter-spacing:-.01em}
 .petprofile .sub{color:var(--muted);font-size:13.5px;margin-top:5px}
+.stagepill{display:inline-flex;align-items:center;gap:6px;margin-top:10px;font-size:12.5px;font-weight:650;padding:6px 13px;border-radius:999px;background:color-mix(in srgb,var(--green) 13%,var(--surface));color:var(--green);border:0;cursor:pointer}
+.stagepill svg{width:15px;height:15px}
 .actiongrid{display:grid;grid-template-columns:1fr 1fr;gap:11px}
 .actcard{display:flex;flex-direction:column;align-items:center;gap:9px;padding:16px 10px;background:var(--surface);border:1px solid var(--line);border-radius:16px;box-shadow:var(--shadow);text-align:center;transition:transform .09s ease}
 .actcard:active{transform:scale(.97)}
 .actcard .ic{width:44px;height:44px;border-radius:13px;display:grid;place-items:center}
 .actcard .ic svg{width:22px;height:22px}
 .actcard b{font-size:13px;font-weight:650;line-height:1.2}
+.tipcard{display:flex;align-items:flex-start;gap:12px;margin-top:14px}
+.tipcard .ic{width:38px;height:38px;border-radius:11px;display:grid;place-items:center;flex:none}
+.tipcard .rr{display:flex;flex-direction:column;gap:2px}
+.tipcard .rr b{font-size:13px}
+.tipcard .rr span{font-size:13px;color:var(--muted);line-height:1.4}
 /* Ofertas / recomendaciones de partners */
 .offer{display:flex;align-items:center;gap:12px;padding:13px 14px;background:var(--surface);border:1px solid var(--line);border-radius:15px;box-shadow:var(--shadow)}
 .offer .rr{flex:1;min-width:0;display:flex;flex-direction:column;gap:2px}
@@ -609,6 +616,10 @@ const STR = {
     tag_open:'Chapa para el collar', tag_open_sub:'QR de emergencia para imprimir', tag_open_lost:'Modo perdido activo · QR listo', tag_title:'Chapa para el collar', tag_intro:'Imprime este QR y ponlo en el collar. Quien encuentre a tu mascota verá tu contacto y sus datos críticos.', tag_note:'Consejo: una chapa NFC duradera resiste mejor el agua y el roce que el papel.', tag_print:'Imprimir', tag_print_cap:'Escanéame si me encuentras · VacuPet',
     found_by:'Atendido por', clinic_call:'Llamar', clinic_book:'Agendar', clinic_card_sub:'Tu clínica, a un toque',
     sec_actions:'Acciones', sec_data:'Datos de la mascota', lbl_sterilized:'esterilizado', lbl_notes:'Notas',
+    tip_title:'Consejo del día',
+    tox_title:'Detector de tóxicos', tox_open_sub:'Alimentos y plantas peligrosas', tox_intro:'Busca un alimento o planta. Se filtra por la especie de tu mascota activa.', tox_search:'Buscar (chocolate, uvas, lirio…)', tox_none:'Sin coincidencias', tox_disc:'Orientativo. Ante una ingesta, contacta ya a tu veterinario o a urgencias.', tox_alto:'Alto', tox_medio:'Medio', tox_bajo:'Bajo',
+    guides_title:'Guías por etapa', guides_open_sub:'Cachorro, adulto y senior', guides_short:'Guía de su etapa', guide_for:'Guía para {sp} según su etapa de vida:', stage_cachorro:'Cachorro', stage_adulto:'Adulto', stage_senior:'Senior', human_years:'años humanos',
+    ration_title:'Calculadora de ración', ration_open_sub:'Energía diaria orientativa', ration_intro:'Estimación de energía diaria según peso y actividad.', ration_weight:'Peso (kg)', ration_activity:'Actividad', ration_kcal100:'kcal por 100 g de su alimento', ration_day:'día', ration_grams:'≈ {g} g/día de un alimento típico', ration_disc:'Estimación educativa; ajusta con tu veterinario y la etiqueta del alimento.', ration_enter:'Ingresa el peso para calcular.', ract_cachorro:'Cachorro (crecimiento)', ract_activo:'Activo', ract_normal:'Normal / esterilizado', ract_senior:'Senior', ract_sobrepeso:'Control de peso',
     sec_appearance:'Apariencia', accent_color:'Color de acento', theme_label:'Tema', theme_auto:'Auto', theme_light:'Claro', theme_dark:'Oscuro',
     accent_auto:'Por mascota', accent_manual:'Manual', accent_auto_hint:'El color de la app se adapta a la mascota activa.',
     sec_album:'Álbum', add_photo:'Añadir foto', no_album:'Sin fotos todavía', album_saved:'Foto añadida', uploading:'Subiendo…',
@@ -716,6 +727,10 @@ const STR = {
     tag_open:'Collar tag', tag_open_sub:'Printable emergency QR', tag_open_lost:'Lost mode active · QR ready', tag_title:'Collar tag', tag_intro:'Print this QR and put it on the collar. Whoever finds your pet sees your contact and critical info.', tag_note:'Tip: a durable NFC tag resists water and wear better than paper.', tag_print:'Print', tag_print_cap:'Scan me if you found me · VacuPet',
     found_by:'Cared for by', clinic_call:'Call', clinic_book:'Book', clinic_card_sub:'Your clinic, one tap away',
     sec_actions:'Actions', sec_data:'Pet details', lbl_sterilized:'neutered', lbl_notes:'Notes',
+    tip_title:'Tip of the day',
+    tox_title:'Toxic finder', tox_open_sub:'Dangerous foods and plants', tox_intro:'Search a food or plant. Filtered by your active pet species.', tox_search:'Search (chocolate, grapes, lily…)', tox_none:'No matches', tox_disc:'Guidance only. If ingested, contact your vet or emergency now.', tox_alto:'High', tox_medio:'Medium', tox_bajo:'Low',
+    guides_title:'Life-stage guides', guides_open_sub:'Young, adult and senior', guides_short:'Life-stage guide', guide_for:'Guide for {sp} by life stage:', stage_cachorro:'Young', stage_adulto:'Adult', stage_senior:'Senior', human_years:'human years',
+    ration_title:'Portion calculator', ration_open_sub:'Rough daily energy', ration_intro:'Daily energy estimate by weight and activity.', ration_weight:'Weight (kg)', ration_activity:'Activity', ration_kcal100:'kcal per 100 g of food', ration_day:'day', ration_grams:'≈ {g} g/day of a typical food', ration_disc:'Educational estimate; adjust with your vet and the food label.', ration_enter:'Enter weight to calculate.', ract_cachorro:'Growing', ract_activo:'Active', ract_normal:'Normal / neutered', ract_senior:'Senior', ract_sobrepeso:'Weight control',
     sec_appearance:'Appearance', accent_color:'Accent color', theme_label:'Theme', theme_auto:'Auto', theme_light:'Light', theme_dark:'Dark',
     accent_auto:'By pet', accent_manual:'Manual', accent_auto_hint:'The app color adapts to the active pet.',
     sec_album:'Album', add_photo:'Add photo', no_album:'No photos yet', album_saved:'Photo added', uploading:'Uploading…',
@@ -823,6 +838,10 @@ const STR = {
     tag_open:'Plaquinha da coleira', tag_open_sub:'QR de emergência para imprimir', tag_open_lost:'Modo perdido ativo · QR pronto', tag_title:'Plaquinha da coleira', tag_intro:'Imprima este QR e coloque na coleira. Quem encontrar seu pet verá seu contato e dados críticos.', tag_note:'Dica: uma plaquinha NFC durável resiste melhor à água e ao desgaste que o papel.', tag_print:'Imprimir', tag_print_cap:'Escaneie-me se me encontrou · VacuPet',
     found_by:'Atendido por', clinic_call:'Ligar', clinic_book:'Agendar', clinic_card_sub:'Sua clínica, a um toque',
     sec_actions:'Ações', sec_data:'Dados do pet', lbl_sterilized:'castrado', lbl_notes:'Notas',
+    tip_title:'Dica do dia',
+    tox_title:'Detector de tóxicos', tox_open_sub:'Alimentos e plantas perigosas', tox_intro:'Busque um alimento ou planta. Filtra pela espécie do pet ativo.', tox_search:'Buscar (chocolate, uvas, lírio…)', tox_none:'Sem resultados', tox_disc:'Orientativo. Em caso de ingestão, contate já o veterinário ou a emergência.', tox_alto:'Alto', tox_medio:'Médio', tox_bajo:'Baixo',
+    guides_title:'Guias por fase', guides_open_sub:'Filhote, adulto e sênior', guides_short:'Guia da fase', guide_for:'Guia para {sp} por fase de vida:', stage_cachorro:'Filhote', stage_adulto:'Adulto', stage_senior:'Sênior', human_years:'anos humanos',
+    ration_title:'Calculadora de ração', ration_open_sub:'Energia diária orientativa', ration_intro:'Estimativa de energia diária por peso e atividade.', ration_weight:'Peso (kg)', ration_activity:'Atividade', ration_kcal100:'kcal por 100 g do alimento', ration_day:'dia', ration_grams:'≈ {g} g/dia de um alimento típico', ration_disc:'Estimativa educativa; ajuste com o veterinário e o rótulo.', ration_enter:'Informe o peso para calcular.', ract_cachorro:'Filhote (crescimento)', ract_activo:'Ativo', ract_normal:'Normal / castrado', ract_senior:'Sênior', ract_sobrepeso:'Controle de peso',
     sec_appearance:'Aparência', accent_color:'Cor de destaque', theme_label:'Tema', theme_auto:'Auto', theme_light:'Claro', theme_dark:'Escuro',
     accent_auto:'Por pet', accent_manual:'Manual', accent_auto_hint:'A cor do app se adapta ao pet ativo.',
     sec_album:'Álbum', add_photo:'Adicionar foto', no_album:'Sem fotos ainda', album_saved:'Foto adicionada', uploading:'Enviando…',
@@ -1049,6 +1068,93 @@ function ageText(nac){
 function esc(s){ return String(s??'').replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c])); }
 function cap(s){ return s?s.charAt(0).toUpperCase()+s.slice(1):''; }
 function emptyBox(icon, txt){ return `<div class="card pad empty"><div class="eicon">${icon}</div><div>${esc(txt)}</div></div>`; }
+
+/* ======================================================================
+   Herramientas y contenido de valor (offline). Helpers puros → testeables.
+   ====================================================================== */
+function petAgeMonths(nac){ if(!nac) return null; const m=monthsBetween(parseISO(nac), new Date()); return m>=0?m:null; }
+// Etapa de vida por especie (cachorro / adulto / senior)
+function lifeStageFromMonths(esp, m){
+  const y=m/12; const seniorAt=(esp==='gato')?10:(esp==='conejo'||esp==='huron')?5:(esp==='tortuga')?20:(esp==='ave')?8:8;
+  if(y<1) return 'cachorro'; if(y>=seniorAt) return 'senior'; return 'adulto';
+}
+function lifeStage(esp, nac){ const m=petAgeMonths(nac); return m==null?null:lifeStageFromMonths(esp,m); }
+// Edad en años humanos (aprox., perros/gatos)
+function humanAgeYears(esp, y){
+  if(y<=0) return 0;
+  if(esp==='gato'){ if(y<=1) return 15*y; if(y<=2) return 15+(y-1)*9; return 24+(y-2)*4; }
+  if(y<=1) return 15*y; if(y<=2) return 15+(y-1)*9; return 24+(y-2)*5;
+}
+function humanAge(esp, nac){ const m=petAgeMonths(nac); return m==null?null:Math.round(humanAgeYears(esp, m/12)); }
+const LIFE_GUIDES = {
+  perro:{
+    cachorro:['Serie de vacunas cada 3–4 semanas hasta las ~16 semanas y refuerzo de rabia.','Desparasitación frecuente (interna cada 2–4 semanas al inicio).','Socialización temprana y refuerzo positivo.','Alimento para cachorro; varias tomas al día.'],
+    adulto:['Refuerzos anuales según esquema y país.','Desparasitación interna cada 3 meses; externa mensual.','Control de peso y ejercicio diario.','Higiene dental y revisión anual.'],
+    senior:['Chequeos cada 6 meses (sangre y presión).','Vigila movilidad, peso y bebida de agua.','Dieta senior y articulaciones si hay artrosis.','Atención a bultos y cambios de conducta.']},
+  gato:{
+    cachorro:['Trivalente felina (FVRCP) en serie + rabia.','Desparasitación y prueba de leucemia si sale al exterior.','Acostumbrar al transportín y al arenero.','Alimento para gatito.'],
+    adulto:['Refuerzos anuales; FeLV según riesgo.','Cepillado y control de bolas de pelo.','Hidratación (fuentes de agua) y control de peso.','Revisión anual y salud dental.'],
+    senior:['Chequeos cada 6 meses (riñón y tiroides).','Vigila peso, sed y uso del arenero.','Accesos fáciles (rampas) y camas cálidas.','Dieta senior/renal si el vet lo indica.']},
+  otro:{
+    cachorro:['Consulta el calendario específico de su especie con un veterinario de exóticos.','Ambiente, temperatura y dieta adecuados a la especie.','Manejo suave y desparasitación según indicación.'],
+    adulto:['Revisión anual con veterinario de exóticos.','Dieta y hábitat correctos; controla el peso.','Higiene del entorno.'],
+    senior:['Chequeos más frecuentes.','Vigila apetito, peso y actividad.','Ajusta hábitat a menor movilidad.']}
+};
+function guideFor(esp, stage){ const g=LIFE_GUIDES[esp]||LIFE_GUIDES.otro; return g[stage]||g.adulto; }
+// Detector de tóxicos (orientativo; ante una ingesta, llama al veterinario)
+const TOXICS = [
+  {n:'Chocolate',sp:'perro,gato',sev:'alto',w:'Teobromina y cafeína: vómitos, taquicardia, convulsiones.'},
+  {n:'Uvas y pasas',sp:'perro',sev:'alto',w:'Pueden causar fallo renal agudo, incluso en poca cantidad.'},
+  {n:'Xilitol (edulcorante)',sp:'perro',sev:'alto',w:'Chicles/dulces "sin azúcar": hipoglucemia y daño hepático.'},
+  {n:'Cebolla y ajo',sp:'perro,gato',sev:'alto',w:'Dañan los glóbulos rojos (anemia). Peor en gatos.'},
+  {n:'Aguacate',sp:'ave,conejo',sev:'alto',w:'Persina: tóxico para aves y algunos exóticos.'},
+  {n:'Alcohol',sp:'todos',sev:'alto',w:'Muy tóxico incluso en pequeñas cantidades.'},
+  {n:'Cafeína (café/té)',sp:'perro,gato',sev:'alto',w:'Estimulante cardíaco y nervioso.'},
+  {n:'Macadamia',sp:'perro',sev:'medio',w:'Debilidad, temblores, vómitos.'},
+  {n:'Masa cruda con levadura',sp:'perro,gato',sev:'alto',w:'Fermenta en el estómago: alcohol y distensión.'},
+  {n:'Hueso cocido',sp:'perro,gato',sev:'medio',w:'Se astilla: obstrucción o perforación.'},
+  {n:'Lácteos',sp:'perro,gato',sev:'bajo',w:'Intolerancia a la lactosa: diarrea.'},
+  {n:'Sal en exceso',sp:'perro,gato',sev:'medio',w:'Intoxicación por sodio; sed y temblores.'},
+  {n:'Paracetamol/ibuprofeno',sp:'perro,gato',sev:'alto',w:'NUNCA automedicar: daño hepático/renal. Fatal en gatos.'},
+  {n:'Anticongelante',sp:'todos',sev:'alto',w:'Sabor dulce, muy atractivo y letal (fallo renal).'},
+  {n:'Chocolate de repostería',sp:'perro,gato',sev:'alto',w:'Más concentrado en teobromina que el de leche.'},
+  {n:'Lirio (planta)',sp:'gato',sev:'alto',w:'Muy tóxico para gatos: fallo renal. Evita en casa.'},
+  {n:'Poinsettia / flor de pascua',sp:'perro,gato',sev:'bajo',w:'Irritación digestiva leve.'},
+  {n:'Sagú / cícada (planta)',sp:'perro,gato',sev:'alto',w:'Semillas muy tóxicas: fallo hepático.'},
+  {n:'Tulipán / narciso (bulbos)',sp:'perro,gato',sev:'medio',w:'Vómitos y salivación.'},
+  {n:'Marihuana / THC',sp:'perro,gato',sev:'alto',w:'Ataxia, letargo; consulta urgente.'},
+  {n:'Cacao / cascarilla de mulch',sp:'perro',sev:'medio',w:'Contiene teobromina.'},
+  {n:'Frutos con hueso (durazno/cereza)',sp:'perro,gato',sev:'medio',w:'El hueso obstruye; contiene cianuro.'}
+];
+function normStr(s){ return String(s||'').toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g,''); }
+function searchToxics(q, esp){
+  const nq=normStr(q);
+  return TOXICS.filter(t0=>{
+    if(esp && esp!=='otro' && !/todos/.test(t0.sp) && !t0.sp.split(',').includes(esp)) return false;
+    if(!nq) return true;
+    return normStr(t0.n).includes(nq) || normStr(t0.w).includes(nq);
+  });
+}
+// Consejo del día (rotación determinista por día)
+const TIPS = [
+  'Ten a mano el teléfono de tu veterinario y el de urgencias 24h.',
+  'El microchip + una chapa en el collar multiplican las probabilidades de reencuentro.',
+  'Pesa a tu mascota cada mes: cambios bruscos son señal temprana.',
+  'Nunca des paracetamol ni ibuprofeno; son tóxicos para perros y gatos.',
+  'Agua fresca siempre disponible; los gatos beben más en fuentes.',
+  'La desparasitación externa mensual previene pulgas y garrapatas.',
+  'Cepillar los dientes reduce enfermedades y mal aliento.',
+  'En verano, nunca dejes a tu mascota en el auto: golpe de calor mortal.',
+  'La rabia suele ser obligatoria por ley; mantén el refuerzo al día.',
+  'Socializa a los cachorros temprano y con refuerzo positivo.',
+  'Revisa orejas, ojos y piel al acariciar: detección temprana.',
+  'Guarda una foto reciente y la tarjeta de emergencia por si se pierde.'
+];
+function tipOfDay(i){ const n=TIPS.length; return TIPS[((i%n)+n)%n]; }
+// Calculadora de ración (energía diaria, orientativa)
+const RATION_FACTORS = { cachorro:3.0, activo:2.0, normal:1.6, senior:1.4, sobrepeso:1.0 };
+function rationKcal(kg, factor){ const k=Number(kg); if(!k||k<=0) return 0; const rer=70*Math.pow(k,0.75); return Math.round(rer*(Number(factor)||1.6)); }
+function rationGrams(kcal, kcalPer100){ const d=Number(kcalPer100)||350; return Math.round((Number(kcal)/d)*100); }
 
 /* ---------------------------- Esquema: sugerir próxima ---------------------------- */
 function suggestProxima(especie, nombre, fechaISO, nacimientoISO){
@@ -1324,6 +1430,11 @@ function viewHome(){
       </div>
       <button class="tile" data-add="cuidado" style="margin-top:11px"><span class="ic c-violet">${I.heart}</span><span class="tt"><b>${t('tile_care')}</b><span>${t('tile_care_sub')}</span></span></button>
     </section>
+
+    <div class="card pad tipcard">
+      <span class="ic c-amber">${I.info}</span>
+      <div class="rr"><b>${t('tip_title')}</b><span>${esc(tipOfDay(Math.floor(Date.now()/86400000)))}</span></div>
+    </div>
     <p class="disclaimer">${t('disc')}</p>
   </div>`;
 }
@@ -1480,12 +1591,14 @@ function viewPet(){
   ].filter(r=>r[1]);
   const hr = stateMeta()[petSummary(pet).estado].color;
   const heroSub = [`${SPECIES_EMOJI[info.especie]||'🐾'} ${esc(cap(info.especie))}`, info.raza?esc(info.raza):'', info.sexo?sexLbl[info.sexo]:'', info.nacimiento?ageText(info.nacimiento):''].filter(Boolean).join(' · ');
+  const stage = lifeStage(info.especie, info.nacimiento); const ha = humanAge(info.especie, info.nacimiento);
   return `<div class="view">
     ${isLost(pet)?`<button class="lostbig" id="lostBanner" style="width:100%;border:0;text-align:left;cursor:pointer">${I.shield}<div><b>${t('lost_on')}</b><span>${t('lost_tap_manage')}</span></div></button>`:''}
     <div class="card pad petprofile">
       <div class="av healthring big" style="border-radius:50%;overflow:hidden;background:var(--surface-2);display:grid;place-items:center;--hr:${hr}">${av}</div>
       <h2>${esc(info.nombre)}</h2>
       <div class="sub">${heroSub}${info.esterilizado===true?` · ✓ ${t('lbl_sterilized')}`:''}</div>
+      ${stage?`<button class="stagepill" id="guideStage">${I.check} ${t('stage_'+stage)}${ha?` · ~${ha} ${t('human_years')}`:''}</button>`:''}
     </div>
 
     <div class="block-title" style="margin:18px 2px 8px">${t('sec_actions')}</div>
@@ -1494,6 +1607,8 @@ function viewPet(){
       <button class="actcard" id="tagOpen"><span class="ic c-accent">${I.paw}</span><b>${t('tag_open')}</b></button>
       <button class="actcard" id="shareCard"><span class="ic c-blue">${I.share}</span><b>${t('m_share')}</b></button>
       <button class="actcard" id="ownerEdit"><span class="ic c-violet">${I.user}</span><b>${t('owner_edit')}</b></button>
+      <button class="actcard" id="guideStage"><span class="ic c-green">${I.check}</span><b>${t('guides_short')}</b></button>
+      <button class="actcard" id="toxOpen"><span class="ic c-red">${I.info}</span><b>${t('tox_title')}</b></button>
     </div>
 
     <div class="block-title" style="margin:18px 2px 8px">${t('sec_data')}</div>
@@ -1546,6 +1661,9 @@ function viewMore(){
       <button class="tile" id="travelOpen" style="margin-top:11px"><span class="ic c-blue">${I.shield}</span><span class="tt"><b>${t('travel_open')}</b><span>${t('travel_open_sub')}</span></span><span class="chev">${I.chev}</span></button>
       <button class="tile" id="vetsOpen" style="margin-top:11px"><span class="ic c-red">${I.stetho}</span><span class="tt"><b>${t('vets_open')}</b><span>${t('vets_open_sub')}</span></span><span class="chev">${I.chev}</span></button>
       <button class="tile" id="newsOpen" style="margin-top:11px"><span class="ic c-amber">${I.info}</span><span class="tt"><b>${t('news_open')}</b><span>${t('news_open_sub')}</span></span><span class="chev">${I.chev}</span></button>
+      <button class="tile" id="toxOpen" style="margin-top:11px"><span class="ic c-red">${I.info}</span><span class="tt"><b>${t('tox_title')}</b><span>${t('tox_open_sub')}</span></span><span class="chev">${I.chev}</span></button>
+      <button class="tile" id="guidesOpen" style="margin-top:11px"><span class="ic c-green">${I.check}</span><span class="tt"><b>${t('guides_title')}</b><span>${t('guides_open_sub')}</span></span><span class="chev">${I.chev}</span></button>
+      <button class="tile" id="rationOpen" style="margin-top:11px"><span class="ic c-accent">${I.scale}</span><span class="tt"><b>${t('ration_title')}</b><span>${t('ration_open_sub')}</span></span><span class="chev">${I.chev}</span></button>
     </section>
 
     <section class="block"><div class="block-title">${t('sec_export')}</div>
@@ -2736,6 +2854,51 @@ function newsModal(){
     + `<p class="hint" style="margin-top:12px">${t('news_note')}</p>`;
   openModal(modalShell(t('news_open'), body, `<button class="btn btn-block" data-close>${t('close')}</button>`));
 }
+function toxicModal(){
+  const esp = activePet()?activePet().info.especie:null;
+  const sevCls={alto:'c-red',medio:'c-amber',bajo:'c-blue'};
+  const render=(q)=>{ const list=searchToxics(q, esp); const box=document.getElementById('toxList'); if(!box) return;
+    box.innerHTML = list.length ? list.map(x=>`<div class="rec"><span class="ic ${sevCls[x.sev]||'c-muted'}">${I.info}</span><div class="rr"><b>${esc(x.n)} <span class="offer-tag ${sevCls[x.sev]}" style="color:inherit">${t('tox_'+x.sev)}</span></b><span>${esc(x.w)}</span></div></div>`).join('') : emptyBox(I.info, t('tox_none')); };
+  const body=`<p class="hint" style="margin-bottom:10px">${t('tox_intro')}</p>
+    <div class="field"><input id="toxQ" placeholder="${t('tox_search')}" autocomplete="off"></div>
+    <div class="card" id="toxList" style="margin-top:4px"></div>
+    <p class="hint" style="margin-top:10px">⚠️ ${t('tox_disc')}</p>`;
+  openModal(modalShell(t('tox_title'), body, `<button class="btn btn-danger btn-block" id="toxVet">${I.stetho} ${t('emerg_vet24')}</button>`));
+  render('');
+  document.getElementById('toxQ').addEventListener('input', e=>render(e.target.value));
+  document.getElementById('toxVet').onclick=()=>openVets('veterinaria urgencias 24 horas intoxicacion');
+}
+function guidesModal(preStage){
+  const pet=activePet(); const esp=pet?pet.info.especie:'perro';
+  let stage = preStage || (pet?lifeStage(esp, pet.info.nacimiento):null) || 'adulto';
+  const stages=['cachorro','adulto','senior'];
+  const draw=()=>{ const seg=document.getElementById('gStageSeg'); const body=document.getElementById('gBody');
+    if(seg) [...seg.children].forEach(b=>b.classList.toggle('on', b.dataset.stage===stage));
+    if(body) body.innerHTML = `<div class="card">${guideFor(esp,stage).map(g=>`<div class="rec"><span class="ic c-accent">${I.check}</span><div class="rr"><b style="font-weight:500">${esc(g)}</b></div></div>`).join('')}</div>`; };
+  const body=`<p class="hint" style="margin-bottom:10px">${tf('guide_for',{sp:cap(esp)})}</p>
+    <div class="seg" id="gStageSeg">${stages.map(s=>`<button type="button" data-stage="${s}">${t('stage_'+s)}</button>`).join('')}</div>
+    <div id="gBody" style="margin-top:12px"></div>
+    <p class="hint" style="margin-top:10px">${t('disc')}</p>`;
+  openModal(modalShell(t('guides_title'), body, `<button class="btn btn-block" data-close>${t('close')}</button>`));
+  document.getElementById('gStageSeg').addEventListener('click', e=>{ const b=e.target.closest('button'); if(!b) return; stage=b.dataset.stage; draw(); });
+  draw();
+}
+function rationModal(){
+  const pet=activePet(); const info=pet?pet.info:{};
+  const defStage = (pet?lifeStage(info.especie, info.nacimiento):null);
+  const defFactor = defStage==='cachorro'?'cachorro':defStage==='senior'?'senior':'normal';
+  const body=`<p class="hint" style="margin-bottom:10px">${t('ration_intro')}</p>
+    <div class="two"><div class="field"><label>${t('ration_weight')}</label><input type="number" step="0.1" min="0" id="rKg" value="${esc(info.peso||'')}" placeholder="kg"></div>
+      <div class="field"><label>${t('ration_activity')}</label><select id="rFactor">${Object.keys(RATION_FACTORS).map(k=>`<option value="${k}" ${k===defFactor?'selected':''}>${t('ract_'+k)}</option>`).join('')}</select></div></div>
+    <div class="field"><label>${t('ration_kcal100')}</label><input type="number" step="10" min="1" id="rKcal" value="350"></div>
+    <div class="card pad" id="rOut" style="text-align:center"></div>
+    <p class="hint" style="margin-top:10px">${t('ration_disc')}</p>`;
+  openModal(modalShell(t('ration_title'), body, `<button class="btn btn-block" data-close>${t('close')}</button>`));
+  const calc=()=>{ const kcal=rationKcal(val('rKg'), RATION_FACTORS[val('rFactor')]); const g=rationGrams(kcal, val('rKcal'));
+    document.getElementById('rOut').innerHTML = kcal ? `<div style="font-size:26px;font-weight:800;color:var(--accent)">${kcal} kcal/${t('ration_day')}</div><div class="hint" style="margin-top:4px">${tf('ration_grams',{g})}</div>` : `<div class="hint">${t('ration_enter')}</div>`; };
+  ['rKg','rFactor','rKcal'].forEach(id=>document.getElementById(id).addEventListener('input',calc));
+  calc();
+}
 function travelModal(){
   if(!activePet()) return;
   const bind=()=>{ const sel=document.getElementById('travelDest'); if(sel) sel.onchange=()=>{ document.getElementById('travelWrap').innerHTML=travelBody(sel.value); bind(); }; };
@@ -3168,6 +3331,10 @@ document.addEventListener('click', e=>{
   if(t0.closest('#travelOpen')){ if(requirePremium('travel')) travelModal(); return; }
   if(t0.closest('#vetsOpen')){ openVets(); return; }
   if(t0.closest('#newsOpen')){ newsModal(); return; }
+  if(t0.closest('#toxOpen')){ toxicModal(); return; }
+  if(t0.closest('#guidesOpen')){ guidesModal(); return; }
+  if(t0.closest('#rationOpen')){ rationModal(); return; }
+  if(t0.closest('#guideStage')){ guidesModal(); return; }
   if(t0.closest('#ocrScan')){ ocrStart(); return; }
   if(t0.closest('#signIn')){ authModal(); return; }
   if(t0.closest('#syncNow')){ syncNow(); return; }

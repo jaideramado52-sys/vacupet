@@ -39,6 +39,7 @@ code += `;globalThis.__VP = {
   partnersOn, partnerOffers, topOffer,
   emergencyPayload, decodeEmergency, isLost, telLink, waLink,
   brandOn, appName, hasClinic,
+  lifeStageFromMonths, humanAgeYears, searchToxics, tipOfDay, rationKcal, rationGrams, guideFor,
   ACCENTS, accentColor, SPECIES_COLOR, albumHTML, docsHTML,
   getData:()=>data, setData:d=>{data=d}
 };`;
@@ -358,6 +359,37 @@ section('Marca blanca / co-branding (Fase 4 Nivel 1, feature flag)');
   ok('marca sin nombre → VacuPet', VP.appName()==='VacuPet');
   delete w.VACUPET_BRAND; delete w.VACUPET_PARTNERS; // restaurar
 }
+
+section('Herramientas y contenido (Lote 1)');
+{
+  // Etapa de vida
+  ok('perro 6m → cachorro', VP.lifeStageFromMonths('perro',6)==='cachorro');
+  ok('perro 3a → adulto', VP.lifeStageFromMonths('perro',36)==='adulto');
+  ok('perro 9a → senior', VP.lifeStageFromMonths('perro',108)==='senior');
+  ok('gato 8a → adulto (senior a los 10)', VP.lifeStageFromMonths('gato',96)==='adulto');
+  ok('gato 12a → senior', VP.lifeStageFromMonths('gato',144)==='senior');
+  // Edad humana
+  ok('perro 1a ≈ 15 humanos', VP.humanAgeYears('perro',1)===15);
+  ok('perro 2a ≈ 24 humanos', VP.humanAgeYears('perro',2)===24);
+  ok('perro 5a ≈ 39 humanos', VP.humanAgeYears('perro',5)===39);
+  ok('gato 5a ≈ 36 humanos', VP.humanAgeYears('gato',5)===36);
+  // Tóxicos
+  ok('busca chocolate', VP.searchToxics('chocolate','perro').some(x=>x.n==='Chocolate'));
+  ok('uvas no aplica a gato', !VP.searchToxics('uvas','gato').some(x=>x.n==='Uvas y pasas'));
+  ok('lirio aplica a gato', VP.searchToxics('lirio','gato').some(x=>/[Ll]irio/.test(x.n)));
+  ok('sin query devuelve lista', VP.searchToxics('','perro').length>0);
+  // Consejo del día (determinista)
+  ok('tipOfDay determinista', VP.tipOfDay(0)===VP.tipOfDay(0) && typeof VP.tipOfDay(0)==='string');
+  ok('tipOfDay envuelve', VP.tipOfDay(-1)===VP.tipOfDay(-1));
+  // Ración
+  ok('rationKcal 10kg normal ≈ 630', Math.abs(VP.rationKcal(10,1.6)-630)<=2);
+  ok('rationKcal 0 → 0', VP.rationKcal(0,1.6)===0);
+  ok('rationGrams 630/350 ≈ 180', VP.rationGrams(630,350)===180);
+  // Guías
+  ok('guía perro senior tiene items', VP.guideFor('perro','senior').length>=3);
+  ok('guía especie desconocida cae a otro', VP.guideFor('dragon','adulto').length>=1);
+}
+
 VP.setData({ v:1, activeId:'1', remDays:30, lang:'es', pets:[{info:{id:'1',nombre:'R',especie:'perro'},vaccines:[],dewormings:[],weights:[],vetVisits:[],cares:[{id:'c',kind:'bano',titulo:'Baño',fecha:iso(-10),cada:30,proxima:iso(5)}]}] });
 {
   const rem = VP.reminders(VP.getData().pets[0]);
