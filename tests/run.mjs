@@ -41,6 +41,7 @@ code += `;globalThis.__VP = {
   brandOn, appName, hasClinic,
   lifeStageFromMonths, humanAgeYears, searchToxics, tipOfDay, rationKcal, rationGrams, guideFor,
   expensesTotal, caregiverPayload, decodeCare,
+  globalSearch,
   ACCENTS, accentColor, SPECIES_COLOR, albumHTML, docsHTML,
   getData:()=>data, setData:d=>{data=d}
 };`;
@@ -412,6 +413,20 @@ section('Herramientas por-mascota (Lote 2)');
   const dec=VP.decodeCare(VP.b64urlEncode(JSON.stringify(cp)));
   ok('decode cuidador round-trip', dec && dec.n==='Rocky' && dec.meds[0].n==='Carprofeno');
   ok('decode cuidador rechaza basura', VP.decodeCare('zzz')===null);
+}
+
+section('UI: búsqueda global (Lote 3)');
+{
+  VP.setData({ v:5, lang:'es', remDays:30, pets:[
+    {info:{id:'1',nombre:'Rocky',especie:'perro'},vaccines:[{id:'a',nombre:'Rabia',fecha:'2024-01-01'}],meds:[{nombre:'Carprofeno'}],dewormings:[],vetVisits:[],cares:[]},
+    {info:{id:'2',nombre:'Luna',especie:'gato'},vaccines:[{id:'b',nombre:'FVRCP'}],meds:[],dewormings:[],vetVisits:[],cares:[{titulo:'Baño'}]},
+  ]});
+  ok('busca por nombre de mascota', VP.globalSearch('rocky').some(r=>r.kind==='mascota'));
+  ok('busca vacuna (acento-insensible)', VP.globalSearch('rabia').some(r=>r.kind==='vacuna'&&r.petName==='Rocky'));
+  ok('busca medicamento', VP.globalSearch('carpro').some(r=>r.kind==='medicacion'));
+  ok('busca cuidado de otra mascota', VP.globalSearch('bano').some(r=>r.kind==='cuidado'&&r.petName==='Luna'));
+  ok('query vacía → sin resultados', VP.globalSearch('').length===0);
+  ok('sin coincidencias → vacío', VP.globalSearch('zzz').length===0);
 }
 
 VP.setData({ v:1, activeId:'1', remDays:30, lang:'es', pets:[{info:{id:'1',nombre:'R',especie:'perro'},vaccines:[],dewormings:[],weights:[],vetVisits:[],cares:[{id:'c',kind:'bano',titulo:'Baño',fecha:iso(-10),cada:30,proxima:iso(5)}]}] });

@@ -154,6 +154,24 @@ test.describe('VacuPet — humo', () => {
     await expect(page.getByText('Ana López')).toBeVisible();
   });
 
+  test('FAB expandible abre la búsqueda global', async ({ page }) => {
+    await seedDemo(page);
+    await page.locator('#fab').click();
+    await expect(page.locator('#fabMenu')).toBeVisible();
+    await page.locator('[data-fabact="buscar"]').click();
+    await expect(page.locator('.modal-head h3')).toHaveText('Buscar');
+    await page.locator('#srchQ').fill('rabia');
+    await expect(page.getByText('Rabia').first()).toBeVisible();
+  });
+
+  test('filtro de Salud oculta secciones no aplicables', async ({ page }) => {
+    await seedDemo(page);
+    await page.locator('[data-tab="card"]').click();
+    await expect(page.locator('#timelineOpen')).toBeVisible();
+    await page.locator('[data-cardf="vencidas"]').click();
+    await expect(page.locator('#timelineOpen')).toHaveCount(0);
+  });
+
   test('selector de país ajusta la normativa de rabia', async ({ page }) => {
     await seedDemo(page);
     await page.locator('[data-tab="more"]').click();

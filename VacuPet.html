@@ -250,6 +250,19 @@ nav.tabbar button.on{color:var(--accent)}
 /* ---- Asistente (chat) ---- */
 .fab{position:fixed;right:16px;bottom:calc(80px + env(safe-area-inset-bottom));z-index:38;width:54px;height:54px;border-radius:50%;background:var(--accent);color:#fff;border:0;box-shadow:var(--shadow-lg);display:grid;place-items:center}
 .fab svg{width:24px;height:24px}
+.syncdot{width:9px;height:9px;border-radius:50%;flex:none;margin-left:-2px}
+.syncdot.s-ok{background:var(--green)}
+.syncdot.s-offline{background:var(--muted)}
+.syncdot.s-syncing{background:var(--amber);animation:syncpulse 1s ease-in-out infinite}
+@keyframes syncpulse{0%,100%{opacity:.35}50%{opacity:1}}
+.fab.fabopen{transform:rotate(90deg)}
+.fab{transition:transform .18s ease}
+.fabmenu{position:fixed;right:16px;bottom:calc(146px + env(safe-area-inset-bottom));z-index:38;display:flex;flex-direction:column;align-items:flex-end;gap:10px}
+.fabmenu.hide{display:none}
+.fabmenu button{display:inline-flex;align-items:center;gap:9px;border:0;background:var(--surface);color:var(--ink);box-shadow:var(--shadow-lg);border-radius:999px;padding:9px 15px 9px 12px;font-size:13.5px;font-weight:650;animation:fabin .18s ease both}
+.fabmenu button .fi{width:30px;height:30px;border-radius:50%;display:grid;place-items:center;background:color-mix(in srgb,var(--accent) 14%,var(--surface));color:var(--accent)}
+.fabmenu button .fi svg{width:17px;height:17px}
+@keyframes fabin{from{opacity:0;transform:translateY(8px) scale(.9)}to{opacity:1;transform:none}}
 .chat{display:flex;flex-direction:column;height:90dvh}
 .chat-body{flex:1;overflow-y:auto;padding:16px;display:flex;flex-direction:column;gap:9px}
 .bub{max-width:84%;padding:10px 13px;border-radius:16px;font-size:14.5px;line-height:1.45;white-space:pre-wrap;word-wrap:break-word}
@@ -423,6 +436,7 @@ nav.tabbar button.on{color:var(--accent)}
 
 <header class="app">
   <div class="brand"><span class="logo" id="brandLogo"></span> <span id="brandName">VacuPet</span></div>
+  <span class="syncdot hide" id="syncDot" aria-hidden="true"></span>
   <div class="header-spacer"></div>
   <div class="langsw" id="langsw" role="group" aria-label="Idioma"></div>
   <button class="iconbtn hide" id="hdrAccount" aria-label="Cuenta"></button>
@@ -436,6 +450,7 @@ nav.tabbar button.on{color:var(--accent)}
 <div id="lockRoot"></div>
 <div id="modalRoot"></div>
 <div id="assistantRoot"></div>
+<div class="fabmenu hide" id="fabMenu"></div>
 <button class="fab hide" id="fab" aria-label="Asistente"></button>
 <div class="toast" id="toast" role="status" aria-live="polite"></div>
 <div id="printArea"></div>
@@ -489,6 +504,7 @@ const I = {
   pill:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="8" width="18" height="8" rx="4" transform="rotate(45 12 12)"/><path d="m8.5 8.5 7 7"/></svg>',
   clip:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 11.5 12.5 20a5 5 0 0 1-7-7l8.5-8.5a3.3 3.3 0 0 1 4.7 4.7L10.1 12.6a1.7 1.7 0 0 1-2.4-2.4l7.3-7.3"/></svg>',
   clock:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>',
+  search:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"/><path d="m21 21-4.3-4.3"/></svg>',
 };
 const SPECIES_EMOJI = { perro:'🐶', gato:'🐱', conejo:'🐰', huron:'🦦', ave:'🐦', tortuga:'🐢', otro:'🐾' };
 // Ilustración SVG por especie (avatar cuando no hay foto subida). Sin internet ni derechos.
@@ -624,6 +640,9 @@ const STR = {
     diary_title:'Diario de salud', diary_open_sub:'Ánimo, apetito y síntomas', diary_intro:'Anota cómo está tu mascota para detectar cambios a tiempo.', diary_empty:'Sin registros aún', diary_add:'Añadir registro', diary_mood:'Ánimo', diary_appetite:'Apetito', diary_symptoms:'Síntomas', diary_symptoms_ph:'Vómito, tos, cojera…', mood_bien:'Bien', mood_normal:'Normal', mood_bajo:'Bajo',
     exp_title:'Gastos', exp_open_sub:'Registra y controla gastos', exp_month:'Este mes', exp_year:'Este año', exp_item:'Gasto', exp_empty:'Sin gastos registrados', exp_add:'Añadir gasto', exp_concept:'Concepto', exp_concept_ph:'Consulta, vacuna, alimento…', exp_amount:'Monto', exp_cat:'Categoría', ecat_consulta:'Consulta', ecat_vacuna:'Vacuna', ecat_medicina:'Medicina', ecat_alimento:'Alimento', ecat_higiene:'Higiene', ecat_otro:'Otro',
     cg_short:'Modo cuidador', cg_title:'Modo cuidador', cg_feed:'Instrucciones de comida', cg_feed_ph:'Ej: 1 taza por la mañana y otra por la noche.', cg_note:'Comparte este enlace con quien cuide a tu mascota: verá comida, medicación, cuidados y contactos (solo lectura).', cg_sheet:'Hoja de cuidados', cg_footer:'Hoja de cuidados · hecha con VacuPet',
+    search_title:'Buscar', search_ph:'Mascota, vacuna, medicamento…', search_hint:'Escribe para buscar en todas tus mascotas.', search_none:'Sin resultados',
+    cf_todos:'Todos', cf_proximas:'Próximas', cf_vencidas:'Vencidas', cf_none:'Nada aquí con este filtro',
+    sync_ok:'Sincronizado', sync_syncing:'Sincronizando…', sync_offline:'Sin conexión',
     sec_appearance:'Apariencia', accent_color:'Color de acento', theme_label:'Tema', theme_auto:'Auto', theme_light:'Claro', theme_dark:'Oscuro',
     accent_auto:'Por mascota', accent_manual:'Manual', accent_auto_hint:'El color de la app se adapta a la mascota activa.',
     sec_album:'Álbum', add_photo:'Añadir foto', no_album:'Sin fotos todavía', album_saved:'Foto añadida', uploading:'Subiendo…',
@@ -739,6 +758,9 @@ const STR = {
     diary_title:'Health diary', diary_open_sub:'Mood, appetite and symptoms', diary_intro:'Log how your pet is doing to catch changes early.', diary_empty:'No entries yet', diary_add:'Add entry', diary_mood:'Mood', diary_appetite:'Appetite', diary_symptoms:'Symptoms', diary_symptoms_ph:'Vomiting, cough, limping…', mood_bien:'Good', mood_normal:'Normal', mood_bajo:'Low',
     exp_title:'Expenses', exp_open_sub:'Track and control costs', exp_month:'This month', exp_year:'This year', exp_item:'Expense', exp_empty:'No expenses yet', exp_add:'Add expense', exp_concept:'Item', exp_concept_ph:'Visit, vaccine, food…', exp_amount:'Amount', exp_cat:'Category', ecat_consulta:'Visit', ecat_vacuna:'Vaccine', ecat_medicina:'Medicine', ecat_alimento:'Food', ecat_higiene:'Grooming', ecat_otro:'Other',
     cg_short:'Sitter mode', cg_title:'Sitter mode', cg_feed:'Feeding instructions', cg_feed_ph:'e.g. 1 cup in the morning and one at night.', cg_note:'Share this link with your pet sitter: they see feeding, meds, care and contacts (read-only).', cg_sheet:'Care sheet', cg_footer:'Care sheet · made with VacuPet',
+    search_title:'Search', search_ph:'Pet, vaccine, medication…', search_hint:'Type to search across all your pets.', search_none:'No results',
+    cf_todos:'All', cf_proximas:'Upcoming', cf_vencidas:'Overdue', cf_none:'Nothing here with this filter',
+    sync_ok:'Synced', sync_syncing:'Syncing…', sync_offline:'Offline',
     sec_appearance:'Appearance', accent_color:'Accent color', theme_label:'Theme', theme_auto:'Auto', theme_light:'Light', theme_dark:'Dark',
     accent_auto:'By pet', accent_manual:'Manual', accent_auto_hint:'The app color adapts to the active pet.',
     sec_album:'Album', add_photo:'Add photo', no_album:'No photos yet', album_saved:'Photo added', uploading:'Uploading…',
@@ -854,6 +876,9 @@ const STR = {
     diary_title:'Diário de saúde', diary_open_sub:'Humor, apetite e sintomas', diary_intro:'Anote como o pet está para detectar mudanças a tempo.', diary_empty:'Sem registros ainda', diary_add:'Adicionar registro', diary_mood:'Humor', diary_appetite:'Apetite', diary_symptoms:'Sintomas', diary_symptoms_ph:'Vômito, tosse, mancar…', mood_bien:'Bem', mood_normal:'Normal', mood_bajo:'Baixo',
     exp_title:'Gastos', exp_open_sub:'Registre e controle gastos', exp_month:'Este mês', exp_year:'Este ano', exp_item:'Gasto', exp_empty:'Sem gastos registrados', exp_add:'Adicionar gasto', exp_concept:'Item', exp_concept_ph:'Consulta, vacina, alimento…', exp_amount:'Valor', exp_cat:'Categoria', ecat_consulta:'Consulta', ecat_vacuna:'Vacina', ecat_medicina:'Remédio', ecat_alimento:'Alimento', ecat_higiene:'Higiene', ecat_otro:'Outro',
     cg_short:'Modo cuidador', cg_title:'Modo cuidador', cg_feed:'Instruções de comida', cg_feed_ph:'Ex: 1 xícara de manhã e outra à noite.', cg_note:'Compartilhe este link com quem cuida do pet: verá comida, remédios, cuidados e contatos (somente leitura).', cg_sheet:'Ficha de cuidados', cg_footer:'Ficha de cuidados · feita com VacuPet',
+    search_title:'Buscar', search_ph:'Pet, vacina, remédio…', search_hint:'Digite para buscar em todos os seus pets.', search_none:'Sem resultados',
+    cf_todos:'Todos', cf_proximas:'Próximas', cf_vencidas:'Vencidas', cf_none:'Nada aqui com este filtro',
+    sync_ok:'Sincronizado', sync_syncing:'Sincronizando…', sync_offline:'Sem conexão',
     sec_appearance:'Aparência', accent_color:'Cor de destaque', theme_label:'Tema', theme_auto:'Auto', theme_light:'Claro', theme_dark:'Escuro',
     accent_auto:'Por pet', accent_manual:'Manual', accent_auto_hint:'A cor do app se adapta ao pet ativo.',
     sec_album:'Álbum', add_photo:'Adicionar foto', no_album:'Sem fotos ainda', album_saved:'Foto adicionada', uploading:'Enviando…',
@@ -1342,6 +1367,8 @@ function renderChrome(){
   const fab = document.getElementById('fab');
   fab.innerHTML = I.spark;
   fab.classList.toggle('hide', shared || found || caregiver || data.pets.length===0);
+  fabOpen=false; fab.classList.remove('fabopen'); const fm=document.getElementById('fabMenu'); if(fm){ fm.classList.add('hide'); fm.innerHTML=''; }
+  setSync((typeof navigator!=='undefined'&&navigator.onLine===false)?'offline':syncState);
 }
 
 /* ---------------------------- Render principal ---------------------------- */
@@ -1565,23 +1592,27 @@ function weightSection(pet){
 }
 function viewCard(){
   const pet = activePet();
-  const vac=(pet.vaccines||[]).slice().sort((a,b)=>(b.fecha||'')<(a.fecha||'')?-1:1);
-  const dew=(pet.dewormings||[]).slice().sort((a,b)=>(b.fecha||'')<(a.fecha||'')?-1:1);
+  const F = cardFilter, all = F==='todos';
+  const matchF = prox => all ? true : (prox && statusOf(prox)===(F==='vencidas'?'vencida':'proxima'));
+  const vac=(pet.vaccines||[]).filter(v=>matchF(v.proxima)).sort((a,b)=>(b.fecha||'')<(a.fecha||'')?-1:1);
+  const dew=(pet.dewormings||[]).filter(d=>matchF(d.proxima)).sort((a,b)=>(b.fecha||'')<(a.fecha||'')?-1:1);
   const vis=(pet.vetVisits||[]).slice().sort((a,b)=>(b.fecha||'')<(a.fecha||'')?-1:1);
-  const car=(pet.cares||[]).slice().sort((a,b)=>(a.proxima||'9')<(b.proxima||'9')?-1:1);
+  const car=(pet.cares||[]).filter(c=>matchF(c.proxima)).sort((a,b)=>(a.proxima||'9')<(b.proxima||'9')?-1:1);
+  const FILTERS=['todos','proximas','vencidas'];
   return `<div class="view">
     <h1 style="font-size:22px">${t('card_of')} ${esc(pet.info.nombre)}</h1>
-    <button class="tile" id="timelineOpen" style="margin-top:14px"><span class="ic c-blue">${I.clock}</span><span class="tt"><b>${t('timeline_open')}</b><span>${t('timeline_open_sub')}</span></span><span class="chev">${I.chev}</span></button>
+    <div class="seg" id="cardFilterSeg" style="margin-top:12px">${FILTERS.map(f=>`<button type="button" data-cardf="${f}" class="${F===f?'on':''}">${t('cf_'+f)}</button>`).join('')}</div>
+    ${all?`<button class="tile" id="timelineOpen" style="margin-top:12px"><span class="ic c-blue">${I.clock}</span><span class="tt"><b>${t('timeline_open')}</b><span>${t('timeline_open_sub')}</span></span><span class="chev">${I.chev}</span></button>`:''}
     <section class="block"><div class="block-title">${t('sec_vaccines')}</div>
-      ${vac.length?`<div class="card">${vac.map(v=>vacRow(v,false)).join('')}</div>`:emptyBox(I.syringe, t('no_vac'))}
-      <div class="row-actions"><button class="btn" style="flex:1" data-add="vacuna">${I.plus} ${t('add_vac')}</button><button class="btn" id="ocrScan">${I.camera} ${t('ocr_scan')}</button></div></section>
+      ${vac.length?`<div class="card">${vac.map(v=>vacRow(v,false)).join('')}</div>`:emptyBox(I.syringe, all?t('no_vac'):t('cf_none'))}
+      ${all?`<div class="row-actions"><button class="btn" style="flex:1" data-add="vacuna">${I.plus} ${t('add_vac')}</button><button class="btn" id="ocrScan">${I.camera} ${t('ocr_scan')}</button></div>`:''}</section>
     <section class="block"><div class="block-title">${t('sec_deworm')}</div>
-      ${dew.length?`<div class="card">${dew.map(d=>dewRow(d,false)).join('')}</div>`:emptyBox(I.bug, t('no_dew'))}
-      <button class="btn btn-block" data-add="desparasitacion" style="margin-top:11px">${I.plus} ${t('add_dew')}</button></section>
-    ${medSection(pet)}
+      ${dew.length?`<div class="card">${dew.map(d=>dewRow(d,false)).join('')}</div>`:emptyBox(I.bug, all?t('no_dew'):t('cf_none'))}
+      ${all?`<button class="btn btn-block" data-add="desparasitacion" style="margin-top:11px">${I.plus} ${t('add_dew')}</button>`:''}</section>
     <section class="block"><div class="block-title">${t('sec_cares')}</div>
-      ${car.length?`<div class="card">${car.map(c=>careRow(c,false)).join('')}</div>`:emptyBox(I.heart, t('no_cares'))}
-      <button class="btn btn-block" data-add="cuidado" style="margin-top:11px">${I.plus} ${t('add_care')}</button></section>
+      ${car.length?`<div class="card">${car.map(c=>careRow(c,false)).join('')}</div>`:emptyBox(I.heart, all?t('no_cares'):t('cf_none'))}
+      ${all?`<button class="btn btn-block" data-add="cuidado" style="margin-top:11px">${I.plus} ${t('add_care')}</button>`:''}</section>
+    ${all?`${medSection(pet)}
     ${weightSection(pet)}
     <section class="block"><div class="block-title">${t('sec_visits')}</div>
       ${vis.length?`<div class="card">${vis.map(v=>visitRow(v,false)).join('')}</div>`:emptyBox(I.stetho, t('no_visit'))}
@@ -1590,7 +1621,7 @@ function viewCard(){
     <section class="block"><div class="block-title">${t('sec_tracking')}</div>
       <button class="tile" id="diaryOpen"><span class="ic c-violet">${I.heart}</span><span class="tt"><b>${t('diary_title')}</b><span>${t('diary_open_sub')}</span></span><span class="chev">${I.chev}</span></button>
       <button class="tile" id="expOpen" style="margin-top:11px"><span class="ic c-blue">${I.download}</span><span class="tt"><b>${t('exp_title')}</b><span>${t('exp_open_sub')}</span></span><span class="chev">${I.chev}</span></button>
-    </section>
+    </section>`:''}
     <p class="disclaimer">${t('disc_scheme')}</p>
   </div>`;
 }
@@ -2356,6 +2387,14 @@ function premiumManageModal(){
 let supa = null;     // cliente
 let session = null;  // sesión actual
 let syncT = null;    // debounce del push
+let syncState = 'ok';
+function setSync(s){
+  syncState = s;
+  const d=document.getElementById('syncDot'); if(!d) return;
+  const show = cloudConfigured() && !!session && !shared && !found && !caregiver;
+  d.className = 'syncdot ' + (show ? ('s-'+s) : 'hide');
+  try{ d.title = t('sync_'+s); }catch(e){}
+}
 
 function loadScript(src){ return new Promise((res,rej)=>{ const s=document.createElement('script'); s.src=src; s.onload=res; s.onerror=rej; document.head.appendChild(s); }); }
 
@@ -2407,12 +2446,13 @@ async function pullState(){
 
 async function pushState(silent){
   const c = await ensureSupabase(); if(!c || !session) return;
+  setSync('syncing');
   try{
     const ts = data.updatedAt || new Date().toISOString(); data.updatedAt = ts;
     const { error } = await c.from('vacupet_state').upsert({ user_id:session.user.id, data, updated_at:ts });
-    if(error){ console.warn(error); if(!silent) toast(t('sync_err')); }
-    else if(!silent) toast(t('sync_done'));
-  }catch(e){ console.warn('push:', e); if(!silent) toast(t('sync_err')); }
+    if(error){ console.warn(error); setSync((typeof navigator!=='undefined'&&navigator.onLine===false)?'offline':'ok'); if(!silent) toast(t('sync_err')); }
+    else { setSync('ok'); if(!silent) toast(t('sync_done')); }
+  }catch(e){ console.warn('push:', e); setSync((typeof navigator!=='undefined'&&navigator.onLine===false)?'offline':'ok'); if(!silent) toast(t('sync_err')); }
 }
 function scheduleSync(){ if(!session) return; clearTimeout(syncT); syncT=setTimeout(()=>pushState(true), 1500); }
 
@@ -2587,6 +2627,46 @@ async function askFaq(question){
 
 // --- UI del chat ---
 function openAssistant(){ chatMsgs=[{role:'bot', html: esc(t('asst_greeting'))}]; renderAssistant(); }
+
+/* ---- FAB expandible (acciones rápidas) ---- */
+let fabOpen=false;
+let cardFilter='todos'; // filtro de Salud: todos | proximas | vencidas
+function fabMenuHTML(){
+  const it=(a,ic,l)=>`<button data-fabact="${a}"><span>${esc(l)}</span><span class="fi">${ic}</span></button>`;
+  return it('buscar',I.search,t('search_title'))+it('vacuna',I.syringe,t('tile_vac'))+it('peso',I.scale,t('add_weight'))+it('foto',I.camera,t('add_photo'))+it('asistente',I.spark,t('asst_open'));
+}
+function toggleFab(force){
+  fabOpen = force!==undefined ? !!force : !fabOpen;
+  const m=document.getElementById('fabMenu'), fab=document.getElementById('fab'); if(!m||!fab) return;
+  if(fabOpen){ m.innerHTML=fabMenuHTML(); m.classList.remove('hide'); fab.classList.add('fabopen'); }
+  else { m.classList.add('hide'); m.innerHTML=''; fab.classList.remove('fabopen'); }
+}
+/* ---- Búsqueda global ---- */
+function globalSearch(q){
+  const nq=normStr(q); if(!nq) return [];
+  const out=[]; const push=(p,kind,label,fecha)=>out.push({petId:p.info.id,petName:p.info.nombre,kind,label,fecha});
+  (data.pets||[]).forEach(p=>{
+    if(normStr(p.info.nombre).includes(nq)) push(p,'mascota',p.info.nombre);
+    (p.vaccines||[]).forEach(v=>{ if(normStr(v.nombre).includes(nq)) push(p,'vacuna',v.nombre,v.fecha); });
+    (p.meds||[]).forEach(m=>{ if(normStr(m.nombre).includes(nq)) push(p,'medicacion',m.nombre); });
+    (p.dewormings||[]).forEach(d=>{ const n=d.producto||''; if(normStr(n).includes(nq)) push(p,'desparasitacion',n||'—',d.fecha); });
+    (p.vetVisits||[]).forEach(v=>{ if(normStr(v.motivo||'').includes(nq)||normStr(v.diagnostico||'').includes(nq)) push(p,'visita',v.motivo||'—',v.fecha); });
+    (p.cares||[]).forEach(c=>{ if(normStr(c.titulo||'').includes(nq)) push(p,'cuidado',c.titulo); });
+  });
+  return out.slice(0,40);
+}
+function searchModal(){
+  const ICON={mascota:I.paw,vacuna:I.syringe,medicacion:I.pill,desparasitacion:I.bug,visita:I.stetho,cuidado:I.heart};
+  const EVK={vacuna:'ev_vacuna',medicacion:'ev_medicacion',desparasitacion:'ev_desparasitacion',visita:'ev_visita',cuidado:'ev_cuidado'};
+  const draw=(q)=>{ const box=document.getElementById('srchRes'); if(!box) return;
+    if(q.trim()===''){ box.innerHTML=`<div class="pad empty">${t('search_hint')}</div>`; return; }
+    const res=globalSearch(q);
+    box.innerHTML = res.length ? res.map(r=>`<div class="rec" data-srch="${esc(r.petId)}" style="cursor:pointer"><span class="ic c-accent">${ICON[r.kind]||I.info}</span><div class="rr"><b>${esc(r.label)}</b><span>${esc(r.petName)}${EVK[r.kind]?` · ${t(EVK[r.kind])}`:''}${r.fecha?` · ${fmt(r.fecha)}`:''}</span></div></div>`).join('') : `<div class="pad empty">${t('search_none')}</div>`; };
+  const body=`<div class="field"><input id="srchQ" placeholder="${t('search_ph')}" autocomplete="off"></div><div class="card" id="srchRes"></div>`;
+  openModal(modalShell(t('search_title'), body, `<button class="btn btn-block" data-close>${t('close')}</button>`));
+  draw('');
+  document.getElementById('srchQ').addEventListener('input',e=>draw(e.target.value));
+}
 function closeAssistant(){ document.getElementById('assistantRoot').innerHTML=''; }
 function userSay(text, forcedIntent){
   chatMsgs.push({ role:'user', text });
@@ -3402,6 +3482,8 @@ function loadDemoPet(){
    ====================================================================== */
 document.addEventListener('click', e=>{
   const t0=e.target;
+  // Cierra el menú del FAB al tocar fuera (sin bloquear la acción tocada).
+  if(fabOpen && !t0.closest('#fab') && !t0.closest('#fabMenu')) toggleFab(false);
   if(t0.closest('[data-close]')){ closeModal(); return; }
   // idioma
   const lg=t0.closest('[data-lang]'); if(lg){ data.lang=lg.dataset.lang; save(); render(); return; }
@@ -3445,7 +3527,12 @@ document.addEventListener('click', e=>{
   if(t0.closest('#pvEnc')){ encBackupModal(); return; }
   if(t0.closest('#pvWipe')){ wipeLocal(); return; }
   if(t0.closest('#pvDelAcc')){ deleteAccount(); return; }
-  if(t0.closest('#fab')||t0.closest('[data-asst]')){ openAssistant(); return; }
+  if(t0.closest('#fab')){ toggleFab(); return; }
+  const fa=t0.closest('[data-fabact]'); if(fa){ const a=fa.dataset.fabact; toggleFab(false);
+    if(a==='buscar') searchModal(); else if(a==='vacuna') vaccineModal(); else if(a==='peso') weightModal(); else if(a==='foto') pickAlbumPhoto(); else if(a==='asistente') openAssistant(); return; }
+  const sr=t0.closest('[data-srch]'); if(sr){ data.activeId=sr.dataset.srch; save(); closeModal(); go('card'); return; }
+  const cf=t0.closest('[data-cardf]'); if(cf){ cardFilter=cf.dataset.cardf; render(); return; }
+  if(t0.closest('[data-asst]')){ openAssistant(); return; }
   if(t0.closest('#nudgeEnable')){ if(cloudConfigured()&&!session){ authModal(); } else { enableNotifs(); } return; }
   if(t0.closest('#nudgeX')){ data.nudgeDismissed=true; save(); render(); return; }
   if(t0.closest('#emergOpen')){ emergencyModal(); return; }
@@ -3493,6 +3580,9 @@ document.addEventListener('change', e=>{ if(e.target.id==='remDays'){ data.remDa
 document.addEventListener('keydown', e=>{ if((e.key==='Enter'||e.key===' ') && e.target.classList && e.target.classList.contains('phero')){ e.preventDefault(); go('pet'); } });
 // Accesibilidad: Escape cierra cualquier modal abierto.
 document.addEventListener('keydown', e=>{ if(e.key==='Escape' && document.getElementById('scrim')) closeModal(); });
+// Indicador de conexión para el estado de sincronización.
+window.addEventListener('online', ()=>setSync('ok'));
+window.addEventListener('offline', ()=>setSync('offline'));
 
 /* ======================================================================
    PWA — service worker, instalación (A2HS) y avisos locales
