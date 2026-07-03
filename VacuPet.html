@@ -620,6 +620,10 @@ const STR = {
     tox_title:'Detector de tóxicos', tox_open_sub:'Alimentos y plantas peligrosas', tox_intro:'Busca un alimento o planta. Se filtra por la especie de tu mascota activa.', tox_search:'Buscar (chocolate, uvas, lirio…)', tox_none:'Sin coincidencias', tox_disc:'Orientativo. Ante una ingesta, contacta ya a tu veterinario o a urgencias.', tox_alto:'Alto', tox_medio:'Medio', tox_bajo:'Bajo',
     guides_title:'Guías por etapa', guides_open_sub:'Cachorro, adulto y senior', guides_short:'Guía de su etapa', guide_for:'Guía para {sp} según su etapa de vida:', stage_cachorro:'Cachorro', stage_adulto:'Adulto', stage_senior:'Senior', human_years:'años humanos',
     ration_title:'Calculadora de ración', ration_open_sub:'Energía diaria orientativa', ration_intro:'Estimación de energía diaria según peso y actividad.', ration_weight:'Peso (kg)', ration_activity:'Actividad', ration_kcal100:'kcal por 100 g de su alimento', ration_day:'día', ration_grams:'≈ {g} g/día de un alimento típico', ration_disc:'Estimación educativa; ajusta con tu veterinario y la etiqueta del alimento.', ration_enter:'Ingresa el peso para calcular.', ract_cachorro:'Cachorro (crecimiento)', ract_activo:'Activo', ract_normal:'Normal / esterilizado', ract_senior:'Senior', ract_sobrepeso:'Control de peso',
+    sec_tracking:'Seguimiento',
+    diary_title:'Diario de salud', diary_open_sub:'Ánimo, apetito y síntomas', diary_intro:'Anota cómo está tu mascota para detectar cambios a tiempo.', diary_empty:'Sin registros aún', diary_add:'Añadir registro', diary_mood:'Ánimo', diary_appetite:'Apetito', diary_symptoms:'Síntomas', diary_symptoms_ph:'Vómito, tos, cojera…', mood_bien:'Bien', mood_normal:'Normal', mood_bajo:'Bajo',
+    exp_title:'Gastos', exp_open_sub:'Registra y controla gastos', exp_month:'Este mes', exp_year:'Este año', exp_item:'Gasto', exp_empty:'Sin gastos registrados', exp_add:'Añadir gasto', exp_concept:'Concepto', exp_concept_ph:'Consulta, vacuna, alimento…', exp_amount:'Monto', exp_cat:'Categoría', ecat_consulta:'Consulta', ecat_vacuna:'Vacuna', ecat_medicina:'Medicina', ecat_alimento:'Alimento', ecat_higiene:'Higiene', ecat_otro:'Otro',
+    cg_short:'Modo cuidador', cg_title:'Modo cuidador', cg_feed:'Instrucciones de comida', cg_feed_ph:'Ej: 1 taza por la mañana y otra por la noche.', cg_note:'Comparte este enlace con quien cuide a tu mascota: verá comida, medicación, cuidados y contactos (solo lectura).', cg_sheet:'Hoja de cuidados', cg_footer:'Hoja de cuidados · hecha con VacuPet',
     sec_appearance:'Apariencia', accent_color:'Color de acento', theme_label:'Tema', theme_auto:'Auto', theme_light:'Claro', theme_dark:'Oscuro',
     accent_auto:'Por mascota', accent_manual:'Manual', accent_auto_hint:'El color de la app se adapta a la mascota activa.',
     sec_album:'Álbum', add_photo:'Añadir foto', no_album:'Sin fotos todavía', album_saved:'Foto añadida', uploading:'Subiendo…',
@@ -731,6 +735,10 @@ const STR = {
     tox_title:'Toxic finder', tox_open_sub:'Dangerous foods and plants', tox_intro:'Search a food or plant. Filtered by your active pet species.', tox_search:'Search (chocolate, grapes, lily…)', tox_none:'No matches', tox_disc:'Guidance only. If ingested, contact your vet or emergency now.', tox_alto:'High', tox_medio:'Medium', tox_bajo:'Low',
     guides_title:'Life-stage guides', guides_open_sub:'Young, adult and senior', guides_short:'Life-stage guide', guide_for:'Guide for {sp} by life stage:', stage_cachorro:'Young', stage_adulto:'Adult', stage_senior:'Senior', human_years:'human years',
     ration_title:'Portion calculator', ration_open_sub:'Rough daily energy', ration_intro:'Daily energy estimate by weight and activity.', ration_weight:'Weight (kg)', ration_activity:'Activity', ration_kcal100:'kcal per 100 g of food', ration_day:'day', ration_grams:'≈ {g} g/day of a typical food', ration_disc:'Educational estimate; adjust with your vet and the food label.', ration_enter:'Enter weight to calculate.', ract_cachorro:'Growing', ract_activo:'Active', ract_normal:'Normal / neutered', ract_senior:'Senior', ract_sobrepeso:'Weight control',
+    sec_tracking:'Tracking',
+    diary_title:'Health diary', diary_open_sub:'Mood, appetite and symptoms', diary_intro:'Log how your pet is doing to catch changes early.', diary_empty:'No entries yet', diary_add:'Add entry', diary_mood:'Mood', diary_appetite:'Appetite', diary_symptoms:'Symptoms', diary_symptoms_ph:'Vomiting, cough, limping…', mood_bien:'Good', mood_normal:'Normal', mood_bajo:'Low',
+    exp_title:'Expenses', exp_open_sub:'Track and control costs', exp_month:'This month', exp_year:'This year', exp_item:'Expense', exp_empty:'No expenses yet', exp_add:'Add expense', exp_concept:'Item', exp_concept_ph:'Visit, vaccine, food…', exp_amount:'Amount', exp_cat:'Category', ecat_consulta:'Visit', ecat_vacuna:'Vaccine', ecat_medicina:'Medicine', ecat_alimento:'Food', ecat_higiene:'Grooming', ecat_otro:'Other',
+    cg_short:'Sitter mode', cg_title:'Sitter mode', cg_feed:'Feeding instructions', cg_feed_ph:'e.g. 1 cup in the morning and one at night.', cg_note:'Share this link with your pet sitter: they see feeding, meds, care and contacts (read-only).', cg_sheet:'Care sheet', cg_footer:'Care sheet · made with VacuPet',
     sec_appearance:'Appearance', accent_color:'Accent color', theme_label:'Theme', theme_auto:'Auto', theme_light:'Light', theme_dark:'Dark',
     accent_auto:'By pet', accent_manual:'Manual', accent_auto_hint:'The app color adapts to the active pet.',
     sec_album:'Album', add_photo:'Add photo', no_album:'No photos yet', album_saved:'Photo added', uploading:'Uploading…',
@@ -842,6 +850,10 @@ const STR = {
     tox_title:'Detector de tóxicos', tox_open_sub:'Alimentos e plantas perigosas', tox_intro:'Busque um alimento ou planta. Filtra pela espécie do pet ativo.', tox_search:'Buscar (chocolate, uvas, lírio…)', tox_none:'Sem resultados', tox_disc:'Orientativo. Em caso de ingestão, contate já o veterinário ou a emergência.', tox_alto:'Alto', tox_medio:'Médio', tox_bajo:'Baixo',
     guides_title:'Guias por fase', guides_open_sub:'Filhote, adulto e sênior', guides_short:'Guia da fase', guide_for:'Guia para {sp} por fase de vida:', stage_cachorro:'Filhote', stage_adulto:'Adulto', stage_senior:'Sênior', human_years:'anos humanos',
     ration_title:'Calculadora de ração', ration_open_sub:'Energia diária orientativa', ration_intro:'Estimativa de energia diária por peso e atividade.', ration_weight:'Peso (kg)', ration_activity:'Atividade', ration_kcal100:'kcal por 100 g do alimento', ration_day:'dia', ration_grams:'≈ {g} g/dia de um alimento típico', ration_disc:'Estimativa educativa; ajuste com o veterinário e o rótulo.', ration_enter:'Informe o peso para calcular.', ract_cachorro:'Filhote (crescimento)', ract_activo:'Ativo', ract_normal:'Normal / castrado', ract_senior:'Sênior', ract_sobrepeso:'Controle de peso',
+    sec_tracking:'Acompanhamento',
+    diary_title:'Diário de saúde', diary_open_sub:'Humor, apetite e sintomas', diary_intro:'Anote como o pet está para detectar mudanças a tempo.', diary_empty:'Sem registros ainda', diary_add:'Adicionar registro', diary_mood:'Humor', diary_appetite:'Apetite', diary_symptoms:'Sintomas', diary_symptoms_ph:'Vômito, tosse, mancar…', mood_bien:'Bem', mood_normal:'Normal', mood_bajo:'Baixo',
+    exp_title:'Gastos', exp_open_sub:'Registre e controle gastos', exp_month:'Este mês', exp_year:'Este ano', exp_item:'Gasto', exp_empty:'Sem gastos registrados', exp_add:'Adicionar gasto', exp_concept:'Item', exp_concept_ph:'Consulta, vacina, alimento…', exp_amount:'Valor', exp_cat:'Categoria', ecat_consulta:'Consulta', ecat_vacuna:'Vacina', ecat_medicina:'Remédio', ecat_alimento:'Alimento', ecat_higiene:'Higiene', ecat_otro:'Outro',
+    cg_short:'Modo cuidador', cg_title:'Modo cuidador', cg_feed:'Instruções de comida', cg_feed_ph:'Ex: 1 xícara de manhã e outra à noite.', cg_note:'Compartilhe este link com quem cuida do pet: verá comida, remédios, cuidados e contatos (somente leitura).', cg_sheet:'Ficha de cuidados', cg_footer:'Ficha de cuidados · feita com VacuPet',
     sec_appearance:'Aparência', accent_color:'Cor de destaque', theme_label:'Tema', theme_auto:'Auto', theme_light:'Claro', theme_dark:'Escuro',
     accent_auto:'Por pet', accent_manual:'Manual', accent_auto_hint:'A cor do app se adapta ao pet ativo.',
     sec_album:'Álbum', add_photo:'Adicionar foto', no_album:'Sem fotos ainda', album_saved:'Foto adicionada', uploading:'Enviando…',
@@ -978,7 +990,8 @@ const KEY = 'vacupet:data:v1';
 //   v2: owner + campos clínicos + peso objetivo (Bloque 1)
 //   v3: meds (medicación) + visitas enriquecidas (Bloque 2)
 //   v4: pais/normativa (esquema vacunal local)
-const SCHEMA_VERSION = 4;
+//   v5: diario de síntomas + gastos (Lote 2)
+const SCHEMA_VERSION = 5;
 
 /* Telemetría local de errores — anónima y SIN red (anillo de 20 en localStorage).
    Solo para que la persona pueda copiar el diagnóstico si algo falla. */
@@ -999,6 +1012,7 @@ window.addEventListener('unhandledrejection', e=>{ logError('promise', (e.reason
 let data = load();
 let shared = null; // si !=null, estamos en vista de carné compartido (solo lectura)
 let found = null;  // si !=null, estamos en la página pública de hallazgo (#e=)
+let caregiver = null; // si !=null, estamos en la hoja de cuidador (#care=)
 
 function load(){
   try{
@@ -1030,6 +1044,9 @@ function migrate(d){
     p.vetVisits = p.vetVisits || [];
     // v2 → v3: medicación
     p.meds = p.meds || [];
+    // v4 → v5: diario de síntomas y gastos
+    p.symptoms = p.symptoms || [];
+    p.expenses = p.expenses || [];
     p.cares = p.cares || [];
     p.album = p.album || [];
     p.docs = p.docs || [];
@@ -1303,13 +1320,13 @@ function renderChrome(){
   document.getElementById('brandLogo').innerHTML = (brandOn() && brand().logo) ? `<img src="${esc(brand().logo)}" alt="" style="width:100%;height:100%;object-fit:contain">` : I.paw;
   const bn=document.getElementById('brandName'); if(bn) bn.textContent = appName();
   document.title = appName();
-  const bk=document.getElementById('btnBackup'); bk.innerHTML = I.settings; bk.classList.toggle('hide', !!(shared||found));
+  const bk=document.getElementById('btnBackup'); bk.innerHTML = I.settings; bk.classList.toggle('hide', !!(shared||found||caregiver));
   const tt=document.getElementById('themeToggle');
   if(tt){ const eff=effectiveTheme(); tt.innerHTML = eff==='dark' ? I.sun : I.moon; tt.setAttribute('aria-label', t(eff==='dark'?'theme_light':'theme_dark')); tt.classList.toggle('hide', !!shared); }
   // Botón de cuenta en la cabecera (visible si hay nube): login si no hay sesión, cuenta si la hay.
   const acc = document.getElementById('hdrAccount');
   if(acc){
-    const showAcc = !shared && !found && cloudConfigured();
+    const showAcc = !shared && !found && !caregiver && cloudConfigured();
     acc.classList.toggle('hide', !showAcc);
     if(showAcc){
       acc.innerHTML = session ? I.userOk : I.user;
@@ -1319,12 +1336,12 @@ function renderChrome(){
   }
   document.getElementById('langsw').innerHTML = ['es','en','pt'].map(l=>
     `<button data-lang="${l}" class="${(data.lang||'es')===l?'on':''}" aria-pressed="${(data.lang||'es')===l}">${l.toUpperCase()}</button>`).join('');
-  document.getElementById('tabbar').innerHTML = (shared||found) ? '' : tabs().map(t0=>
+  document.getElementById('tabbar').innerHTML = (shared||found||caregiver) ? '' : tabs().map(t0=>
     `<button data-tab="${t0.id}" role="tab" aria-selected="${currentTab===t0.id}" class="${currentTab===t0.id?'on':''}">${t0.icon}<span>${t0.label}</span></button>`
   ).join('');
   const fab = document.getElementById('fab');
   fab.innerHTML = I.spark;
-  fab.classList.toggle('hide', shared || found || data.pets.length===0);
+  fab.classList.toggle('hide', shared || found || caregiver || data.pets.length===0);
 }
 
 /* ---------------------------- Render principal ---------------------------- */
@@ -1333,6 +1350,7 @@ function render(){
   renderChrome();
   const app = document.getElementById('app');
   if(found){ app.innerHTML = viewFound(); return; }
+  if(caregiver){ app.innerHTML = viewCaregiver(); return; }
   if(shared){ app.innerHTML = viewShared(); if(sharedSig) setTimeout(runShareVerify, 0); return; }
   if(data.pets.length===0){ app.innerHTML = viewOnboarding(); return; }
   if(currentTab==='home') app.innerHTML = viewHome();
@@ -1569,6 +1587,10 @@ function viewCard(){
       ${vis.length?`<div class="card">${vis.map(v=>visitRow(v,false)).join('')}</div>`:emptyBox(I.stetho, t('no_visit'))}
       <button class="btn btn-block" data-add="visita" style="margin-top:11px">${I.plus} ${t('add_visit')}</button></section>
     <section class="block"><div class="block-title">${t('sec_docs')}</div>${docsHTML(pet)}</section>
+    <section class="block"><div class="block-title">${t('sec_tracking')}</div>
+      <button class="tile" id="diaryOpen"><span class="ic c-violet">${I.heart}</span><span class="tt"><b>${t('diary_title')}</b><span>${t('diary_open_sub')}</span></span><span class="chev">${I.chev}</span></button>
+      <button class="tile" id="expOpen" style="margin-top:11px"><span class="ic c-blue">${I.download}</span><span class="tt"><b>${t('exp_title')}</b><span>${t('exp_open_sub')}</span></span><span class="chev">${I.chev}</span></button>
+    </section>
     <p class="disclaimer">${t('disc_scheme')}</p>
   </div>`;
 }
@@ -1608,7 +1630,7 @@ function viewPet(){
       <button class="actcard" id="shareCard"><span class="ic c-blue">${I.share}</span><b>${t('m_share')}</b></button>
       <button class="actcard" id="ownerEdit"><span class="ic c-violet">${I.user}</span><b>${t('owner_edit')}</b></button>
       <button class="actcard" id="guideStage"><span class="ic c-green">${I.check}</span><b>${t('guides_short')}</b></button>
-      <button class="actcard" id="toxOpen"><span class="ic c-red">${I.info}</span><b>${t('tox_title')}</b></button>
+      <button class="actcard" id="cgOpen"><span class="ic c-amber">${I.user}</span><b>${t('cg_short')}</b></button>
     </div>
 
     <div class="block-title" style="margin:18px 2px 8px">${t('sec_data')}</div>
@@ -1947,6 +1969,8 @@ function openEdit(kind, id){
   else if(kind==='cuidado'){ const r=(pet.cares||[]).find(x=>x.id===id); if(r) careModal(r); }
   else if(kind==='visita'){ const r=(pet.vetVisits||[]).find(x=>x.id===id); if(r) visitModal(r); }
   else if(kind==='medicamento'){ const r=(pet.meds||[]).find(x=>x.id===id); if(r) medModal(r); }
+  else if(kind==='sintoma'){ const r=(pet.symptoms||[]).find(x=>x.id===id); if(r) symptomModal(r); }
+  else if(kind==='gasto'){ const r=(pet.expenses||[]).find(x=>x.id===id); if(r) expenseModal(r); }
   else if(kind==='peso'){ const r=(pet.weights||[]).find(x=>x.id===id); if(r) weightModal(r); }
 }
 
@@ -2899,6 +2923,103 @@ function rationModal(){
   ['rKg','rFactor','rKcal'].forEach(id=>document.getElementById(id).addEventListener('input',calc));
   calc();
 }
+
+/* ---- Diario de salud / síntomas ---- */
+const MOODS = ['bien','normal','bajo'];
+function moodCls(v){ return {bien:'c-green',normal:'c-amber',bajo:'c-red'}[v]||'c-muted'; }
+function symptomDiaryModal(){
+  const pet=activePet(); if(!pet) return; const list=(pet.symptoms||[]).slice().sort((a,b)=>(b.fecha||'')<(a.fecha||'')?-1:1);
+  const body=`<p class="hint" style="margin-bottom:10px">${t('diary_intro')}</p>
+    ${list.length?`<div class="card">${list.map(s=>`<div class="rec"><span class="ic ${moodCls(s.animo)}">${I.heart}</span><div class="rr" data-edit="sintoma" data-id="${s.id}" style="cursor:pointer"><b>${fmt(s.fecha)}</b><span>${[t('diary_mood')+': '+t('mood_'+(s.animo||'normal')), t('diary_appetite')+': '+t('mood_'+(s.apetito||'normal')), s.sintomas].filter(Boolean).join(' · ')}${s.nota?` · ${esc(s.nota)}`:''}</span></div><button class="iconmini" data-del="sintoma" data-id="${s.id}" aria-label="${t('delete')}">${I.trash}</button></div>`).join('')}</div>`:emptyBox(I.heart,t('diary_empty'))}
+    <button class="btn btn-block" id="diaryAdd" style="margin-top:11px">${I.plus} ${t('diary_add')}</button>`;
+  openModal(modalShell(t('diary_title'), body, `<button class="btn btn-block" data-close>${t('close')}</button>`));
+  document.getElementById('diaryAdd').onclick=()=>symptomModal();
+}
+function symptomModal(existing){
+  const pet=activePet(); const e=existing||{};
+  const seg=(id,val)=>`<div class="seg" id="${id}">${MOODS.map(m=>`<button type="button" data-v="${m}" class="${(val||'normal')===m?'on':''}">${t('mood_'+m)}</button>`).join('')}</div>`;
+  const body=`<div class="field"><label>${t('care_last')} *</label><input type="date" id="sy-fecha" value="${esc(e.fecha||todayISO())}" max="${todayISO()}"></div>
+    <div class="field"><label>${t('diary_mood')}</label>${seg('sy-animo',e.animo)}</div>
+    <div class="field"><label>${t('diary_appetite')}</label>${seg('sy-apetito',e.apetito)}</div>
+    <div class="field"><label>${t('diary_symptoms')}</label><input id="sy-sint" value="${esc(e.sintomas||'')}" placeholder="${t('diary_symptoms_ph')}"></div>
+    <div class="field"><label>${t('care_notes')}</label><textarea id="sy-nota">${esc(e.nota||'')}</textarea></div>`;
+  let animo=e.animo||'normal', apetito=e.apetito||'normal';
+  openModal(modalShell(existing?t('edit'):t('diary_add'), body, FOOT('saveSy')));
+  const bind=(id,set)=>document.getElementById(id).addEventListener('click',ev=>{const b=ev.target.closest('button');if(!b)return;set(b.dataset.v);[...ev.currentTarget.children].forEach(c=>c.classList.toggle('on',c===b));});
+  bind('sy-animo',v=>animo=v); bind('sy-apetito',v=>apetito=v);
+  document.getElementById('saveSy').onclick=()=>{ const rec={fecha:val('sy-fecha'),animo,apetito,sintomas:val('sy-sint').trim(),nota:val('sy-nota').trim()};
+    if(existing){Object.assign(existing,rec);}else{(pet.symptoms||(pet.symptoms=[])).push({id:uid(),...rec});} save(); closeModal(); toast(t('saved')); symptomDiaryModal(); };
+}
+
+/* ---- Rastreador de gastos ---- */
+function curSym(){ return data.currency || 'Q'; }
+function expensesTotal(expenses, sinceISO){ return (expenses||[]).filter(e=>!sinceISO||(e.fecha||'')>=sinceISO).reduce((s,e)=>s+(Number(e.monto)||0),0); }
+const ECATS=['consulta','vacuna','medicina','alimento','higiene','otro'];
+function expensesModal(){
+  const pet=activePet(); if(!pet) return; const list=(pet.expenses||[]).slice().sort((a,b)=>(b.fecha||'')<(a.fecha||'')?-1:1);
+  const mS=todayISO().slice(0,7)+'-01', yS=todayISO().slice(0,4)+'-01-01', c=curSym();
+  const body=`<div class="two"><div class="card pad" style="text-align:center"><div class="hint">${t('exp_month')}</div><div style="font-size:20px;font-weight:800;color:var(--accent)">${c}${expensesTotal(pet.expenses,mS).toFixed(2)}</div></div>
+    <div class="card pad" style="text-align:center"><div class="hint">${t('exp_year')}</div><div style="font-size:20px;font-weight:800">${c}${expensesTotal(pet.expenses,yS).toFixed(2)}</div></div></div>
+    ${list.length?`<div class="card" style="margin-top:12px">${list.map(x=>`<div class="rec"><span class="ic c-blue">${I.download}</span><div class="rr" data-edit="gasto" data-id="${x.id}" style="cursor:pointer"><b>${esc(x.concepto||t('exp_item'))}</b><span>${fmt(x.fecha)}${x.cat?` · ${t('ecat_'+x.cat)}`:''}</span></div><div class="meta" style="font-weight:700;color:var(--ink)">${c}${(Number(x.monto)||0).toFixed(2)}</div><button class="iconmini" data-del="gasto" data-id="${x.id}" aria-label="${t('delete')}">${I.trash}</button></div>`).join('')}</div>`:emptyBox(I.download,t('exp_empty'))}
+    <button class="btn btn-block" id="expAdd" style="margin-top:11px">${I.plus} ${t('exp_add')}</button>`;
+  openModal(modalShell(t('exp_title'), body, `<button class="btn btn-block" data-close>${t('close')}</button>`));
+  document.getElementById('expAdd').onclick=()=>expenseModal();
+}
+function expenseModal(existing){
+  const pet=activePet(); const e=existing||{}; let cat=e.cat||'consulta';
+  const body=`<div class="field"><label>${t('exp_concept')}</label><input id="ex-con" value="${esc(e.concepto||'')}" placeholder="${t('exp_concept_ph')}"></div>
+    <div class="two"><div class="field"><label>${t('exp_amount')}</label><input type="number" step="0.01" min="0" id="ex-monto" value="${esc(e.monto||'')}"></div>
+      <div class="field"><label>${t('care_last')}</label><input type="date" id="ex-fecha" value="${esc(e.fecha||todayISO())}" max="${todayISO()}"></div></div>
+    <div class="field"><label>${t('exp_cat')}</label><select id="ex-cat">${ECATS.map(x=>`<option value="${x}" ${cat===x?'selected':''}>${t('ecat_'+x)}</option>`).join('')}</select></div>`;
+  openModal(modalShell(existing?t('edit'):t('exp_add'), body, FOOT('saveEx')));
+  document.getElementById('saveEx').onclick=()=>{ const rec={concepto:val('ex-con').trim(),monto:val('ex-monto'),fecha:val('ex-fecha'),cat:val('ex-cat')};
+    if(existing){Object.assign(existing,rec);}else{(pet.expenses||(pet.expenses=[])).push({id:uid(),...rec});} save(); closeModal(); toast(t('saved')); expensesModal(); };
+}
+
+/* ---- Modo cuidador (handoff de solo lectura) ---- */
+function caregiverPayload(pet){
+  const i=pet.info||{}, o=data.owner||{};
+  const meds=(pet.meds||[]).filter(m=>m.activo!==false).map(m=>({n:m.nombre,d:m.dosis||'',f:medFreqLabel(m),h:m.hora||''}));
+  const cares=(pet.cares||[]).filter(c=>c.proxima).slice(0,8).map(c=>({t:c.titulo,f:c.proxima}));
+  return {app:'vacupet',cg:1,n:i.nombre,sp:i.especie,rz:i.raza||'',al:i.alergias||'',co:i.condiciones||'',vet:i.veterinario||'',
+    on:o.nombre||'',op:o.telefono||'',an:o.altNombre||'',ap:o.altTelefono||'',meds,cares,feed:pet.feedNote||''};
+}
+function caregiverLink(pet){ return location.origin+location.pathname+'#care='+b64urlEncode(JSON.stringify(caregiverPayload(pet))); }
+function decodeCare(h){ try{ const o=JSON.parse(b64urlDecode(h)); return (o&&o.app==='vacupet'&&o.cg)?o:null; }catch(e){ return null; } }
+function caregiverModal(){
+  const pet=activePet(); if(!pet) return;
+  const body=`<div class="field"><label>${t('cg_feed')}</label><textarea id="cgFeed" placeholder="${t('cg_feed_ph')}">${esc(pet.feedNote||'')}</textarea></div>
+    <div class="qrbox" id="cgQr"><span class="hint">QR…</span></div>
+    <div class="linkbox"><input id="cgLink" readonly><button class="btn" id="cgCopy" aria-label="${t('copied')}">${I.copy}</button></div>
+    <p class="hint" style="margin-top:10px">${t('cg_note')}</p>`;
+  openModal(modalShell(t('cg_title'), body, `<button class="btn btn-block" data-close>${t('close')}</button>`));
+  const refresh=()=>{ pet.feedNote=val('cgFeed').trim(); const link=caregiverLink(pet); document.getElementById('cgLink').value=link;
+    ensureQR(ok=>{ const box=document.getElementById('cgQr'); if(!box) return; if(ok&&window.qrcode){ try{ const qr=window.qrcode(0,'M'); qr.addData(link); qr.make(); box.innerHTML=qr.createImgTag(4,0);}catch(e){ box.innerHTML='<span class="hint">QR…</span>'; } } }); };
+  document.getElementById('cgFeed').addEventListener('input',()=>{ pet.feedNote=val('cgFeed').trim(); document.getElementById('cgLink').value=caregiverLink(pet); });
+  document.getElementById('cgFeed').addEventListener('change',()=>{ pet.feedNote=val('cgFeed').trim(); save(); refresh(); });
+  document.getElementById('cgCopy').onclick=async()=>{ pet.feedNote=val('cgFeed').trim(); save(); const l=caregiverLink(pet); try{ await navigator.clipboard.writeText(l);}catch(_){ } toast(t('copied')); };
+  refresh();
+}
+function viewCaregiver(){
+  const f=caregiver;
+  const row=(k,v)=> v?`<div class="rec"><div class="rr"><span>${esc(k)}</span></div><div class="meta" style="font-weight:600;color:var(--ink)">${esc(v)}</div></div>`:'';
+  const contact=(name,phone)=>{ if(!phone) return ''; const wa=waLink(phone);
+    return `<div class="card pad" style="display:flex;align-items:center;gap:10px;margin-top:8px"><div style="flex:1;min-width:0"><b>${esc(name||t('emerg_owner'))}</b><div class="hint">${esc(phone)}</div></div><a class="btn btn-primary" href="${telLink(phone)}" style="flex:none">${t('found_call')}</a>${wa?`<a class="btn" href="${wa}" target="_blank" rel="noopener" style="flex:none">WhatsApp</a>`:''}</div>`; };
+  return `<div class="view">
+    <div class="card pad" style="display:flex;align-items:center;gap:14px;margin-top:14px">
+      <div class="av" style="width:56px;height:56px;border-radius:50%;overflow:hidden;border:1px solid var(--line);flex:none"><img src="${speciesArt(f.sp||'otro')}" style="width:100%;height:100%;object-fit:cover"></div>
+      <div><h2>${esc(f.n||'')}</h2><div class="sub" style="color:var(--muted)">${SPECIES_EMOJI[f.sp]||'🐾'} ${esc(cap(f.sp||''))}${f.rz?` · ${esc(f.rz)}`:''} · ${t('cg_sheet')}</div></div>
+    </div>
+    ${f.feed?`<div class="block-title" style="margin:16px 2px 6px">${t('cg_feed')}</div><div class="card pad"><b style="font-weight:500">${esc(f.feed)}</b></div>`:''}
+    ${(f.meds&&f.meds.length)?`<div class="block-title" style="margin:16px 2px 6px">${t('sec_meds')}</div><div class="card">${f.meds.map(m=>`<div class="rec"><span class="ic c-red">${I.pill}</span><div class="rr"><b>${esc(m.n)}</b><span>${[m.d,m.f,m.h].filter(Boolean).join(' · ')}</span></div></div>`).join('')}</div>`:''}
+    ${(f.cares&&f.cares.length)?`<div class="block-title" style="margin:16px 2px 6px">${t('sec_cares')}</div><div class="card">${f.cares.map(c=>`<div class="rec"><span class="ic c-violet">${I.heart}</span><div class="rr"><b>${esc(c.t)}</b><span>${fmt(c.f)}</span></div></div>`).join('')}</div>`:''}
+    ${(f.al||f.co||f.vet)?`<div class="block-title" style="margin:16px 2px 6px">${t('found_medical')}</div><div class="card">${row(t('lbl_allergies'),f.al)}${row(t('lbl_conditions'),f.co)}${row('Veterinario',f.vet)}</div>`:''}
+    <div class="block-title" style="margin:16px 2px 6px">${t('found_contact')}</div>
+    ${contact(f.on,f.op)}${contact(f.an,f.ap)}
+    <button class="btn btn-ghost btn-block" id="openMine" style="margin-top:18px">${t('found_openapp')}</button>
+    <p class="disclaimer">${t('cg_footer')}</p>
+  </div>`;
+}
 function travelModal(){
   if(!activePet()) return;
   const bind=()=>{ const sel=document.getElementById('travelDest'); if(sel) sel.onchange=()=>{ document.getElementById('travelWrap').innerHTML=travelBody(sel.value); bind(); }; };
@@ -3209,7 +3330,7 @@ function demoFoto(c1, c2){
 function loadDemoPet(){
   const d = n => toISO(addDays(new Date(), n));
   const P = []; // helper para crear cada mascota con valores por defecto seguros
-  const add = (info, x) => P.push(Object.assign({ vaccines:[], dewormings:[], weights:[], vetVisits:[], meds:[], cares:[], album:[], docs:[] }, x, { info: Object.assign({ id:uid(), demo:true }, info) }));
+  const add = (info, x) => P.push(Object.assign({ vaccines:[], dewormings:[], weights:[], vetVisits:[], meds:[], symptoms:[], expenses:[], cares:[], album:[], docs:[] }, x, { info: Object.assign({ id:uid(), demo:true }, info) }));
 
   // 🐶 Rocky — perro, con DOSIS PRÓXIMA (estado ámbar) + datos completos
   add({ nombre:'Rocky', especie:'perro', raza:'Labrador', sexo:'m', nacimiento:'2022-03-10', microchip:'941000012345678', esterilizado:true, peso:28, foto:speciesArt('perro'), veterinario:'Clínica Patitas', sangre:'DEA 1.1+', alergias:'Pollo', condiciones:'Displasia leve de cadera', pesoMin:25, pesoMax:30 }, {
@@ -3285,8 +3406,8 @@ document.addEventListener('click', e=>{
   // idioma
   const lg=t0.closest('[data-lang]'); if(lg){ data.lang=lg.dataset.lang; save(); render(); return; }
   // compartido: abrir mi app
-  if(t0.closest('#openMine')){ shared=null; found=null; history.replaceState(null,'',location.pathname); go('home'); return; }
-  if(shared||found) return; // en vista compartida / de hallazgo no hay más acciones
+  if(t0.closest('#openMine')){ shared=null; found=null; caregiver=null; history.replaceState(null,'',location.pathname); go('home'); return; }
+  if(shared||found||caregiver) return; // en vistas públicas no hay más acciones
   const tab=t0.closest('[data-tab]'); if(tab){ go(tab.dataset.tab); return; }
   const goEl=t0.closest('[data-go]'); if(goEl){ go(goEl.dataset.go); return; }
   if(t0.closest('#hdrAccount')){ if(session) go('more'); else authModal(); return; }
@@ -3314,8 +3435,12 @@ document.addEventListener('click', e=>{
     else if(k==='peso'){ pet.weights=pet.weights.filter(x=>x.id!==id); const l=pet.weights.slice().sort((a,b)=>a.fecha<b.fecha?1:-1)[0]; pet.info.peso=l?l.kg:pet.info.peso; }
     else if(k==='visita') pet.vetVisits=pet.vetVisits.filter(x=>x.id!==id);
     else if(k==='medicamento') pet.meds=pet.meds.filter(x=>x.id!==id);
+    else if(k==='sintoma') pet.symptoms=pet.symptoms.filter(x=>x.id!==id);
+    else if(k==='gasto') pet.expenses=pet.expenses.filter(x=>x.id!==id);
     else if(k==='cuidado') pet.cares=pet.cares.filter(x=>x.id!==id);
-    save(); toast(t('deleted')); render(); return; }
+    save(); toast(t('deleted')); render();
+    if(k==='sintoma') symptomDiaryModal(); else if(k==='gasto') expensesModal();  // refresca el modal abierto
+    return; }
   if(t0.closest('#pvLock')){ lockModal(); return; }
   if(t0.closest('#pvEnc')){ encBackupModal(); return; }
   if(t0.closest('#pvWipe')){ wipeLocal(); return; }
@@ -3335,6 +3460,9 @@ document.addEventListener('click', e=>{
   if(t0.closest('#guidesOpen')){ guidesModal(); return; }
   if(t0.closest('#rationOpen')){ rationModal(); return; }
   if(t0.closest('#guideStage')){ guidesModal(); return; }
+  if(t0.closest('#diaryOpen')){ symptomDiaryModal(); return; }
+  if(t0.closest('#expOpen')){ expensesModal(); return; }
+  if(t0.closest('#cgOpen')){ caregiverModal(); return; }
   if(t0.closest('#ocrScan')){ ocrStart(); return; }
   if(t0.closest('#signIn')){ authModal(); return; }
   if(t0.closest('#syncNow')){ syncNow(); return; }
@@ -3506,10 +3634,12 @@ const hash0 = location.hash || '';
 const tokenMatch = hash0.match(/^#s=([0-9a-fA-F-]{8,})/);   // carné compartido por token
 const foundMatch = hash0.match(/^#e=(.+)$/);                // página pública de hallazgo
 found = foundMatch ? decodeEmergency(foundMatch[1]) : null;
+const careMatch = hash0.match(/^#care=(.+)$/);              // hoja de cuidador
+caregiver = careMatch ? decodeCare(careMatch[1]) : null;
 shared = readShareHash();                                   // carné compartido en el hash (#v=)
 let pendingAdd = null;
 
-if(found){
+if(found || caregiver){
   render();
 } else if(tokenMatch){
   // Vista de solo lectura cargada de forma asíncrona vía RPC.

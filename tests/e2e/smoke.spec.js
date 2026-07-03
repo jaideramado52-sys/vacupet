@@ -130,6 +130,30 @@ test.describe('VacuPet — humo', () => {
     await expect(page.locator('.modal-head h3')).toHaveText('Guías por etapa');
   });
 
+  test('diario de salud registra una entrada', async ({ page }) => {
+    await seedDemo(page);
+    await page.locator('[data-tab="card"]').click();
+    await page.locator('#diaryOpen').click();
+    await expect(page.locator('.modal-head h3')).toHaveText('Diario de salud');
+    await page.locator('#diaryAdd').click();
+    await page.locator('#sy-sint').fill('Tos leve');
+    await page.locator('#saveSy').click();
+    await expect(page.getByText('Tos leve')).toBeVisible();
+  });
+
+  test('modo cuidador genera la hoja de solo lectura', async ({ page }) => {
+    await seedDemo(page);
+    await page.locator('[data-tab="pet"]').click();
+    await page.locator('#cgOpen').click();
+    await expect(page.locator('.modal-head h3')).toHaveText('Modo cuidador');
+    const link = await page.locator('#cgLink').inputValue();
+    expect(link).toContain('#care=');
+    await page.goto(link);
+    await page.reload();
+    await expect(page.getByText('Hoja de cuidados').first()).toBeVisible();
+    await expect(page.getByText('Ana López')).toBeVisible();
+  });
+
   test('selector de país ajusta la normativa de rabia', async ({ page }) => {
     await seedDemo(page);
     await page.locator('[data-tab="more"]').click();

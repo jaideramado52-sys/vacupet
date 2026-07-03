@@ -40,6 +40,7 @@ code += `;globalThis.__VP = {
   emergencyPayload, decodeEmergency, isLost, telLink, waLink,
   brandOn, appName, hasClinic,
   lifeStageFromMonths, humanAgeYears, searchToxics, tipOfDay, rationKcal, rationGrams, guideFor,
+  expensesTotal, caregiverPayload, decodeCare,
   ACCENTS, accentColor, SPECIES_COLOR, albumHTML, docsHTML,
   getData:()=>data, setData:d=>{data=d}
 };`;
@@ -223,10 +224,11 @@ section('Migración versionada del esquema');
   const old = { v:1, lang:'es', remDays:30, activeId:'1',
     pets:[{ info:{id:'1',nombre:'R',especie:'perro'}, vaccines:[], dewormings:[] }] };
   const m = VP.migrate(old);
-  ok('sube a SCHEMA_VERSION', m.v===VP.SCHEMA_VERSION && VP.SCHEMA_VERSION===4);
+  ok('sube a SCHEMA_VERSION', m.v===VP.SCHEMA_VERSION && VP.SCHEMA_VERSION===5);
   ok('añade owner', m.owner && typeof m.owner==='object');
   ok('añade pais por defecto (GT)', m.pais==='GT');
   ok('añade meds a la mascota', Array.isArray(m.pets[0].meds));
+  ok('añade symptoms y expenses', Array.isArray(m.pets[0].symptoms) && Array.isArray(m.pets[0].expenses));
   ok('preserva datos existentes', m.pets[0].info.nombre==='R' && m.lang==='es');
   ok('idempotente (2ª pasada estable)', VP.migrate(VP.migrate(old)).v===VP.SCHEMA_VERSION);
   ok('basura → defaults con versión', VP.migrate(null).v===VP.SCHEMA_VERSION);
@@ -388,6 +390,28 @@ section('Herramientas y contenido (Lote 1)');
   // Guías
   ok('guía perro senior tiene items', VP.guideFor('perro','senior').length>=3);
   ok('guía especie desconocida cae a otro', VP.guideFor('dragon','adulto').length>=1);
+}
+
+section('Herramientas por-mascota (Lote 2)');
+{
+  const exps=[{fecha:iso(-5),monto:100},{fecha:iso(-40),monto:50},{fecha:'2000-01-01',monto:999}];
+  ok('total sin filtro suma todo', VP.expensesTotal(exps)===1149);
+  const mS=iso(0).slice(0,7)+'-01';
+  ok('total del mes filtra por fecha', VP.expensesTotal([{fecha:mS,monto:100},{fecha:'2000-01-01',monto:999}],mS)===100);
+  ok('total vacío = 0', VP.expensesTotal([])===0);
+  // Modo cuidador: payload + round-trip
+  VP.setData({ v:5, lang:'es', remDays:30, owner:{nombre:'Ana',telefono:'+502 5555 1234'}, pets:[] });
+  const pet={ info:{nombre:'Rocky',especie:'perro',alergias:'Pollo',veterinario:'Patitas'}, feedNote:'1 taza mañana y noche',
+    meds:[{nombre:'Carprofeno',dosis:'50 mg',cada:1,hora:'08:00',activo:true},{nombre:'Viejo',activo:false}],
+    cares:[{titulo:'Baño',proxima:iso(5)},{titulo:'Sin fecha'}] };
+  const cp=VP.caregiverPayload(pet);
+  ok('payload cuidador: identidad + feed', cp.n==='Rocky' && cp.feed==='1 taza mañana y noche');
+  ok('payload cuidador: solo meds activos', cp.meds.length===1 && cp.meds[0].n==='Carprofeno');
+  ok('payload cuidador: solo cuidados con fecha', cp.cares.length===1 && cp.cares[0].t==='Baño');
+  ok('payload cuidador: contacto del dueño', cp.on==='Ana' && cp.op==='+502 5555 1234');
+  const dec=VP.decodeCare(VP.b64urlEncode(JSON.stringify(cp)));
+  ok('decode cuidador round-trip', dec && dec.n==='Rocky' && dec.meds[0].n==='Carprofeno');
+  ok('decode cuidador rechaza basura', VP.decodeCare('zzz')===null);
 }
 
 VP.setData({ v:1, activeId:'1', remDays:30, lang:'es', pets:[{info:{id:'1',nombre:'R',especie:'perro'},vaccines:[],dewormings:[],weights:[],vetVisits:[],cares:[{id:'c',kind:'bano',titulo:'Baño',fecha:iso(-10),cada:30,proxima:iso(5)}]}] });
