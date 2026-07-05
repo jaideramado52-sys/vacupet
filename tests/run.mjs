@@ -41,7 +41,7 @@ code += `;globalThis.__VP = {
   brandOn, appName, hasClinic,
   lifeStageFromMonths, humanAgeYears, searchToxics, tipOfDay, rationKcal, rationGrams, guideFor,
   expensesTotal, caregiverPayload, decodeCare,
-  globalSearch,
+  globalSearch, searchDiseases, medVeces, dosesToday,
   ACCENTS, accentColor, SPECIES_COLOR, albumHTML, docsHTML,
   getData:()=>data, setData:d=>{data=d}
 };`;
@@ -427,6 +427,18 @@ section('UI: búsqueda global (Lote 3)');
   ok('busca cuidado de otra mascota', VP.globalSearch('bano').some(r=>r.kind==='cuidado'&&r.petName==='Luna'));
   ok('query vacía → sin resultados', VP.globalSearch('').length===0);
   ok('sin coincidencias → vacío', VP.globalSearch('zzz').length===0);
+}
+
+section('Lote 4: enfermedades y medicación intradía');
+{
+  ok('busca parvovirus', VP.searchDiseases('parvo','perro').some(d=>/Parvo/.test(d.n)));
+  ok('parvo no aplica a gato', !VP.searchDiseases('parvo','gato').some(d=>/Parvo/i.test(d.n)));
+  ok('panleucopenia para gato', VP.searchDiseases('panleu','gato').length>=1);
+  ok('busca por síntoma', VP.searchDiseases('diarrea','perro').length>=1);
+  ok('medVeces por defecto 1', VP.medVeces({})===1);
+  ok('medVeces usa veces', VP.medVeces({veces:3})===3);
+  ok('dosesToday cuenta hoy', VP.dosesToday({veces:3,doseLog:{d:iso(0),c:2}})===2);
+  ok('dosesToday 0 si otro día', VP.dosesToday({veces:3,doseLog:{d:iso(-1),c:2}})===0);
 }
 
 VP.setData({ v:1, activeId:'1', remDays:30, lang:'es', pets:[{info:{id:'1',nombre:'R',especie:'perro'},vaccines:[],dewormings:[],weights:[],vetVisits:[],cares:[{id:'c',kind:'bano',titulo:'Baño',fecha:iso(-10),cada:30,proxima:iso(5)}]}] });

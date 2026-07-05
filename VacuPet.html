@@ -346,6 +346,15 @@ nav.tabbar button.on{color:var(--accent)}
 .tipcard .rr{display:flex;flex-direction:column;gap:2px}
 .tipcard .rr b{font-size:13px}
 .tipcard .rr span{font-size:13px;color:var(--muted);line-height:1.4}
+.coach{display:flex;align-items:flex-start;gap:11px;margin-top:14px;padding:13px 14px;border-radius:15px;background:color-mix(in srgb,var(--accent) 9%,var(--surface));border:1px solid color-mix(in srgb,var(--accent) 22%,transparent)}
+.coach .ic{width:34px;height:34px;border-radius:10px;display:grid;place-items:center;flex:none}
+.coach .rr{flex:1;display:flex;flex-direction:column;gap:2px}
+.coach .rr b{font-size:13px}
+.coach .rr span{font-size:12.5px;color:var(--muted);line-height:1.4}
+.checkrow.done .rr b{text-decoration:line-through;color:var(--muted)}
+.dosebtn{flex:none;min-width:38px;height:30px;padding:0 8px;border-radius:999px;border:1px solid var(--line);background:var(--surface-2);color:var(--muted);font-size:12px;font-weight:700;display:grid;place-items:center}
+.dosebtn.on{background:color-mix(in srgb,var(--green) 15%,var(--surface));color:var(--green);border-color:transparent}
+.dosebtn svg{width:16px;height:16px}
 /* Ofertas / recomendaciones de partners */
 .offer{display:flex;align-items:center;gap:12px;padding:13px 14px;background:var(--surface);border:1px solid var(--line);border-radius:15px;box-shadow:var(--shadow)}
 .offer .rr{flex:1;min-width:0;display:flex;flex-direction:column;gap:2px}
@@ -480,6 +489,7 @@ const I = {
   stetho:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M5 3v5a4 4 0 0 0 8 0V3"/><path d="M9 17a5 5 0 0 0 10 0v-2"/><circle cx="19" cy="12" r="2"/></svg>',
   bell:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9a6 6 0 0 1 12 0c0 5 2 6 2 6H4s2-1 2-6Z"/><path d="M10 19a2 2 0 0 0 4 0"/></svg>',
   check:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round"><path d="m5 12 5 5 9-10"/></svg>',
+  circle:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="8.5"/></svg>',
   plus:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg>',
   chev:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m9 6 6 6-6 6"/></svg>',
   x:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M6 6l12 12M18 6 6 18"/></svg>',
@@ -643,6 +653,10 @@ const STR = {
     search_title:'Buscar', search_ph:'Mascota, vacuna, medicamento…', search_hint:'Escribe para buscar en todas tus mascotas.', search_none:'Sin resultados',
     cf_todos:'Todos', cf_proximas:'Próximas', cf_vencidas:'Vencidas', cf_none:'Nada aquí con este filtro',
     sync_ok:'Sincronizado', sync_syncing:'Sincronizando…', sync_offline:'Sin conexión',
+    coach_tip:'Consejo', coach_home:'Usa el botón + para acciones rápidas (buscar, añadir vacuna, peso o foto).', coach_card:'Filtra por Próximas o Vencidas, y toca "Línea de tiempo" para ver todo el historial.', coach_pet:'Aquí tienes la tarjeta de emergencia, la chapa del collar, el modo cuidador y la guía por etapa.',
+    checklist_hint:'Marca lo que ya cumpliste', checklist_done:'{n}/{total} hecho',
+    dis_title:'Enfermedades', dis_open_sub:'Qué son, síntomas y prevención', dis_intro:'Fichas informativas. Se filtran por la especie de tu mascota activa.', dis_search:'Buscar (parvo, rabia, pulgas…)', dis_what:'Qué es', dis_symp:'Síntomas', dis_prev:'Prevención',
+    med_perday:'Veces al día', med_taken:'Marcar tomada', med_taken_ok:'¡Dosis completadas hoy! 💊',
     sec_appearance:'Apariencia', accent_color:'Color de acento', theme_label:'Tema', theme_auto:'Auto', theme_light:'Claro', theme_dark:'Oscuro',
     accent_auto:'Por mascota', accent_manual:'Manual', accent_auto_hint:'El color de la app se adapta a la mascota activa.',
     sec_album:'Álbum', add_photo:'Añadir foto', no_album:'Sin fotos todavía', album_saved:'Foto añadida', uploading:'Subiendo…',
@@ -761,6 +775,10 @@ const STR = {
     search_title:'Search', search_ph:'Pet, vaccine, medication…', search_hint:'Type to search across all your pets.', search_none:'No results',
     cf_todos:'All', cf_proximas:'Upcoming', cf_vencidas:'Overdue', cf_none:'Nothing here with this filter',
     sync_ok:'Synced', sync_syncing:'Syncing…', sync_offline:'Offline',
+    coach_tip:'Tip', coach_home:'Use the + button for quick actions (search, add vaccine, weight or photo).', coach_card:'Filter by Upcoming or Overdue, and tap "Timeline" to see the full history.', coach_pet:'Here you have the emergency card, collar tag, sitter mode and the life-stage guide.',
+    checklist_hint:'Check off what you have done', checklist_done:'{n}/{total} done',
+    dis_title:'Diseases', dis_open_sub:'What they are, symptoms and prevention', dis_intro:'Fact sheets. Filtered by your active pet species.', dis_search:'Search (parvo, rabies, fleas…)', dis_what:'What it is', dis_symp:'Symptoms', dis_prev:'Prevention',
+    med_perday:'Times a day', med_taken:'Mark taken', med_taken_ok:'All doses done today! 💊',
     sec_appearance:'Appearance', accent_color:'Accent color', theme_label:'Theme', theme_auto:'Auto', theme_light:'Light', theme_dark:'Dark',
     accent_auto:'By pet', accent_manual:'Manual', accent_auto_hint:'The app color adapts to the active pet.',
     sec_album:'Album', add_photo:'Add photo', no_album:'No photos yet', album_saved:'Photo added', uploading:'Uploading…',
@@ -879,6 +897,10 @@ const STR = {
     search_title:'Buscar', search_ph:'Pet, vacina, remédio…', search_hint:'Digite para buscar em todos os seus pets.', search_none:'Sem resultados',
     cf_todos:'Todos', cf_proximas:'Próximas', cf_vencidas:'Vencidas', cf_none:'Nada aqui com este filtro',
     sync_ok:'Sincronizado', sync_syncing:'Sincronizando…', sync_offline:'Sem conexão',
+    coach_tip:'Dica', coach_home:'Use o botão + para ações rápidas (buscar, adicionar vacina, peso ou foto).', coach_card:'Filtre por Próximas ou Vencidas, e toque em "Linha do tempo" para ver todo o histórico.', coach_pet:'Aqui você tem o cartão de emergência, a plaquinha, o modo cuidador e o guia por fase.',
+    checklist_hint:'Marque o que já cumpriu', checklist_done:'{n}/{total} feito',
+    dis_title:'Doenças', dis_open_sub:'O que são, sintomas e prevenção', dis_intro:'Fichas informativas. Filtra pela espécie do pet ativo.', dis_search:'Buscar (parvo, raiva, pulgas…)', dis_what:'O que é', dis_symp:'Sintomas', dis_prev:'Prevenção',
+    med_perday:'Vezes ao dia', med_taken:'Marcar tomada', med_taken_ok:'Todas as doses de hoje! 💊',
     sec_appearance:'Aparência', accent_color:'Cor de destaque', theme_label:'Tema', theme_auto:'Auto', theme_light:'Claro', theme_dark:'Escuro',
     accent_auto:'Por pet', accent_manual:'Manual', accent_auto_hint:'A cor do app se adapta ao pet ativo.',
     sec_album:'Álbum', add_photo:'Adicionar foto', no_album:'Sem fotos ainda', album_saved:'Foto adicionada', uploading:'Enviando…',
@@ -1197,6 +1219,32 @@ function tipOfDay(i){ const n=TIPS.length; return TIPS[((i%n)+n)%n]; }
 const RATION_FACTORS = { cachorro:3.0, activo:2.0, normal:1.6, senior:1.4, sobrepeso:1.0 };
 function rationKcal(kg, factor){ const k=Number(kg); if(!k||k<=0) return 0; const rer=70*Math.pow(k,0.75); return Math.round(rer*(Number(factor)||1.6)); }
 function rationGrams(kcal, kcalPer100){ const d=Number(kcalPer100)||350; return Math.round((Number(kcal)/d)*100); }
+// Coach marks (tips de primera vez, por dispositivo)
+function coachSeen(k){ try{ return !!(JSON.parse(localStorage.getItem('vacupet:coach')||'{}')[k]); }catch(e){ return false; } }
+function markCoach(k){ try{ const m=JSON.parse(localStorage.getItem('vacupet:coach')||'{}'); m[k]=1; localStorage.setItem('vacupet:coach',JSON.stringify(m)); }catch(e){} }
+function coachCard(k, text){ if(coachSeen(k)) return ''; return `<div class="coach"><span class="ic c-accent">${I.spark}</span><div class="rr"><b>${t('coach_tip')}</b><span>${esc(text)}</span></div><button class="iconbtn" data-coachx="${esc(k)}" aria-label="${t('close')}" style="width:30px;height:30px;flex:none">${I.x}</button></div>`; }
+// Biblioteca de enfermedades (fichas: qué es, síntomas, prevención)
+const DISEASES = [
+  {n:'Rabia',sp:'perro,gato',q:'Virus mortal que afecta el sistema nervioso; zoonosis (contagia a personas).',s:'Cambios de conducta, agresividad o parálisis, salivación, miedo al agua.',p:'Vacunación (a menudo obligatoria por ley) y evitar contacto con animales desconocidos.'},
+  {n:'Parvovirus',sp:'perro',q:'Virus muy contagioso del intestino, grave en cachorros.',s:'Vómito, diarrea con sangre, decaimiento y deshidratación.',p:'Serie de vacunas del cachorro y evitar zonas de riesgo hasta completarla.'},
+  {n:'Moquillo (distemper)',sp:'perro',q:'Virus que afecta vías respiratorias, digestivas y sistema nervioso.',s:'Fiebre, secreción nasal/ocular, tos, convulsiones en casos graves.',p:'Vacuna polivalente en serie y refuerzos.'},
+  {n:'Leptospirosis',sp:'perro',q:'Bacteria en agua/orina de roedores; puede dañar riñón e hígado. Zoonosis.',s:'Fiebre, vómito, ictericia, dolor muscular, sed excesiva.',p:'Vacuna (zonas húmedas) y evitar aguas estancadas.'},
+  {n:'Panleucopenia felina',sp:'gato',q:'"Parvovirus felino": muy contagioso y grave, sobre todo en gatitos.',s:'Vómito, diarrea, fiebre, decaimiento.',p:'Trivalente felina (FVRCP) en serie.'},
+  {n:'Rinotraqueítis / calicivirus',sp:'gato',q:'Virus respiratorios felinos (gripe del gato).',s:'Estornudos, secreción nasal/ocular, úlceras en la boca.',p:'Vacuna FVRCP; higiene y evitar contacto con positivos.'},
+  {n:'Leucemia felina (FeLV)',sp:'gato',q:'Retrovirus que debilita el sistema inmune.',s:'Pérdida de peso, anemia, infecciones recurrentes.',p:'Test previo, vacuna en gatos con acceso al exterior, evitar contacto con positivos.'},
+  {n:'Parásitos intestinales',sp:'perro,gato',q:'Lombrices y protozoos que roban nutrientes.',s:'Diarrea, vientre hinchado, pelo opaco, adelgazamiento.',p:'Desparasitación interna periódica y recoger las heces.'},
+  {n:'Pulgas y garrapatas',sp:'perro,gato',q:'Parásitos externos que transmiten enfermedades.',s:'Picor, rascado, puntos negros en el pelo, anemia en casos graves.',p:'Antiparasitario externo mensual y revisar el pelo tras paseos.'},
+  {n:'Enfermedad dental',sp:'perro,gato',q:'Sarro y gingivitis que dañan encías y dientes.',s:'Mal aliento, sarro, encías rojas, dificultad para comer.',p:'Cepillado regular, snacks dentales y limpiezas con el veterinario.'},
+  {n:'Obesidad',sp:'perro,gato',q:'Exceso de peso que acorta la vida y agrava otras enfermedades.',s:'Dificultad para moverse, cansancio, no se palpan las costillas.',p:'Ración adecuada, ejercicio y controles de peso mensuales.'}
+];
+function searchDiseases(q, esp){
+  const nq=normStr(q);
+  return DISEASES.filter(d=>{
+    if(esp && esp!=='otro' && !d.sp.split(',').includes(esp)) return false;
+    if(!nq) return true;
+    return normStr(d.n).includes(nq) || normStr(d.q).includes(nq) || normStr(d.s).includes(nq);
+  });
+}
 
 /* ---------------------------- Esquema: sugerir próxima ---------------------------- */
 function suggestProxima(especie, nombre, fechaISO, nacimientoISO){
@@ -1455,6 +1503,7 @@ function viewHome(){
       <div class="chip" data-go="card"><div class="n" data-count="${s.vencidas}" style="color:var(--red)">${s.vencidas}</div><div class="l">${t('chip_overdue')}</div></div>
       <div class="chip" data-go="pet"><div class="n" data-count="${logros}" style="color:var(--green)">${logros}</div><div class="l">${t('sec_achievements')}</div></div>
     </div>
+    ${coachCard('home', t('coach_home'))}
     ${lostBn}
     ${banner}
     ${nudge}
@@ -1522,13 +1571,17 @@ function medFreqLabel(m){
   if(m.veces && Number(m.veces)>1) return tf('med_x_daily',{n:Number(m.veces)});
   const c=Number(m.cada); if(c===1) return t('med_daily'); if(c>0) return freqLabel(c); return t('care_freq_none');
 }
+function medVeces(m){ const v=Number(m.veces); return v>0?v:1; }
+function dosesToday(m){ return (m.doseLog && m.doseLog.d===todayISO()) ? (m.doseLog.c||0) : 0; }
 function medRow(m, ro){
   const ended = m.activo===false || (m.fin && m.fin<todayISO());
   const sub=[m.dosis, medFreqLabel(m), m.hora].filter(Boolean).join(' · ');
   const tag = ended ? `<span class="tagdue c-muted">${t('med_ended')}</span>` : dueTagFor(m.proxima);
+  const v=medVeces(m), dc=dosesToday(m);
+  const dose = (ro||ended) ? '' : `<button class="dosebtn ${dc>=v?'on':''}" data-dose="${m.id}" aria-label="${t('med_taken')}" title="${t('med_taken')}">${dc>=v?I.check:`${dc}/${v}`}</button>`;
   return `<div class="rec" style="${ended?'opacity:.6':''}"><span class="ic ${ended?'c-muted':'c-red'}">${I.pill}</span>
     <div class="rr"${ro?'':` data-edit="medicamento" data-id="${m.id}" style="cursor:pointer"`}><b>${esc(m.nombre)}</b><span>${esc(sub)}${(!ended&&m.proxima)?` · ${t('next').toLowerCase()} ${fmt(m.proxima)}`:''}</span></div>
-    <div class="meta">${tag}</div>
+    ${dose}<div class="meta">${tag}</div>
     ${ro?'':`<button class="iconmini" data-del="medicamento" data-id="${m.id}" aria-label="${t('delete')}">${I.trash}</button>`}</div>`;
 }
 function medSection(pet){
@@ -1544,7 +1597,8 @@ function medModal(existing){
     <div class="two"><div class="field"><label>${t('med_dose')}</label><input id="md-dosis" value="${esc(e.dosis||'')}" placeholder="50 mg, 2 UI…"></div>
       <div class="field"><label>${t('med_via')}</label><select id="md-via">${['','Oral','Subcutánea','Intramuscular','Tópica','Ótica','Oftálmica'].map(o=>`<option value="${o}" ${(e.via||'')===o?'selected':''}>${o||'—'}</option>`).join('')}</select></div></div>
     <div class="two"><div class="field"><label>${t('med_freq')}</label><select id="md-cada"><option value="0">${t('care_freq_none')}</option><option value="1" ${Number(e.cada)===1?'selected':''}>${t('med_daily')}</option>${[2,3,7,14,30].map(n=>`<option value="${n}" ${Number(e.cada)===n?'selected':''}>${esc(freqLabel(n))}</option>`).join('')}</select></div>
-      <div class="field"><label>${t('med_time')}</label><input type="time" id="md-hora" value="${esc(e.hora||'')}"></div></div>
+      <div class="field"><label>${t('med_perday')}</label><input type="number" min="1" max="6" id="md-veces" value="${esc(e.veces||'')}" placeholder="1"></div></div>
+    <div class="field"><label>${t('med_time')}</label><input type="time" id="md-hora" value="${esc(e.hora||'')}"></div>
     <div class="two"><div class="field"><label>${t('med_start')}</label><input type="date" id="md-inicio" value="${esc(e.inicio||todayISO())}"></div>
       <div class="field"><label>${t('med_end')}</label><input type="date" id="md-fin" value="${esc(e.fin||'')}"></div></div>
     <div class="field"><label>${t('next')}</label><input type="date" id="md-proxima" value="${esc(e.proxima||'')}"><div class="hint" id="md-sug"></div></div>
@@ -1557,7 +1611,7 @@ function medModal(existing){
   document.getElementById('saveMed').addEventListener('click', ()=>{
     const nombre=val('md-nombre').trim(); if(!nombre){ document.getElementById('f-mnombre').classList.add('err'); return; }
     const fin=val('md-fin'); const activo = !(fin && fin<todayISO());
-    const rec={ nombre, dosis:val('md-dosis').trim(), via:val('md-via'), cada:Number(val('md-cada')), hora:val('md-hora'),
+    const rec={ nombre, dosis:val('md-dosis').trim(), via:val('md-via'), cada:Number(val('md-cada')), veces:Number(val('md-veces'))||1, hora:val('md-hora'),
       inicio:val('md-inicio'), fin, proxima:val('md-proxima'), activo, notas:val('md-notas').trim() };
     if(existing){ Object.assign(existing, rec); } else { pet.meds.push({ id:uid(), ...rec }); }
     save(); closeModal(); toast(t('saved_med')); render();
@@ -1602,6 +1656,7 @@ function viewCard(){
   return `<div class="view">
     <h1 style="font-size:22px">${t('card_of')} ${esc(pet.info.nombre)}</h1>
     <div class="seg" id="cardFilterSeg" style="margin-top:12px">${FILTERS.map(f=>`<button type="button" data-cardf="${f}" class="${F===f?'on':''}">${t('cf_'+f)}</button>`).join('')}</div>
+    ${coachCard('card', t('coach_card'))}
     ${all?`<button class="tile" id="timelineOpen" style="margin-top:12px"><span class="ic c-blue">${I.clock}</span><span class="tt"><b>${t('timeline_open')}</b><span>${t('timeline_open_sub')}</span></span><span class="chev">${I.chev}</span></button>`:''}
     <section class="block"><div class="block-title">${t('sec_vaccines')}</div>
       ${vac.length?`<div class="card">${vac.map(v=>vacRow(v,false)).join('')}</div>`:emptyBox(I.syringe, all?t('no_vac'):t('cf_none'))}
@@ -1654,6 +1709,7 @@ function viewPet(){
       ${stage?`<button class="stagepill" id="guideStage">${I.check} ${t('stage_'+stage)}${ha?` · ~${ha} ${t('human_years')}`:''}</button>`:''}
     </div>
 
+    ${coachCard('pet', t('coach_pet'))}
     <div class="block-title" style="margin:18px 2px 8px">${t('sec_actions')}</div>
     <div class="actiongrid">
       <button class="actcard" id="emergOpen"><span class="ic c-red">${I.shield}</span><b>${t('emerg_open')}</b></button>
@@ -1716,6 +1772,7 @@ function viewMore(){
       <button class="tile" id="newsOpen" style="margin-top:11px"><span class="ic c-amber">${I.info}</span><span class="tt"><b>${t('news_open')}</b><span>${t('news_open_sub')}</span></span><span class="chev">${I.chev}</span></button>
       <button class="tile" id="toxOpen" style="margin-top:11px"><span class="ic c-red">${I.info}</span><span class="tt"><b>${t('tox_title')}</b><span>${t('tox_open_sub')}</span></span><span class="chev">${I.chev}</span></button>
       <button class="tile" id="guidesOpen" style="margin-top:11px"><span class="ic c-green">${I.check}</span><span class="tt"><b>${t('guides_title')}</b><span>${t('guides_open_sub')}</span></span><span class="chev">${I.chev}</span></button>
+      <button class="tile" id="disOpen" style="margin-top:11px"><span class="ic c-violet">${I.info}</span><span class="tt"><b>${t('dis_title')}</b><span>${t('dis_open_sub')}</span></span><span class="chev">${I.chev}</span></button>
       <button class="tile" id="rationOpen" style="margin-top:11px"><span class="ic c-accent">${I.scale}</span><span class="tt"><b>${t('ration_title')}</b><span>${t('ration_open_sub')}</span></span><span class="chev">${I.chev}</span></button>
     </section>
 
@@ -2978,14 +3035,31 @@ function guidesModal(preStage){
   const stages=['cachorro','adulto','senior'];
   const draw=()=>{ const seg=document.getElementById('gStageSeg'); const body=document.getElementById('gBody');
     if(seg) [...seg.children].forEach(b=>b.classList.toggle('on', b.dataset.stage===stage));
-    if(body) body.innerHTML = `<div class="card">${guideFor(esp,stage).map(g=>`<div class="rec"><span class="ic c-accent">${I.check}</span><div class="rr"><b style="font-weight:500">${esc(g)}</b></div></div>`).join('')}</div>`; };
+    const items=guideFor(esp,stage); const cl=(pet&&pet.checklist)||{};
+    const done=items.filter((_,i)=>cl[stage+'|'+i]).length;
+    if(body) body.innerHTML = `<div class="hint" style="margin:0 2px 7px">${t('checklist_hint')} · ${tf('checklist_done',{n:done,total:items.length})}</div>
+      <div class="card">${items.map((g,i)=>{ const k=stage+'|'+i; const ck=!!cl[k];
+        return `<button class="rec checkrow${ck?' done':''}" ${pet?`data-check="${esc(k)}"`:''} style="width:100%;border:0;text-align:left;background:none;cursor:${pet?'pointer':'default'}"><span class="ic ${ck?'c-green':'c-muted'}">${ck?I.check:I.circle}</span><div class="rr"><b style="font-weight:500">${esc(g)}</b></div></button>`; }).join('')}</div>`; };
   const body=`<p class="hint" style="margin-bottom:10px">${tf('guide_for',{sp:cap(esp)})}</p>
     <div class="seg" id="gStageSeg">${stages.map(s=>`<button type="button" data-stage="${s}">${t('stage_'+s)}</button>`).join('')}</div>
     <div id="gBody" style="margin-top:12px"></div>
     <p class="hint" style="margin-top:10px">${t('disc')}</p>`;
   openModal(modalShell(t('guides_title'), body, `<button class="btn btn-block" data-close>${t('close')}</button>`));
   document.getElementById('gStageSeg').addEventListener('click', e=>{ const b=e.target.closest('button'); if(!b) return; stage=b.dataset.stage; draw(); });
+  document.getElementById('gBody').addEventListener('click', e=>{ const b=e.target.closest('[data-check]'); if(!b||!pet) return; pet.checklist=pet.checklist||{}; const k=b.dataset.check; pet.checklist[k]=!pet.checklist[k]; save(); draw(); });
   draw();
+}
+function diseasesModal(){
+  const esp=activePet()?activePet().info.especie:null;
+  const render=(q)=>{ const list=searchDiseases(q,esp); const box=document.getElementById('disList'); if(!box) return;
+    box.innerHTML = list.length ? list.map(d=>`<div class="rec" style="align-items:flex-start"><span class="ic c-accent" style="flex:none">${I.info}</span><div class="rr"><b>${esc(d.n)}</b><span><b style="color:var(--ink);font-weight:600">${t('dis_what')}:</b> ${esc(d.q)}<br><b style="color:var(--ink);font-weight:600">${t('dis_symp')}:</b> ${esc(d.s)}<br><b style="color:var(--ink);font-weight:600">${t('dis_prev')}:</b> ${esc(d.p)}</span></div></div>`).join('') : emptyBox(I.info, t('tox_none')); };
+  const body=`<p class="hint" style="margin-bottom:10px">${t('dis_intro')}</p>
+    <div class="field"><input id="disQ" placeholder="${t('dis_search')}" autocomplete="off"></div>
+    <div class="card" id="disList" style="margin-top:4px"></div>
+    <p class="hint" style="margin-top:10px">${t('disc')}</p>`;
+  openModal(modalShell(t('dis_title'), body, `<button class="btn btn-block" data-close>${t('close')}</button>`));
+  render('');
+  document.getElementById('disQ').addEventListener('input', e=>render(e.target.value));
 }
 function rationModal(){
   const pet=activePet(); const info=pet?pet.info:{};
@@ -3532,6 +3606,7 @@ document.addEventListener('click', e=>{
     if(a==='buscar') searchModal(); else if(a==='vacuna') vaccineModal(); else if(a==='peso') weightModal(); else if(a==='foto') pickAlbumPhoto(); else if(a==='asistente') openAssistant(); return; }
   const sr=t0.closest('[data-srch]'); if(sr){ data.activeId=sr.dataset.srch; save(); closeModal(); go('card'); return; }
   const cf=t0.closest('[data-cardf]'); if(cf){ cardFilter=cf.dataset.cardf; render(); return; }
+  const dz=t0.closest('[data-dose]'); if(dz){ const pet=activePet(); const m=(pet.meds||[]).find(x=>x.id===dz.dataset.dose); if(m){ const today=todayISO(), v=medVeces(m); let c=(m.doseLog&&m.doseLog.d===today)?(m.doseLog.c||0):0; c=c>=v?0:c+1; m.doseLog={d:today,c}; save(); render(); if(c>=v) toast(t('med_taken_ok')); } return; }
   if(t0.closest('[data-asst]')){ openAssistant(); return; }
   if(t0.closest('#nudgeEnable')){ if(cloudConfigured()&&!session){ authModal(); } else { enableNotifs(); } return; }
   if(t0.closest('#nudgeX')){ data.nudgeDismissed=true; save(); render(); return; }
@@ -3550,6 +3625,8 @@ document.addEventListener('click', e=>{
   if(t0.closest('#diaryOpen')){ symptomDiaryModal(); return; }
   if(t0.closest('#expOpen')){ expensesModal(); return; }
   if(t0.closest('#cgOpen')){ caregiverModal(); return; }
+  if(t0.closest('#disOpen')){ diseasesModal(); return; }
+  const cx=t0.closest('[data-coachx]'); if(cx){ markCoach(cx.dataset.coachx); render(); return; }
   if(t0.closest('#ocrScan')){ ocrStart(); return; }
   if(t0.closest('#signIn')){ authModal(); return; }
   if(t0.closest('#syncNow')){ syncNow(); return; }

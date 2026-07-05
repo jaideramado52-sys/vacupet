@@ -172,6 +172,29 @@ test.describe('VacuPet — humo', () => {
     await expect(page.locator('#timelineOpen')).toHaveCount(0);
   });
 
+  test('biblioteca de enfermedades filtra', async ({ page }) => {
+    await seedDemo(page);
+    await page.locator('[data-tab="more"]').click();
+    await page.locator('#disOpen').click();
+    await expect(page.locator('.modal-head h3')).toHaveText('Enfermedades');
+    await page.locator('#disQ').fill('parvo');
+    await expect(page.getByText('Parvovirus')).toBeVisible();
+  });
+
+  test('medicación: marcar dosis tomada hoy', async ({ page }) => {
+    await seedDemo(page);
+    await page.locator('[data-tab="card"]').click();
+    await page.locator('[data-dose]').first().click();
+    await expect(page.locator('.dosebtn.on').first()).toBeVisible();
+  });
+
+  test('coach mark se puede descartar', async ({ page }) => {
+    await seedDemo(page);
+    await expect(page.locator('[data-coachx="home"]')).toBeVisible();
+    await page.locator('[data-coachx="home"]').click();
+    await expect(page.locator('[data-coachx="home"]')).toHaveCount(0);
+  });
+
   test('selector de país ajusta la normativa de rabia', async ({ page }) => {
     await seedDemo(page);
     await page.locator('[data-tab="more"]').click();
