@@ -29,15 +29,26 @@ window.VACUPET_SUPABASE = {
 //  Monetización (Fase 1 — freemium). APAGADO por defecto:
 //  con monetize:false todo está desbloqueado (comportamiento actual,
 //  los usuarios no notan ningún cambio). Pon monetize:true para activar
-//  el paywall. checkoutUrl = enlace de pago (Lemon Squeezy / Recurrente);
-//  si está vacío, el botón muestra "próximamente". devCode = código de
-//  desbloqueo local para pruebas / ventas manuales tempranas.
+//  el paywall.
+//
+//  Infra de pago (Fase A): RevenueCat es la fuente de verdad de "premium"
+//  (unifica App Store IAP + Google Play + Web Billing). Su webhook llama a
+//  la Edge Function `vacupet-billing`, que mantiene la tabla `entitlements`;
+//  la app la lee con pullEntitlement(). En la WEB, checkoutUrl es el enlace
+//  de pago (RevenueCat Web Billing / Stripe / Lemon Squeezy). La app le añade
+//  el user_id de Supabase para que el proveedor lo reenvíe como app_user_id
+//  (así el webhook sabe a quién conceder el acceso). Si checkoutUrl está
+//  vacío, el botón muestra "próximamente".
+//    manageUrl  = portal de gestión / restaurar compra (customer portal).
+//    devCode    = desbloqueo local para pruebas / ventas manuales tempranas.
+//  IMPORTANTE: monetize:true requiere webhook + BILLING_ENFORCE=1 en Supabase
+//  (enforcement de servidor) y ToS/reembolsos publicados. Ver docs/MONETIZACION.md.
 // ------------------------------------------------------------
 window.VACUPET_FEATURES = {
   monetize: false,
   freePetLimit: 2,
-  checkoutUrl: "",
-  manageUrl: "",
+  checkoutUrl: "",   // enlace de pago web (con ?plan= para elegir plan)
+  manageUrl: "",     // portal de gestión / restaurar compra
   devCode: ""
 };
 

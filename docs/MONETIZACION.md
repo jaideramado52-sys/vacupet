@@ -368,3 +368,63 @@ window.VACUPET_BRAND = {
 
 Hasta poner `enabled:true` en un despliegue concreto, **la app pública sigue
 siendo VacuPet sin cambios**.
+
+---
+
+# Fase A — Infra de pagos real (RevenueCat + web) · implementada
+
+Objetivo del proyecto: **web + app móvil**. En iOS/Android, Apple/Google obligan
+a su compra in-app (IAP) para lo digital. Por eso la capa de facturación es
+**RevenueCat**, que unifica **App Store IAP + Google Play Billing + Web Billing**
+en un solo entitlement, y la app móvil se empaqueta con **Capacitor** (reutiliza
+la PWA de un solo archivo, sin reescribir).
+
+```
+  iOS (IAP) ─┐
+Android(Play)─┼─► RevenueCat ─(webhook)─► Edge Fn vacupet-billing ─► tabla entitlements ─► enforcement
+  Web(Stripe)─┘         └─ "premium" unificado en las 3 plataformas       (is_premium)
+```
+
+## Lo que YA quedó hecho (2026-07-06)
+
+1. **Esquema desplegado en Supabase** (Management API):
+   - `entitlements` + columnas `store`, `customer_id`, `valid_until`.
+   - `redeem_codes` + RPC `redeem_code(p_code)` (canje con sesión, un solo uso).
+   - Helper `is_premium(uid uuid) → boolean` (enforcement de servidor).
+2. **Webhook**: Edge Function `supabase/functions/vacupet-billing/index.ts`.
+   - Verifica el header `Authorization` contra el secret `BILLING_WEBHOOK_SECRET`.
+   - Mapea eventos RevenueCat → `entitlements` (GRANT: INITIAL_PURCHASE/RENEWAL/
+     UNCANCELLATION/PRODUCT_CHANGE/NON_RENEWING_PURCHASE; REVOKE: EXPIRATION/REFUND/
+     SUBSCRIPTION_PAUSED; CANCELLATION **no** revoca hasta expirar).
+   - Requiere `app_user_id` = user_id de Supabase (UUID); si no, lo ignora.
+   - `verify_jwt = false` en `config.toml` (lo protege el secret).
+3. **Enforcement de servidor**: `vacupet-push` solo notifica a premium **si**
+   `BILLING_ENFORCE=1` (off por defecto → no rompe el push gratuito actual).
+4. **Cliente**: `startCheckout(plan)` pasa `app_user_id`/`client_reference_id`/`email`
+   al checkout; `premiumManageModal` con **Restaurar compra** (re-lee entitlement)
+   y **Gestionar** (portal). Config `checkoutUrl`/`manageUrl` en `supabase-config.js`.
+
+## Pasos para ACTIVAR (los haces tú cuando tengas cuentas)
+
+1. **Crear RevenueCat** y un producto/entitlement "premium". Añadir productos:
+   `vacupet_monthly`, `vacupet_yearly`, `vacupet_lifetime` (non-consumable).
+2. **Web Billing** (o conectar Stripe/Lemon Squeezy) para cobrar en el navegador.
+   Configurar que `client_reference_id`/`app_user_id` se propague como el
+   `app_user_id` de RevenueCat (para que el webhook sepa a quién conceder).
+3. **Webhook en RevenueCat** → URL `https://<ref>.functions.supabase.co/vacupet-billing`,
+   header `Authorization: <valor secreto>`. Desplegar la función:
+   `supabase functions deploy vacupet-billing` y fijar el secret:
+   `supabase secrets set BILLING_WEBHOOK_SECRET=<valor secreto>`.
+4. **Probar en sandbox** (compra de prueba) → ver fila en `entitlements` → la app
+   muestra Premium tras `pullEntitlement()`.
+5. **Encender**: en `supabase-config.js` `monetize:true` + `checkoutUrl`/`manageUrl`;
+   en Supabase `BILLING_ENFORCE=1`. Publicar **ToS + Política de reembolsos**.
+
+## Móvil (Capacitor + RevenueCat) — fase siguiente
+- `npx cap init`, envolver `VacuPet.html`, plugin `@revenuecat/purchases-capacitor`.
+- Al iniciar sesión: `Purchases.logIn(session.user.id)` → app_user_id = UUID Supabase.
+- Android primero (Play $25), luego iOS (Apple $99/año). Mismo webhook, misma tabla.
+- **Chapas NFC** = pago externo web (bien físico, NO IAP). **Clínicas** = factura.
+
+> Nada de esto afecta a los usuarios hasta poner `monetize:true`. Todo el gating
+> del cliente es UX; la verdad está en `entitlements` (servidor).

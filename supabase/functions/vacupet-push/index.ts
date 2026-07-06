@@ -21,6 +21,9 @@ const VAPID_PUBLIC  = Deno.env.get("VAPID_PUBLIC_KEY")  || "";
 const VAPID_PRIVATE = Deno.env.get("VAPID_PRIVATE_KEY") || "";
 const VAPID_SUBJECT = Deno.env.get("VAPID_SUBJECT")     || "mailto:admin@vacupet.app";
 const CRON_SECRET   = Deno.env.get("CRON_SECRET")       || "";
+// Enforcement de servidor: si "1", solo se notifica a usuarios con premium vigente.
+// Off por defecto para no romper el push gratuito mientras la monetización esté apagada.
+const ENFORCE       = Deno.env.get("BILLING_ENFORCE")   === "1";
 
 function todayISO(): string { return new Date().toISOString().slice(0, 10); }
 function daysBetween(aISO: string, bISO: string): number {
@@ -78,9 +81,20 @@ Deno.serve(async (req) => {
     .select("user_id, data, last_pushed");
   if (error) return new Response(JSON.stringify({ error: error.message }), { status: 500 });
 
+  // Enforcement: si está activo, precarga el set de usuarios con premium vigente.
+  let premium: Set<string> | null = null;
+  if (ENFORCE) {
+    const { data: ents } = await supa
+      .from("entitlements").select("user_id, active, valid_until").eq("active", true);
+    premium = new Set((ents || [])
+      .filter((e: any) => !e.valid_until || e.valid_until >= today)
+      .map((e: any) => e.user_id));
+  }
+
   let sent = 0, users = 0;
   for (const row of (states || [])) {
     if (row.last_pushed === today) continue;          // ya notificado hoy
+    if (premium && !premium.has(row.user_id)) continue; // recordatorios = premium
     const items = dueItems(row.data);
     if (items.length === 0) continue;
 

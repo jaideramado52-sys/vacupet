@@ -13,6 +13,10 @@ verify_jwt = false
 [functions.vacupet-sign]
 verify_jwt = false
 
+# Webhook de facturación: lo protege BILLING_WEBHOOK_SECRET (header), no un JWT.
+[functions.vacupet-billing]
+verify_jwt = false
+
 # Cron: protegidas con CRON_SECRET (no por JWT), para que pg_cron pueda invocarlas.
 [functions.vacupet-push]
 verify_jwt = false
