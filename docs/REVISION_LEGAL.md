@@ -147,6 +147,24 @@ no tratarse de datos de salud humana._
 - [ ] **🟦 ¿Traducir** los textos legales a inglés y portugués (la app es ES/EN/PT)?
       ¿O basta español + aviso?
 
+### H. Pagos y suscripciones _(nuevo, 2026-07-06)_
+La app pasa a tener **plan gratuito + Premium** (suscripción mensual/anual y compra única
+"de por vida"), cobrado por **web** (proveedor de pago) y por **IAP** en iOS/Android.
+Documentos: `TERMINOS.md` §7–§9 y `REEMBOLSOS.md`.
+- [ ] **🟦 ¿Quién es el vendedor/comerciante de registro** en la web? ¿Hace falta una **entidad**?
+      ¿Conviene un *Merchant of Record* (que asuma impuestos y facturación)?
+- [ ] **🟦 Impuestos**: IVA/ISR sobre venta de contenido digital a consumidores en varios países.
+      ¿Quién los recauda y declara? ¿Facturación electrónica en Guatemala?
+- [ ] **🟦 Plazo de reembolso** (propuesto: **14 días** en web) y **derecho de desistimiento** del
+      consumidor: interacción con el *suministro inmediato de contenido digital*.
+- [ ] Reflejar que **Apple/Google gestionan sus propios reembolsos** (no podemos emitirlos).
+- [ ] **Renovación automática**: obligaciones de aviso previo y de cancelación sencilla
+      (en varias jurisdicciones hay normas específicas de "click to cancel").
+- [ ] Declarar **RevenueCat** y el **proveedor de pago** como terceros (ya en `PRIVACIDAD.md`).
+- [ ] **🟦 Cambios de precio**: preaviso exigido y efecto sobre periodos ya pagados.
+- [ ] Requisitos de las tiendas: ToS + Privacidad **accesibles por URL pública** y enlazadas en la
+      ficha de la app; describir la suscripción y su precio antes de comprar.
+
 ---
 
 ## 6. Estado actual de cada documento
