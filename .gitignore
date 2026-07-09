@@ -19,6 +19,21 @@ test-results/
 dist/
 .netlify/
 
+# Capacitor: el proyecto nativo SÍ se versiona; sus builds y assets copiados NO.
+android/build/
+android/app/build/
+android/.gradle/
+android/local.properties
+android/app/src/main/assets/public/
+android/app/src/main/assets/capacitor.config.json
+android/app/src/main/assets/capacitor.plugins.json
+ios/App/App/public/
+ios/App/Pods/
+
+# Firma de Android — NUNCA subir el keystore
+*.jks
+*.keystore
+
 # Perfiles temporales de Chrome (pruebas headless) y archivos de trabajo
 .ct*/
 .shot*/

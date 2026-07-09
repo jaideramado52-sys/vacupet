@@ -8,9 +8,17 @@
     "e2e": "playwright test",
     "e2e:install": "playwright install --with-deps chromium",
     "serve": "python -m http.server 8080 --bind 127.0.0.1",
-    "build": "bash netlify-build.sh"
+    "build": "bash netlify-build.sh",
+    "cap:sync": "npm run build && cap sync",
+    "cap:android": "npm run cap:sync && cap open android"
   },
   "devDependencies": {
+    "@capacitor/android": "^8.4.1",
+    "@capacitor/cli": "^8.4.1",
     "@playwright/test": "^1.49.0"
+  },
+  "dependencies": {
+    "@capacitor/core": "^8.4.1",
+    "@revenuecat/purchases-capacitor": "^13.2.2"
   }
 }

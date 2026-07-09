@@ -49,7 +49,19 @@ window.VACUPET_FEATURES = {
   freePetLimit: 2,
   checkoutUrl: "",   // enlace de pago web (con ?plan= para elegir plan)
   manageUrl: "",     // portal de gestión / restaurar compra
-  devCode: ""
+  devCode: "",
+
+  // --- RevenueCat (compras in-app nativas, Capacitor) --------------------
+  // En iOS/Android las tiendas OBLIGAN a usar su IAP para lo digital, así que
+  // la app nativa compra con RevenueCat y la web usa checkoutUrl. Las API keys
+  // son PÚBLICAS (SDK de cliente); la verdad la impone el webhook + entitlements.
+  // Están en RevenueCat > Project > API keys (goog_… / appl_…).
+  // entitlementId = el identificador del entitlement configurado en RevenueCat.
+  revenueCat: {
+    apiKeyAndroid: "",   // goog_...
+    apiKeyIos: "",       // appl_...
+    entitlementId: "premium"
+  }
 };
 
 // ------------------------------------------------------------

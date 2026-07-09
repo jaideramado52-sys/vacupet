@@ -1,0 +1,16 @@
+{
+  "appId": "com.vacupets.app",
+  "appName": "VacuPet",
+  "webDir": "dist",
+  "server": {
+    "androidScheme": "https"
+  },
+  "android": {
+    "backgroundColor": "#ffffff"
+  },
+  "plugins": {
+    "PurchasesPlugin": {
+      "_comment": "La API key de RevenueCat NO va aquí: se lee de window.VACUPET_FEATURES.revenueCat en supabase-config.js"
+    }
+  }
+}

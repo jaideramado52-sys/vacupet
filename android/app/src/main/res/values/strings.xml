@@ -1,0 +1,7 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources>
+    <string name="app_name">VacuPet</string>
+    <string name="title_activity_main">VacuPet</string>
+    <string name="package_name">com.vacupets.app</string>
+    <string name="custom_url_scheme">com.vacupets.app</string>
+</resources>

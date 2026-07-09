@@ -2342,16 +2342,111 @@ function paywallModal(trigger){
     <div class="pwhero"><span class="pwbadge">${I.shield} Premium</span>
       <h2>${t('pw_title')}</h2><p>${t('pw_sub')}</p></div>
     <div class="card" style="margin-top:14px">${items}</div>
-    <p class="hint" style="margin-top:12px">${t('pw_note')}</p>`;
+    <p class="hint" style="margin-top:12px">${t('pw_note')}</p>
+    ${isNative() ? `<p style="margin-top:10px;text-align:center"><button class="btn btn-ghost" id="pwRestore">${t('pw_restore')}</button></p>` : ''}`;
   const foot = `<button class="btn btn-ghost" id="pwRedeem" style="flex:none">${t('pw_redeem')}</button><button class="btn btn-primary btn-block" id="pwBuy">${t('pw_cta')}</button>`;
   openModal(modalShell(t('pw_title'), body, foot));
   document.getElementById('pwBuy').onclick = ()=>startCheckout();
   document.getElementById('pwRedeem').onclick = redeemModal;
+  const pr = document.getElementById('pwRestore');
+  if(pr) pr.onclick = async ()=>{ const ok = await rcRestore(); await pullEntitlement(); if(ok||isPremium()){ closeModal(); toast(t('pw_restored')); } else toast(t('pw_redeem_bad'),'error'); };
 }
+/* ======================================================================
+   RevenueCat — compras in-app nativas (Capacitor, iOS/Android).
+   En las tiendas, Apple/Google OBLIGAN a usar su IAP para lo digital; en el
+   navegador se usa el checkout web. RevenueCat unifica ambos: el entitlement
+   viaja por su webhook → Edge Function `vacupet-billing` → tabla entitlements.
+   Clave: appUserID = user_id de Supabase (UUID), que es lo que lee el webhook.
+   Si no hay plugin o no hay API key, todo degrada al checkout web.
+   ====================================================================== */
+function isNative(){ try{ return !!(window.Capacitor && window.Capacitor.isNativePlatform && window.Capacitor.isNativePlatform()); }catch(_){ return false; } }
+function platform(){ try{ return (window.Capacitor && window.Capacitor.getPlatform) ? window.Capacitor.getPlatform() : 'web'; }catch(_){ return 'web'; } }
+function rcPlugin(){ try{ return (window.Capacitor && window.Capacitor.Plugins && window.Capacitor.Plugins.Purchases) || null; }catch(_){ return null; } }
+function rcCfg(){ return features().revenueCat || {}; }
+function rcApiKey(){ const p=platform(); return p==='ios' ? (rcCfg().apiKeyIos||'') : p==='android' ? (rcCfg().apiKeyAndroid||'') : ''; }
+function rcEntitlementId(){ return rcCfg().entitlementId || 'premium'; }
+let rcReady = false;
+// Configura el SDK una sola vez. Devuelve false si no aplica (web, sin key…).
+async function rcInit(){
+  if(rcReady) return true;
+  if(!isNative()) return false;
+  const P = rcPlugin(), key = rcApiKey();
+  if(!P || !key) return false;
+  try{
+    const opts = { apiKey:key };
+    if(session && session.user) opts.appUserID = session.user.id;   // vincula desde el arranque
+    await P.configure(opts);
+    rcReady = true;
+    return true;
+  }catch(e){ logError('revenuecat', 'configure: ' + (e && e.message || e)); return false; }
+}
+// Al iniciar sesión: asocia las compras al UUID de Supabase.
+async function rcLogin(){
+  if(!(await rcInit())) return;
+  if(!session || !session.user) return;
+  try{ await rcPlugin().logIn({ appUserID: session.user.id }); await rcSyncEntitlement(); }catch(_){}
+}
+async function rcLogout(){ if(rcReady && rcPlugin()){ try{ await rcPlugin().logOut(); }catch(_){} } }
+// Lee el estado de RevenueCat y lo refleja en la copia local (la verdad sigue
+// siendo la tabla `entitlements`, que refresca pullEntitlement()).
+async function rcSyncEntitlement(){
+  if(!(await rcInit())) return false;
+  try{
+    const { customerInfo } = await rcPlugin().getCustomerInfo();
+    return applyCustomerInfo(customerInfo);
+  }catch(_){ return false; }
+}
+function applyCustomerInfo(ci){
+  const ent = ci && ci.entitlements && ci.entitlements.active && ci.entitlements.active[rcEntitlementId()];
+  if(!ent) return false;
+  data.premium = {
+    active: true,
+    plan: (ent.productIdentifier||'').toLowerCase().includes('lifetime') ? 'lifetime'
+        : (ent.productIdentifier||'').toLowerCase().includes('year') ? 'yearly' : 'monthly',
+    until: ent.expirationDate ? String(ent.expirationDate).slice(0,10) : null,
+    source: 'store'
+  };
+  save(false); render();
+  return true;
+}
+// Compra nativa: ofertas → paquete → compra. Tras comprar, el webhook actualiza
+// el servidor; refrescamos también desde ahí para no depender solo del cliente.
+async function rcPurchase(plan){
+  if(!(await rcInit())) return false;
+  const P = rcPlugin();
+  try{
+    const offerings = await P.getOfferings();
+    const current = offerings && offerings.current;
+    if(!current || !(current.availablePackages||[]).length){ toast(t('pw_soon'),'info'); return false; }
+    const pkgs = current.availablePackages;
+    // Elige el paquete pedido; si no, el primero de la oferta actual.
+    const want = (plan||'').toLowerCase();
+    const pkg = pkgs.find(p => ((p.product && p.product.identifier)||p.identifier||'').toLowerCase().includes(want)) || pkgs[0];
+    const res = await P.purchasePackage({ aPackage: pkg });
+    applyCustomerInfo(res && res.customerInfo);
+    toast(t('pw_redeem_ok'));
+    pullEntitlement();   // confirma contra el servidor (fuente de verdad)
+    return true;
+  }catch(e){
+    if(e && (e.code === '1' || e.userCancelled)) return false;   // cancelada por el usuario
+    logError('revenuecat', 'purchase: ' + (e && e.message || e));
+    toast(t('pw_redeem_bad'),'error');
+    return false;
+  }
+}
+// Restaurar compras (obligatorio en las tiendas).
+async function rcRestore(){
+  if(!(await rcInit())) return false;
+  try{ const { customerInfo } = await rcPlugin().restorePurchases(); return applyCustomerInfo(customerInfo); }
+  catch(_){ return false; }
+}
+
 // Abre el checkout web pasando el user_id de Supabase para que el proveedor
 // (RevenueCat Web Billing / Stripe / Lemon Squeezy) lo reenvíe como app_user_id
 // al webhook `vacupet-billing`, que es quien concede el entitlement.
+// En iOS/Android se desvía a la compra in-app (IAP) — requisito de las tiendas.
 function startCheckout(plan){
+  if(isNative() && rcApiKey()){ rcPurchase(plan); return; }
   const url = features().checkoutUrl;
   if(!url){ toast(t('pw_soon'),'info'); return; }
   const p = new URLSearchParams({ app:'vacupet' });
@@ -2456,7 +2551,11 @@ function premiumManageModal(){
     const u = url + (url.includes('?')?'&':'?') + (session&&session.user?('email='+encodeURIComponent(session.user.email||'')):'');
     try{ window.open(u,'_blank'); }catch(_){ location.href=u; }
   };
-  document.getElementById('pmRestore').onclick = async ()=>{ await pullEntitlement(); toast(t('pw_restored')); };
+  document.getElementById('pmRestore').onclick = async ()=>{
+    if(isNative() && rcApiKey()) await rcRestore();   // restaurar compras de la tienda
+    await pullEntitlement();
+    toast(t('pw_restored'));
+  };
 }
 let supa = null;     // cliente
 let session = null;  // sesión actual
@@ -2484,9 +2583,11 @@ async function ensureSupabase(){
     });
     const { data:{ session:s } } = await supa.auth.getSession();
     session = s || null;
+    if(session) rcLogin();   // sesión ya guardada: vincula RevenueCat al arrancar
     supa.auth.onAuthStateChange((evt, s2)=>{
       session = s2;
-      if(evt==='SIGNED_IN'){ closeModal(); if(window.Notification && Notification.permission==='granted') trySubscribePush(); pullState().then(()=>render()); pullEntitlement(); }
+      if(evt==='SIGNED_IN'){ closeModal(); if(window.Notification && Notification.permission==='granted') trySubscribePush(); pullState().then(()=>render()); pullEntitlement(); rcLogin(); }
+      else if(evt==='SIGNED_OUT'){ rcLogout(); if(!shared) render(); }
       else if(!shared) render();
     });
     return supa;
@@ -2578,7 +2679,10 @@ function authModal(){
       action.disabled=true; action.textContent=t('loading');
       const c = await ensureSupabase();
       if(!c){ toast(t('cloud_off')); action.disabled=false; action.textContent=t('auth_send'); return; }
-      const { error } = await c.auth.signInWithOtp({ email, options:{ emailRedirectTo: location.origin + location.pathname } });
+      // En nativo el origen es https://localhost (webview): no sirve como destino
+      // del enlace. Se omite el redirect y el usuario entra con el código de 6 dígitos.
+      const opts = isNative() ? {} : { emailRedirectTo: location.origin + location.pathname };
+      const { error } = await c.auth.signInWithOtp({ email, options: opts });
       action.disabled=false;
       if(error){ toast(error.message); action.textContent=t('auth_send'); return; }
       step=2; document.getElementById('codeStep').classList.remove('hide');
@@ -3683,7 +3787,9 @@ window.addEventListener('offline', ()=>setSync('offline'));
    ====================================================================== */
 let installPrompt = null;   // evento beforeinstallprompt diferido
 
-if('serviceWorker' in navigator){
+// En la app nativa (Capacitor) los assets ya vienen empaquetados: registrar el
+// service worker solo añadiría una capa de caché que sirve contenido obsoleto.
+if('serviceWorker' in navigator && !isNative()){
   window.addEventListener('load', ()=>{
     navigator.serviceWorker.register('./service-worker.js').then(reg=>{
       // Aviso de nueva versión: cuando un worker nuevo queda instalado y ya había uno activo.
