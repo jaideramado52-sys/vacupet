@@ -1,0 +1,81 @@
+# VacuPet — Build iOS (Capacitor) en un runner macOS de GitHub Actions.
+# -----------------------------------------------------------------------------
+# ARCHIVO DESACTIVADO A PROPÓSITO (extensión .disabled): no corre hasta que lo
+# actives. Permite compilar el .ipa SIN tener un Mac, usando el runner macOS.
+#
+# CÓMO ACTIVARLO (cuando tengas cuenta Apple Developer, $99/año):
+#   1) Renómbralo a  ios.yml  (quita ".disabled").
+#   2) Añade la plataforma iOS una vez, en un Mac o en este mismo runner:
+#        npm i -D @capacitor/ios && npx cap add ios
+#      y commitea la carpeta ios/.
+#   3) Carga estos secrets en el repo (Settings > Secrets > Actions):
+#        BUILD_CERTIFICATE_B64      (tu certificado .p12 en base64)
+#        P12_PASSWORD               (contraseña del .p12)
+#        PROVISIONING_PROFILE_B64   (perfil de aprovisionamiento en base64)
+#        KEYCHAIN_PASSWORD          (cualquier cadena; para la keychain temporal)
+#        APPLE_TEAM_ID              (tu Team ID de Apple)
+#   4) Para subir a TestFlight/App Store: añade una App Store Connect API key
+#      y un paso de `xcrun altool`/`fastlane pilot` al final.
+#
+# Mientras tanto, la app vive como PWA (vacupets.com → Añadir a pantalla de inicio).
+
+name: iOS build
+
+on:
+  workflow_dispatch:      # solo manual; nunca automático
+
+jobs:
+  build-ios:
+    runs-on: macos-14
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Instalar dependencias
+        run: npm ci
+
+      - name: Build web + sync Capacitor
+        run: |
+          npm run build
+          npx cap sync ios
+
+      - name: Importar certificado y perfil
+        env:
+          BUILD_CERTIFICATE_B64: ${{ secrets.BUILD_CERTIFICATE_B64 }}
+          P12_PASSWORD: ${{ secrets.P12_PASSWORD }}
+          PROVISIONING_PROFILE_B64: ${{ secrets.PROVISIONING_PROFILE_B64 }}
+          KEYCHAIN_PASSWORD: ${{ secrets.KEYCHAIN_PASSWORD }}
+        run: |
+          CERT_PATH=$RUNNER_TEMP/cert.p12
+          PROFILE_PATH=$RUNNER_TEMP/profile.mobileprovision
+          KEYCHAIN=$RUNNER_TEMP/app.keychain-db
+          echo -n "$BUILD_CERTIFICATE_B64" | base64 --decode -o $CERT_PATH
+          echo -n "$PROVISIONING_PROFILE_B64" | base64 --decode -o $PROFILE_PATH
+          security create-keychain -p "$KEYCHAIN_PASSWORD" $KEYCHAIN
+          security set-keychain-settings -lut 21600 $KEYCHAIN
+          security unlock-keychain -p "$KEYCHAIN_PASSWORD" $KEYCHAIN
+          security import $CERT_PATH -P "$P12_PASSWORD" -A -t cert -f pkcs12 -k $KEYCHAIN
+          security list-keychain -d user -s $KEYCHAIN
+          mkdir -p ~/Library/MobileDevice/Provisioning\ Profiles
+          cp $PROFILE_PATH ~/Library/MobileDevice/Provisioning\ Profiles/
+
+      - name: Compilar el .ipa
+        env:
+          APPLE_TEAM_ID: ${{ secrets.APPLE_TEAM_ID }}
+        run: |
+          xcodebuild -workspace ios/App/App.xcworkspace \
+            -scheme App -configuration Release \
+            -archivePath $RUNNER_TEMP/App.xcarchive archive \
+            DEVELOPMENT_TEAM=$APPLE_TEAM_ID
+          xcodebuild -exportArchive \
+            -archivePath $RUNNER_TEMP/App.xcarchive \
+            -exportPath $RUNNER_TEMP/export \
+            -exportOptionsPlist ios/ExportOptions.plist
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: VacuPet-ios
+          path: ${{ runner.temp }}/export/*.ipa

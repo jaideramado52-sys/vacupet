@@ -1,11 +1,14 @@
 /* VacuPet — Service Worker (Fase 2 PWA) */
-const CACHE = "vacupet-v3";
+const CACHE = "vacupet-v4";
 const CORE = [
   "./VacuPet.html",
   "./manifest.webmanifest",
   "./supabase-config.js",
   "./icon.svg",
   "./icon-maskable.svg",
+  "./apple-touch-icon.png",
+  "./icon-192.png",
+  "./icon-512.png",
 ];
 
 self.addEventListener("install", (e) => {

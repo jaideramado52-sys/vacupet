@@ -48,10 +48,24 @@ in-app (obligatorias en las tiendas para bienes digitales).
    comprar → ver la fila en `entitlements` → la app muestra Premium.
 7. Encender: `monetize:true` + `BILLING_ENFORCE=1` + ToS/reembolsos publicados.
 
-## iOS (después)
-Requiere **macOS** con Xcode y Apple Developer ($99/año):
-`npm i -D @capacitor/ios && npx cap add ios && npx cap open ios`.
-Copiar la API key `appl_…` a `apiKeyIos`. Mismo webhook, misma tabla.
+## iOS — PROYECTADO, apagado (activar pronto)
+El código ya está preparado para iPhone (metaetiquetas Apple, iconos PNG, la lógica
+de RevenueCat es la misma). Falta **solo el empaquetado nativo**, que exige un Mac.
+
+**Mientras tanto — PWA en iPhone (funciona ya, gratis):**
+Safari → **vacupets.com** → Compartir → **Añadir a pantalla de inicio**. Icono propio,
+pantalla completa, offline y notificaciones. Sin comisión de Apple (cobro por checkout web).
+
+**Para publicar en App Store (cuando haya cuenta Apple Developer, $99/año):**
+- **Con Mac:** `npm i -D @capacitor/ios && npx cap add ios && npx cap open ios` → Xcode.
+- **Sin Mac:** usar `.github/workflows/ios.yml.disabled` — compila el `.ipa` en un runner
+  **macOS de GitHub Actions**. Renómbralo a `ios.yml`, añade la carpeta `ios/`, carga los
+  secrets (certificado, perfil, Team ID) y lánzalo manualmente. Instrucciones en el propio archivo.
+- En ambos casos: copiar la API key `appl_…` a `apiKeyIos`. **Mismo webhook, misma tabla.**
+
+> Regla de Apple: los PWA-wrapper "vacíos" a veces se rechazan. VacuPet aporta valor nativo
+> real (cámara para OCR, notificaciones, compras), así que debería pasar; si hay pegas, añadir
+> alguna función nativa explícita antes de reenviar.
 
 ## Reglas de las tiendas (importante)
 - Lo **digital** (Premium) **debe** pasar por IAP → 15–30% de comisión.

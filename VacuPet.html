@@ -8,7 +8,13 @@
 <title>VacuPet — Carné de salud para mascotas</title>
 <link rel="manifest" href="./manifest.webmanifest">
 <link rel="icon" href="./icon.svg" type="image/svg+xml">
-<link rel="apple-touch-icon" href="./icon.svg">
+<!-- iOS ignora los SVG en apple-touch-icon: sin este PNG, la pantalla de inicio
+     muestra una miniatura de la página en vez del icono. -->
+<link rel="apple-touch-icon" href="./apple-touch-icon.png">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="VacuPet">
 <meta property="og:type" content="website">
 <meta property="og:title" content="VacuPet — Carné de salud para mascotas">
 <meta property="og:description" content="Vacunas, desparasitación, peso y recordatorios para tu mascota. Funciona offline.">
