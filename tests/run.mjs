@@ -93,6 +93,20 @@ d.lang='pt'; ok('pt', VP.t('tab_card')==='Saúde');
 d.lang='es'; ok('tf interpola', VP.tf('in_days',{n:5})==='En 5 días');
 ok('fallback clave inexistente', VP.t('__no__')==='__no__');
 
+section('Regresiones de la auditoría (no mentir al usuario)');
+// La clave 'saved' no existía: t() cae a la clave literal y mostraba "saved" crudo
+// al guardar diario, gasto y modo perdido.
+d.lang='es'; ok("t('saved') traducido (no la clave cruda)", VP.t('saved')==='Guardado');
+d.lang='en'; ok("t('saved') en inglés", VP.t('saved')==='Saved');
+d.lang='pt'; ok("t('saved') en portugués", VP.t('saved')==='Salvo');
+d.lang='es';
+ok("existe aviso de almacenamiento lleno", VP.t('save_full').includes('lleno'));
+ok("existe aviso de foto solo local", VP.t('album_saved_local').length>10);
+ok("etiqueta del FAB traducida", VP.t('fab_label')==='Acciones rápidas');
+// El álbum vacío mostraba solo un "+" suelto; la cadena existía pero estaba muerta.
+ok('álbum vacío usa su estado vacío', VP.albumHTML({album:[]}).includes(VP.t('no_album')));
+ok('álbum con fotos no lo muestra', !VP.albumHTML({album:[{id:'1',img:'x',fecha:'2026-01-01'}]}).includes(VP.t('no_album')));
+
 section('Navegación (4 destinos, rango 3-5 de Material 3 / iOS HIG)');
 d.lang='es';
 const TB = VP.tabs();
