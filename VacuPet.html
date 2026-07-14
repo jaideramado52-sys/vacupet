@@ -57,7 +57,7 @@ html.bigtext{zoom:1.15}
 body{
   background:var(--bg);color:var(--ink);font-family:var(--font);line-height:1.5;
   -webkit-font-smoothing:antialiased;min-height:100dvh;
-  padding-bottom:calc(72px + env(safe-area-inset-bottom));
+  padding-bottom:calc(72px + env(safe-area-inset-bottom));   /* deja hueco a la barra de pestañas */
 }
 h1,h2,h3{margin:0;font-weight:650;letter-spacing:-.01em}
 button{font-family:inherit;cursor:pointer}
@@ -254,6 +254,9 @@ nav.tabbar button.on{color:var(--accent)}
 .linkbox input{font-size:12px;color:var(--muted)}
 
 /* ---- Asistente (chat) ---- */
+/* Con el FAB visible hace falta más hueco: ocupa de 80px a 134px desde abajo y,
+   con solo 72px, tapaba el final del contenido (incluido el descargo legal). */
+body.hasfab{padding-bottom:calc(148px + env(safe-area-inset-bottom))}
 .fab{position:fixed;right:16px;bottom:calc(80px + env(safe-area-inset-bottom));z-index:38;width:54px;height:54px;border-radius:50%;background:var(--accent);color:#fff;border:0;box-shadow:var(--shadow-lg);display:grid;place-items:center}
 .fab svg{width:24px;height:24px}
 .syncdot{width:9px;height:9px;border-radius:50%;flex:none;margin-left:-2px}
@@ -571,7 +574,7 @@ const STR = {
     m_ics:'Exportar calendario (.ics)', m_ics_sub:'Próximas dosis y desparasitaciones',
     m_pdf:'Carné en PDF', m_pdf_sub:'Imprimir o guardar como PDF', m_share:'Compartir carné', m_share_sub:'Enlace y código QR (solo lectura)',
     m_json:'Respaldo (JSON)', m_json_sub:'Descarga una copia de todo', m_import:'Restaurar respaldo', m_import_sub:'Importa un archivo JSON',
-    about_body:'VacuPet · Fases 0–1 (carné local). Tus datos viven solo en este dispositivo (localStorage). Haz respaldos con regularidad.',
+    about_body:'VacuPet · Carné de salud para mascotas. Por defecto tus datos viven solo en este dispositivo; si inicias sesión, se sincronizan de forma cifrada en tu cuenta. Haz respaldos con regularidad.',
     save:'Guardar', cancel:'Cancelar', close:'Cerrar', delete:'Eliminar', edit:'Editar',
     shared_title:'Carné compartido (solo lectura)', open_mine:'Abrir mi VacuPet', shared_bad:'Enlace de carné no válido.',
     copied:'Enlace copiado', saved_pet:'Mascota guardada', saved_vac:'Vacuna registrada', saved_dew:'Desparasitación registrada',
@@ -699,7 +702,7 @@ const STR = {
     m_ics:'Export calendar (.ics)', m_ics_sub:'Upcoming doses and deworming',
     m_pdf:'Record as PDF', m_pdf_sub:'Print or save as PDF', m_share:'Share record', m_share_sub:'Link and QR code (read-only)',
     m_json:'Backup (JSON)', m_json_sub:'Download a copy of everything', m_import:'Restore backup', m_import_sub:'Import a JSON file',
-    about_body:'VacuPet · Phases 0–1 (local record). Your data lives only on this device (localStorage). Back up regularly.',
+    about_body:'VacuPet · Health record for pets. By default your data lives only on this device; if you sign in, it syncs encrypted to your account. Back up regularly.',
     save:'Save', cancel:'Cancel', close:'Close', delete:'Delete', edit:'Edit',
     shared_title:'Shared record (read-only)', open_mine:'Open my VacuPet', shared_bad:'Invalid record link.',
     copied:'Link copied', saved_pet:'Pet saved', saved_vac:'Vaccine saved', saved_dew:'Deworming saved',
@@ -827,7 +830,7 @@ const STR = {
     m_ics:'Exportar calendário (.ics)', m_ics_sub:'Próximas doses e vermífugos',
     m_pdf:'Carteira em PDF', m_pdf_sub:'Imprimir ou salvar como PDF', m_share:'Compartilhar carteira', m_share_sub:'Link e QR code (somente leitura)',
     m_json:'Backup (JSON)', m_json_sub:'Baixe uma cópia de tudo', m_import:'Restaurar backup', m_import_sub:'Importe um arquivo JSON',
-    about_body:'VacuPet · Fases 0–1 (registro local). Seus dados ficam só neste aparelho (localStorage). Faça backups com frequência.',
+    about_body:'VacuPet · Caderneta de saúde para pets. Por padrão seus dados ficam só neste aparelho; se você entrar na conta, são sincronizados de forma cifrada. Faça backups com frequência.',
     save:'Salvar', cancel:'Cancelar', close:'Fechar', delete:'Excluir', edit:'Editar',
     shared_title:'Carteira compartilhada (somente leitura)', open_mine:'Abrir meu VacuPet', shared_bad:'Link de carteira inválido.',
     copied:'Link copiado', saved_pet:'Pet salvo', saved_vac:'Vacina registrada', saved_dew:'Vermífugo registrado',
@@ -1445,7 +1448,10 @@ function renderChrome(){
   ).join('');
   const fab = document.getElementById('fab');
   fab.innerHTML = I.spark;
-  fab.classList.toggle('hide', shared || found || caregiver || data.pets.length===0);
+  const fabHidden = shared || found || caregiver || data.pets.length===0;
+  fab.classList.toggle('hide', fabHidden);
+  // El hueco inferior extra depende del FAB: una sola condición para ambos.
+  document.body.classList.toggle('hasfab', !fabHidden);
   fabOpen=false; fab.classList.remove('fabopen'); const fm=document.getElementById('fabMenu'); if(fm){ fm.classList.add('hide'); fm.innerHTML=''; }
   setSync((typeof navigator!=='undefined'&&navigator.onLine===false)?'offline':syncState);
 }
@@ -4021,7 +4027,8 @@ if(found || caregiver){
 } else {
   if(!shared){
     // Accesos directos del manifest / enlaces: #tab=card, #add=vacuna
-    const mTab = hash0.match(/[#&]tab=([a-z]+)/);  if(mTab && ['home','card','pet','more'].includes(mTab[1])) currentTab = mTab[1];
+    // 'pet' sigue siendo destino válido (sub-vista de Inicio), aunque ya no sea pestaña.
+    const mTab = hash0.match(/[#&]tab=([a-z]+)/);  if(mTab && ['home','card','care','pet','more'].includes(mTab[1])) currentTab = mTab[1];
     const mAdd = hash0.match(/[#&]add=([a-z]+)/);   if(mAdd) pendingAdd = mAdd[1];
     if(mTab || mAdd) history.replaceState(null,'',location.pathname);
   }
