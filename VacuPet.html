@@ -547,7 +547,11 @@ function petFoto(info){ return (info && info.foto) || speciesArt(info ? info.esp
    ====================================================================== */
 const STR = {
   es:{
-    tab_home:'Inicio', tab_card:'Salud', tab_pet:'Mascota', tab_more:'Más',
+    tab_home:'Inicio', tab_card:'Salud', tab_pet:'Mascota', tab_care:'Cuidado', tab_more:'Más',
+    care_intro:'Todo lo que necesitas saber para cuidarla mejor. Funciona sin conexión.',
+    coach_care:'Guías por etapa, alimentos tóxicos, enfermedades y tu asistente: todo aquí.',
+    sec_guides:'Guías y alimentación', sec_safety:'Seguridad y salud',
+    back_home:'Inicio',
     onb_title:'Bienvenido a VacuPet', onb_sub:'Crea el carné de salud de tu primera mascota. Funciona offline, en tu dispositivo.', onb_add:'Añadir mascota',
     disc:'No reemplaza el carné oficial ni la consulta veterinaria.',
     disc_full:'Registro personal de apoyo — no reemplaza el carné oficial ni la consulta veterinaria.',
@@ -671,7 +675,11 @@ const STR = {
     sec_docs:'Documentos', add_doc:'Adjuntar documento', no_docs:'Sin documentos', doc_saved:'Documento adjuntado', doc_big:'El archivo es muy grande para guardarlo localmente (máx. ~2 MB)',
   },
   en:{
-    tab_home:'Home', tab_card:'Health', tab_pet:'Pet', tab_more:'More',
+    tab_home:'Home', tab_card:'Health', tab_pet:'Pet', tab_care:'Care', tab_more:'More',
+    care_intro:'Everything you need to take better care of them. Works offline.',
+    coach_care:'Life-stage guides, toxic foods, diseases and your assistant — all here.',
+    sec_guides:'Guides and feeding', sec_safety:'Safety and health',
+    back_home:'Home',
     onb_title:'Welcome to VacuPet', onb_sub:"Create your first pet's health record. Works offline, on your device.", onb_add:'Add pet',
     disc:'Does not replace the official record or veterinary advice.',
     disc_full:'Personal support record — does not replace the official record or veterinary advice.',
@@ -795,7 +803,11 @@ const STR = {
     sec_docs:'Documents', add_doc:'Attach document', no_docs:'No documents', doc_saved:'Document attached', doc_big:'File too large to store locally (max ~2 MB)',
   },
   pt:{
-    tab_home:'Início', tab_card:'Saúde', tab_pet:'Pet', tab_more:'Mais',
+    tab_home:'Início', tab_card:'Saúde', tab_pet:'Pet', tab_care:'Cuidado', tab_more:'Mais',
+    care_intro:'Tudo o que você precisa para cuidar melhor dele. Funciona sem conexão.',
+    coach_care:'Guias por fase, alimentos tóxicos, doenças e seu assistente: tudo aqui.',
+    sec_guides:'Guias e alimentação', sec_safety:'Segurança e saúde',
+    back_home:'Início',
     onb_title:'Bem-vindo ao VacuPet', onb_sub:'Crie a carteira de saúde do seu primeiro pet. Funciona offline, no seu aparelho.', onb_add:'Adicionar pet',
     disc:'Não substitui a carteira oficial nem a consulta veterinária.',
     disc_full:'Registro pessoal de apoio — não substitui a carteira oficial nem a consulta veterinária.',
@@ -1373,12 +1385,18 @@ function weightChart(weights){
 
 /* ---------------------------- Navegación ---------------------------- */
 let currentTab = 'home';
+// 4 destinos (rango 3-5 de Material 3 / iOS HIG). "Mascota" NO es pestaña:
+// duplicaba el héroe de Inicio y se abre tocando la foto de la mascota allí.
+// Su hueco lo ocupa "Cuidado", que saca a la superficie las herramientas de
+// valor que antes estaban enterradas en "Más" (el clásico cajón de sastre).
 function tabs(){ return [
   {id:'home',  label:t('tab_home'), icon:I.home},
   {id:'card',  label:t('tab_card'), icon:I.card},
-  {id:'pet',   label:t('tab_pet'),  icon:I.pet},
+  {id:'care',  label:t('tab_care'), icon:I.heart},
   {id:'more',  label:t('tab_more'), icon:I.more},
 ];}
+// 'pet' es una sub-vista de Inicio: mientras se ve, Inicio queda marcado.
+function tabOf(cur){ return cur==='pet' ? 'home' : cur; }
 function reduceMotion(){ return !!(window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches); }
 function go(tab){
   currentTab=tab;
@@ -1421,8 +1439,9 @@ function renderChrome(){
   }
   document.getElementById('langsw').innerHTML = ['es','en','pt'].map(l=>
     `<button data-lang="${l}" class="${(data.lang||'es')===l?'on':''}" aria-pressed="${(data.lang||'es')===l}">${l.toUpperCase()}</button>`).join('');
+  const curTab = tabOf(currentTab);
   document.getElementById('tabbar').innerHTML = (shared||found||caregiver) ? '' : tabs().map(t0=>
-    `<button data-tab="${t0.id}" role="tab" aria-selected="${currentTab===t0.id}" class="${currentTab===t0.id?'on':''}">${t0.icon}<span>${t0.label}</span></button>`
+    `<button data-tab="${t0.id}" role="tab" aria-selected="${curTab===t0.id}" class="${curTab===t0.id?'on':''}">${t0.icon}<span>${t0.label}</span></button>`
   ).join('');
   const fab = document.getElementById('fab');
   fab.innerHTML = I.spark;
@@ -1443,6 +1462,7 @@ function render(){
   if(currentTab==='home') app.innerHTML = viewHome();
   else if(currentTab==='card') app.innerHTML = viewCard();
   else if(currentTab==='pet') app.innerHTML = viewPet();
+  else if(currentTab==='care') app.innerHTML = viewCare();
   else app.innerHTML = viewMore();
   if(typeof hydrateStorage==='function') hydrateStorage();
   runCountUps();
@@ -1713,6 +1733,7 @@ function viewPet(){
   const heroSub = [`${SPECIES_EMOJI[info.especie]||'🐾'} ${esc(cap(info.especie))}`, info.raza?esc(info.raza):'', info.sexo?sexLbl[info.sexo]:'', info.nacimiento?ageText(info.nacimiento):''].filter(Boolean).join(' · ');
   const stage = lifeStage(info.especie, info.nacimiento); const ha = humanAge(info.especie, info.nacimiento);
   return `<div class="view">
+    <button class="btn btn-ghost" data-go="home" style="height:36px;padding:0 12px;margin-bottom:10px;gap:4px"><span style="display:inline-flex;transform:rotate(180deg)">${I.chev}</span>${t('back_home')}</button>
     ${isLost(pet)?`<button class="lostbig" id="lostBanner" style="width:100%;border:0;text-align:left;cursor:pointer">${I.shield}<div><b>${t('lost_on')}</b><span>${t('lost_tap_manage')}</span></div></button>`:''}
     <div class="card pad petprofile">
       <div class="av healthring big" style="border-radius:50%;overflow:hidden;background:var(--surface-2);display:grid;place-items:center;--hr:${hr}">${av}</div>
@@ -1723,12 +1744,12 @@ function viewPet(){
 
     ${coachCard('pet', t('coach_pet'))}
     <div class="block-title" style="margin:18px 2px 8px">${t('sec_actions')}</div>
+    <!-- Solo acciones de ESTA mascota. "Editar dueño" es global → vive en Más;
+         las guías por etapa → pestaña Cuidado (aquí queda la píldora de etapa). -->
     <div class="actiongrid">
       <button class="actcard" id="emergOpen"><span class="ic c-red">${I.shield}</span><b>${t('emerg_open')}</b></button>
       <button class="actcard" id="tagOpen"><span class="ic c-accent">${I.paw}</span><b>${t('tag_open')}</b></button>
       <button class="actcard" id="shareCard"><span class="ic c-blue">${I.share}</span><b>${t('m_share')}</b></button>
-      <button class="actcard" id="ownerEdit"><span class="ic c-violet">${I.user}</span><b>${t('owner_edit')}</b></button>
-      <button class="actcard" id="guideStage"><span class="ic c-green">${I.check}</span><b>${t('guides_short')}</b></button>
       <button class="actcard" id="cgOpen"><span class="ic c-amber">${I.user}</span><b>${t('cg_short')}</b></button>
     </div>
 
@@ -1746,6 +1767,57 @@ function viewPet(){
       <button class="btn btn-danger" id="delPet" aria-label="${t('delete')}">${I.trash}</button>
     </div>
     ${data.pets.length>1?`<button class="btn btn-ghost btn-block" id="switchPet" style="margin-top:10px">${t('switch_pet')}</button>`:''}
+  </div>`;
+}
+
+/* ---- Cuidado (contenido y herramientas de valor) ----
+   Estas herramientas vivían dentro de "Más", donde la gente no entraba porque
+   lo lee como "ajustes". Son el contenido que diferencia a VacuPet (y donde
+   viven varias funciones premium), así que ahora tienen pestaña propia. */
+function viewCare(){
+  const pet = activePet(); const info = pet ? pet.info : null;
+  const stage = info ? lifeStage(info.especie, info.nacimiento) : null;
+  const ha = info ? humanAge(info.especie, info.nacimiento) : null;
+
+  // Guías: una sola entrada. Si conocemos la etapa de la mascota activa, la
+  // mostramos personalizada ("Adulto · ~36 años"); si no, la genérica. Ambas
+  // abren guidesModal(), así que enseñar las dos sería la misma acción repetida.
+  const guias = stage
+    ? `<button class="tile" id="guideStage"><span class="ic c-green">${I.check}</span>
+        <span class="tt"><b>${t('guides_title')}</b><span>${esc(pet.info.nombre)} · ${t('stage_'+stage)}${ha?` · ~${ha} ${t('human_years')}`:''}</span></span>
+        <span class="chev">${I.chev}</span></button>`
+    : `<button class="tile" id="guidesOpen"><span class="ic c-green">${I.check}</span>
+        <span class="tt"><b>${t('guides_title')}</b><span>${t('guides_open_sub')}</span></span>
+        <span class="chev">${I.chev}</span></button>`;
+
+  return `<div class="view">
+    <h1 style="font-size:22px">${t('tab_care')}</h1>
+    <p class="hint" style="margin:-4px 0 4px">${t('care_intro')}</p>
+    ${coachCard('care', t('coach_care'))}
+
+    <section class="block"><div class="block-title">${t('sec_guides')}</div>
+      ${guias}
+      <button class="tile" id="rationOpen" style="margin-top:11px"><span class="ic c-accent">${I.scale}</span><span class="tt"><b>${t('ration_title')}</b><span>${t('ration_open_sub')}</span></span><span class="chev">${I.chev}</span></button>
+    </section>
+
+    <section class="block"><div class="block-title">${t('sec_safety')}</div>
+      <button class="tile" id="toxOpen"><span class="ic c-red">${I.info}</span><span class="tt"><b>${t('tox_title')}</b><span>${t('tox_open_sub')}</span></span><span class="chev">${I.chev}</span></button>
+      <button class="tile" id="disOpen" style="margin-top:11px"><span class="ic c-violet">${I.info}</span><span class="tt"><b>${t('dis_title')}</b><span>${t('dis_open_sub')}</span></span><span class="chev">${I.chev}</span></button>
+      <button class="tile" id="vetsOpen" style="margin-top:11px"><span class="ic c-red">${I.stetho}</span><span class="tt"><b>${t('vets_open')}</b><span>${t('vets_open_sub')}</span></span><span class="chev">${I.chev}</span></button>
+    </section>
+
+    <section class="block"><div class="block-title">${t('sec_tools')}</div>
+      <button class="tile" data-asst><span class="ic c-violet">${I.spark}</span><span class="tt"><b>${t('asst_open')}</b><span>${t('asst_open_sub')}</span></span><span class="chev">${I.chev}</span></button>
+      <button class="tile" id="travelOpen" style="margin-top:11px"><span class="ic c-blue">${I.shield}</span><span class="tt"><b>${t('travel_open')}</b><span>${t('travel_open_sub')}</span></span><span class="chev">${I.chev}</span></button>
+      <button class="tile" id="newsOpen" style="margin-top:11px"><span class="ic c-amber">${I.info}</span><span class="tt"><b>${t('news_open')}</b><span>${t('news_open_sub')}</span></span><span class="chev">${I.chev}</span></button>
+    </section>
+
+    ${partnersOn()?offerCard(topOffer('more'),{dismiss:true,style:'margin-top:14px'}):''}
+    <div class="card pad tipcard">
+      <span class="ic c-amber">${I.info}</span>
+      <div class="rr"><b>${t('tip_title')}</b><span>${esc(tipOfDay(Math.floor(Date.now()/86400000)))}</span></div>
+    </div>
+    <p class="disclaimer">${t('disc')}</p>
   </div>`;
 }
 
@@ -1775,17 +1847,6 @@ function viewMore(){
 
     <section class="block"><div class="block-title">${t('sec_owner')}</div>
       <button class="tile" id="ownerEdit"><span class="ic c-accent">${I.user}</span><span class="tt"><b>${t('owner_edit')}</b><span>${(data.owner&&(data.owner.nombre||data.owner.telefono))?esc([data.owner.nombre,data.owner.telefono].filter(Boolean).join(' · ')):t('owner_edit_sub')}</span></span><span class="chev">${I.chev}</span></button>
-    </section>
-
-    <section class="block"><div class="block-title">${t('sec_tools')}</div>
-      <button class="tile" data-asst><span class="ic c-violet">${I.spark}</span><span class="tt"><b>${t('asst_open')}</b><span>${t('asst_open_sub')}</span></span><span class="chev">${I.chev}</span></button>
-      <button class="tile" id="travelOpen" style="margin-top:11px"><span class="ic c-blue">${I.shield}</span><span class="tt"><b>${t('travel_open')}</b><span>${t('travel_open_sub')}</span></span><span class="chev">${I.chev}</span></button>
-      <button class="tile" id="vetsOpen" style="margin-top:11px"><span class="ic c-red">${I.stetho}</span><span class="tt"><b>${t('vets_open')}</b><span>${t('vets_open_sub')}</span></span><span class="chev">${I.chev}</span></button>
-      <button class="tile" id="newsOpen" style="margin-top:11px"><span class="ic c-amber">${I.info}</span><span class="tt"><b>${t('news_open')}</b><span>${t('news_open_sub')}</span></span><span class="chev">${I.chev}</span></button>
-      <button class="tile" id="toxOpen" style="margin-top:11px"><span class="ic c-red">${I.info}</span><span class="tt"><b>${t('tox_title')}</b><span>${t('tox_open_sub')}</span></span><span class="chev">${I.chev}</span></button>
-      <button class="tile" id="guidesOpen" style="margin-top:11px"><span class="ic c-green">${I.check}</span><span class="tt"><b>${t('guides_title')}</b><span>${t('guides_open_sub')}</span></span><span class="chev">${I.chev}</span></button>
-      <button class="tile" id="disOpen" style="margin-top:11px"><span class="ic c-violet">${I.info}</span><span class="tt"><b>${t('dis_title')}</b><span>${t('dis_open_sub')}</span></span><span class="chev">${I.chev}</span></button>
-      <button class="tile" id="rationOpen" style="margin-top:11px"><span class="ic c-accent">${I.scale}</span><span class="tt"><b>${t('ration_title')}</b><span>${t('ration_open_sub')}</span></span><span class="chev">${I.chev}</span></button>
     </section>
 
     <section class="block"><div class="block-title">${t('sec_export')}</div>

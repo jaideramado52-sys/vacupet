@@ -43,6 +43,7 @@ code += `;globalThis.__VP = {
   expensesTotal, caregiverPayload, decodeCare,
   globalSearch, searchDiseases, medVeces, dosesToday,
   ACCENTS, accentColor, SPECIES_COLOR, albumHTML, docsHTML,
+  tabs, tabOf,
   getData:()=>data, setData:d=>{data=d}
 };`;
 (0, eval)(code);
@@ -91,6 +92,21 @@ d.lang='en'; ok('en', VP.t('tab_home')==='Home');
 d.lang='pt'; ok('pt', VP.t('tab_card')==='Saúde');
 d.lang='es'; ok('tf interpola', VP.tf('in_days',{n:5})==='En 5 días');
 ok('fallback clave inexistente', VP.t('__no__')==='__no__');
+
+section('Navegación (4 destinos, rango 3-5 de Material 3 / iOS HIG)');
+d.lang='es';
+const TB = VP.tabs();
+ok('4 destinos', TB.length===4);
+ok('dentro del rango 3-5', TB.length>=3 && TB.length<=5);
+ok('orden: home, card, care, more', TB.map(x=>x.id).join(',')==='home,card,care,more');
+ok('"Mascota" ya no es pestaña', !TB.some(x=>x.id==='pet'));
+ok('todas las pestañas tienen etiqueta', TB.every(x=>!!x.label && x.label!=='undefined'));
+ok('etiqueta Cuidado (es)', VP.t('tab_care')==='Cuidado');
+d.lang='en'; ok('etiqueta Care (en)', VP.tabs()[2].label==='Care');
+d.lang='pt'; ok('etiqueta Cuidado (pt)', VP.tabs()[2].label==='Cuidado');
+d.lang='es';
+ok('perfil marca Inicio en la barra', VP.tabOf('pet')==='home');
+ok('el resto de pestañas se marcan solas', VP.tabOf('care')==='care' && VP.tabOf('more')==='more');
 
 section('base64url');
 const txt = JSON.stringify({n:'Rocky áéí 🐶'});

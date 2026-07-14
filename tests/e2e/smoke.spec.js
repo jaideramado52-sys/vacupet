@@ -15,6 +15,14 @@ async function seedDemo(page) {
   await expect(page.locator('[data-tab="card"]')).toBeVisible();
 }
 
+// "Mascota" ya no es pestaña: el perfil se abre tocando la foto de la mascota
+// en Inicio (el héroe). Navegamos como lo hará el usuario real.
+async function openPet(page) {
+  await page.locator('[data-tab="home"]').click();
+  await page.locator('.phero').click();
+  await expect(page.locator('.petprofile')).toBeVisible();
+}
+
 test.describe('VacuPet — humo', () => {
   test('siembra el ejemplo y arranca', async ({ page }) => {
     await seedDemo(page);
@@ -37,7 +45,7 @@ test.describe('VacuPet — humo', () => {
 
   test('tarjeta de emergencia con contacto del dueño', async ({ page }) => {
     await seedDemo(page);
-    await page.locator('[data-tab="pet"]').click();
+    await openPet(page);
     await page.locator('#emergOpen').click();
     await expect(page.locator('.scrim')).toBeVisible();
     await expect(page.getByText('Ana López')).toBeVisible();
@@ -89,7 +97,7 @@ test.describe('VacuPet — humo', () => {
     await seedDemo(page);
     // El demo trae a Rocky en modo perdido → aviso en Inicio y en su perfil.
     await expect(page.locator('#lostHome')).toBeVisible();
-    await page.locator('[data-tab="pet"]').click();
+    await openPet(page);
     await page.locator('#tagOpen').click();
     const link = await page.locator('#tagLink').inputValue();
     expect(link).toContain('#e=');
@@ -115,7 +123,7 @@ test.describe('VacuPet — humo', () => {
 
   test('herramienta: detector de tóxicos filtra', async ({ page }) => {
     await seedDemo(page);
-    await page.locator('[data-tab="more"]').click();
+    await page.locator('[data-tab="care"]').click();
     await page.locator('#toxOpen').click();
     await expect(page.locator('.modal-head h3')).toHaveText('Detector de tóxicos');
     await page.locator('#toxQ').fill('chocolate');
@@ -124,7 +132,7 @@ test.describe('VacuPet — humo', () => {
 
   test('perfil muestra etapa de vida y abre las guías', async ({ page }) => {
     await seedDemo(page);
-    await page.locator('[data-tab="pet"]').click();
+    await openPet(page);
     await expect(page.locator('#guideStage').first()).toBeVisible();
     await page.locator('.stagepill#guideStage').click();
     await expect(page.locator('.modal-head h3')).toHaveText('Guías por etapa');
@@ -143,7 +151,7 @@ test.describe('VacuPet — humo', () => {
 
   test('modo cuidador genera la hoja de solo lectura', async ({ page }) => {
     await seedDemo(page);
-    await page.locator('[data-tab="pet"]').click();
+    await openPet(page);
     await page.locator('#cgOpen').click();
     await expect(page.locator('.modal-head h3')).toHaveText('Modo cuidador');
     const link = await page.locator('#cgLink').inputValue();
@@ -174,7 +182,7 @@ test.describe('VacuPet — humo', () => {
 
   test('biblioteca de enfermedades filtra', async ({ page }) => {
     await seedDemo(page);
-    await page.locator('[data-tab="more"]').click();
+    await page.locator('[data-tab="care"]').click();
     await page.locator('#disOpen').click();
     await expect(page.locator('.modal-head h3')).toHaveText('Enfermedades');
     await page.locator('#disQ').fill('parvo');
