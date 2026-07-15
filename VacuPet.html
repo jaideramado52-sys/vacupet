@@ -26,7 +26,7 @@
 /* ============================ Sistema de diseño ============================ */
 :root{
   --bg:#EFF6F5; --surface:#FFFFFF; --surface-2:#F6FBFA; --ink:#102A28; --muted:#5C6E6B;
-  --accent:#0D9488; --accent-ink:color-mix(in srgb,var(--accent) 72%,#000); --line:#DCEBE8; --line-2:#EAF4F2;
+  --accent:#0C8479; --accent-ink:color-mix(in srgb,var(--accent) 72%,#000); --on-accent:#fff; --line:#DCEBE8; --line-2:#EAF4F2;
   --green:#16A34A; --amber:#D97706; --red:#DC2626; --blue:#2563EB;
   --radius:16px; --radius-sm:11px; --shadow:0 1px 2px rgba(13,40,38,.05),0 1px 3px rgba(13,40,38,.04);
   --shadow-lg:0 10px 30px rgba(13,40,38,.13);
@@ -36,7 +36,7 @@
 @media (prefers-color-scheme: dark){
   :root{
     --bg:#08130F; --surface:#10201C; --surface-2:#142824; --ink:#E6F2EF; --muted:#97B2AD;
-    --accent:#2DD4BF; --accent-ink:color-mix(in srgb,var(--accent) 55%,#fff); --line:#1C2C28; --line-2:#172320;
+    --accent:#2DD4BF; --accent-ink:color-mix(in srgb,var(--accent) 55%,#fff); --on-accent:#08130F; --line:#1C2C28; --line-2:#172320;
     --shadow:0 1px 2px rgba(0,0,0,.3); --shadow-lg:0 12px 34px rgba(0,0,0,.5);
   }
 }
@@ -47,7 +47,7 @@ html[data-theme="dark"]{
 }
 html[data-theme="light"]{
   --bg:#EFF6F5; --surface:#FFFFFF; --surface-2:#F6FBFA; --ink:#102A28; --muted:#5C6E6B;
-  --accent:#0D9488; --accent-ink:color-mix(in srgb,var(--accent) 72%,#000); --line:#DCEBE8; --line-2:#EAF4F2;
+  --accent:#0C8479; --accent-ink:color-mix(in srgb,var(--accent) 72%,#000); --on-accent:#fff; --line:#DCEBE8; --line-2:#EAF4F2;
   --shadow:0 1px 2px rgba(13,40,38,.05),0 1px 3px rgba(13,40,38,.04); --shadow-lg:0 10px 30px rgba(13,40,38,.13);
 }
 *{box-sizing:border-box}
@@ -73,12 +73,12 @@ header.app{
   backdrop-filter:saturate(160%) blur(12px);border-bottom:1px solid var(--line-2);
 }
 .brand{display:flex;align-items:center;gap:9px;font-weight:700;letter-spacing:-.02em;font-size:18px}
-.brand .logo{width:32px;height:32px;border-radius:9px;background:var(--accent);display:grid;place-items:center;color:#fff}
+.brand .logo{width:32px;height:32px;border-radius:9px;background:var(--accent);display:grid;place-items:center;color:var(--on-accent)}
 .brand .logo svg{width:19px;height:19px}
 .header-spacer{flex:1}
 .langsw{display:flex;gap:2px;background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:3px;box-shadow:var(--shadow)}
 .langsw button{border:0;background:none;color:var(--muted);font-size:11.5px;font-weight:700;padding:4px 7px;border-radius:7px}
-.langsw button.on{background:var(--accent);color:#fff}
+.langsw button.on{background:var(--accent);color:var(--on-accent)}
 .iconbtn{width:38px;height:38px;border-radius:11px;border:1px solid var(--line);background:var(--surface);
   display:grid;place-items:center;color:var(--ink);box-shadow:var(--shadow)}
 .iconbtn svg{width:18px;height:18px}
@@ -191,7 +191,7 @@ section.block{margin:22px 0 0}
 .btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;height:46px;padding:0 18px;border-radius:13px;
   border:1px solid var(--line);background:var(--surface);color:var(--ink);font-weight:600;font-size:15px;box-shadow:var(--shadow)}
 .btn svg{width:18px;height:18px}
-.btn-primary{background:var(--accent);border-color:transparent;color:#fff;box-shadow:0 4px 14px color-mix(in srgb,var(--accent) 40%,transparent)}
+.btn-primary{background:var(--accent);border-color:transparent;color:var(--on-accent);box-shadow:0 4px 14px color-mix(in srgb,var(--accent) 40%,transparent)}
 .btn-block{width:100%}
 .btn-ghost{background:transparent;border-color:transparent;box-shadow:none;color:var(--accent-ink)}
 .btn-danger{color:var(--red);border-color:color-mix(in srgb,var(--red) 30%,var(--line))}
@@ -257,7 +257,7 @@ nav.tabbar button.on{color:var(--accent)}
 /* Con el FAB visible hace falta más hueco: ocupa de 80px a 134px desde abajo y,
    con solo 72px, tapaba el final del contenido (incluido el descargo legal). */
 body.hasfab{padding-bottom:calc(148px + env(safe-area-inset-bottom))}
-.fab{position:fixed;right:16px;bottom:calc(80px + env(safe-area-inset-bottom));z-index:38;width:54px;height:54px;border-radius:50%;background:var(--accent);color:#fff;border:0;box-shadow:var(--shadow-lg);display:grid;place-items:center}
+.fab{position:fixed;right:16px;bottom:calc(80px + env(safe-area-inset-bottom));z-index:38;width:54px;height:54px;border-radius:50%;background:var(--accent);color:var(--on-accent);border:0;box-shadow:var(--shadow-lg);display:grid;place-items:center}
 .fab svg{width:24px;height:24px}
 .syncdot{width:9px;height:9px;border-radius:50%;flex:none;margin-left:-2px}
 .syncdot.s-ok{background:var(--green)}
@@ -277,7 +277,7 @@ body.hasfab{padding-bottom:calc(148px + env(safe-area-inset-bottom))}
 .chat-body{flex:1;overflow-y:auto;padding:16px;display:flex;flex-direction:column;gap:9px}
 .bub{max-width:84%;padding:10px 13px;border-radius:16px;font-size:14.5px;line-height:1.45;white-space:pre-wrap;word-wrap:break-word}
 .bub.bot{background:var(--surface-2);border:1px solid var(--line);border-bottom-left-radius:5px;align-self:flex-start}
-.bub.user{background:var(--accent);color:#fff;border-bottom-right-radius:5px;align-self:flex-end}
+.bub.user{background:var(--accent);color:var(--on-accent);border-bottom-right-radius:5px;align-self:flex-end}
 .bub .inline-actions{display:flex;flex-wrap:wrap;gap:7px;margin-top:9px}
 .bub .ia-btn{border:1px solid var(--line);background:var(--surface);color:var(--accent-ink);border-radius:999px;padding:6px 11px;font-size:13px;font-weight:600}
 .chips-row{display:flex;gap:7px;overflow-x:auto;padding:0 16px 8px;scrollbar-width:none}
@@ -388,7 +388,7 @@ body.hasfab{padding-bottom:calc(148px + env(safe-area-inset-bottom))}
 .photo-pick .pv img{width:100%;height:100%;object-fit:cover}
 
 /* ---- Compartido (solo lectura) ---- */
-.sharebar{background:var(--accent);color:#fff;text-align:center;padding:10px 16px;font-size:13px;font-weight:600;display:flex;gap:10px;align-items:center;justify-content:center}
+.sharebar{background:var(--accent);color:var(--on-accent);text-align:center;padding:10px 16px;font-size:13px;font-weight:600;display:flex;gap:10px;align-items:center;justify-content:center}
 .sharebar button{background:rgba(255,255,255,.2);color:#fff;border:0;border-radius:9px;padding:6px 12px;font-weight:600;font-size:13px}
 .vbadge{display:flex;align-items:center;justify-content:center;gap:8px;margin-top:14px;padding:11px 14px;border-radius:13px;font-size:13.5px;font-weight:650;border:1px solid var(--line)}
 .vbadge svg{width:17px;height:17px}
@@ -428,7 +428,7 @@ body.hasfab{padding-bottom:calc(148px + env(safe-area-inset-bottom))}
 
 /* ---- Pantalla de bloqueo ---- */
 .lockscreen{position:fixed;inset:0;z-index:90;background:var(--bg);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:16px;padding:32px;text-align:center}
-.lockscreen .lk-logo{width:64px;height:64px;border-radius:18px;background:var(--accent);display:grid;place-items:center;color:#fff}
+.lockscreen .lk-logo{width:64px;height:64px;border-radius:18px;background:var(--accent);display:grid;place-items:center;color:var(--on-accent)}
 .lockscreen .lk-logo svg{width:34px;height:34px}
 .lockscreen h2{font-size:20px}
 .lockscreen input{max-width:240px;text-align:center;letter-spacing:6px;font-size:20px}
@@ -945,15 +945,19 @@ const STR = {
   },
 };
 // Paleta de acentos y color por especie (personalización visual)
+// Todos cumplen WCAG AA (≥4.5:1) con texto blanco: es el color del botón
+// primario de toda la app. Tonos calculados para el mínimo oscurecido que pasa
+// AA conservando el matiz (turquesa 3.74→4.57, azul 2.77→4.52, coral 2.80→4.52).
 const ACCENTS = [
-  { key:'turquesa', c:'#0D9488' },
-  { key:'azul',     c:'#0EA5E9' },
-  { key:'verde',    c:'#16A34A' },
+  { key:'turquesa', c:'#0C8479' },
+  { key:'azul',     c:'#0B7EB2' },
+  { key:'verde',    c:'#12883E' },
   { key:'morado',   c:'#7C3AED' },
-  { key:'coral',    c:'#F97316' },
+  { key:'coral',    c:'#C55405' },
   { key:'rosa',     c:'#E11D74' },
 ];
-const SPECIES_COLOR = { perro:'#D97706', gato:'#7C3AED', conejo:'#DB2777', huron:'#0D9488', ave:'#2563EB', tortuga:'#15803D', otro:'#16A34A' };
+// Igual que ACCENTS: AA con blanco (perro 3.19→4.58, hurón 3.74→4.57, otro 3.30→4.55).
+const SPECIES_COLOR = { perro:'#B16105', gato:'#7C3AED', conejo:'#DB2777', huron:'#0C8479', ave:'#2563EB', tortuga:'#15803D', otro:'#12883E' };
 function accentColor(){ const a=ACCENTS.find(x=>x.key===data.accent); return a?a.c:null; }
 function applyAccent(){
   let c=accentColor();

@@ -107,6 +107,16 @@ ok("etiqueta del FAB traducida", VP.t('fab_label')==='Acciones rápidas');
 ok('álbum vacío usa su estado vacío', VP.albumHTML({album:[]}).includes(VP.t('no_album')));
 ok('álbum con fotos no lo muestra', !VP.albumHTML({album:[{id:'1',img:'x',fecha:'2026-01-01'}]}).includes(VP.t('no_album')));
 
+section('Contraste WCAG AA del acento (texto blanco sobre botón primario)');
+(()=>{
+  const Lc=c=>{c/=255;return c<=0.03928?c/12.92:((c+0.055)/1.055)**2.4};
+  const lum=([r,g,b])=>0.2126*Lc(r)+0.7152*Lc(g)+0.0722*Lc(b);
+  const hx=h=>[1,3,5].map(i=>parseInt(h.slice(i,i+2),16));
+  const rW=h=>1.05/(lum(hx(h))+0.05);
+  for(const a of VP.ACCENTS) ok(`acento ${a.key} ≥4.5:1 (${rW(a.c).toFixed(2)})`, rW(a.c)>=4.5);
+  for(const [k,c] of Object.entries(VP.SPECIES_COLOR)) ok(`especie ${k} ≥4.5:1 (${rW(c).toFixed(2)})`, rW(c)>=4.5);
+})();
+
 section('Navegación (4 destinos, rango 3-5 de Material 3 / iOS HIG)');
 d.lang='es';
 const TB = VP.tabs();
