@@ -996,7 +996,7 @@ function effectiveTheme(){
 function toggleTheme(){
   const next = effectiveTheme()==='dark' ? 'light' : 'dark';
   const apply = ()=>{ data.theme = next; save(); render(); };
-  if(document.startViewTransition && !reduceMotion()) document.startViewTransition(apply); else apply();
+  withTransition(apply);
 }
 function speciesGrad(especie){
   const c=SPECIES_COLOR[especie]||SPECIES_COLOR.otro;
@@ -1438,10 +1438,19 @@ function tabs(){ return [
 // 'pet' es una sub-vista de Inicio: mientras se ve, Inicio queda marcado.
 function tabOf(cur){ return cur==='pet' ? 'home' : cur; }
 function reduceMotion(){ return !!(window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches); }
+// Envuelve una transición de vista tragando el rechazo "Transition was aborted"
+// que la API lanza si llega otra transición antes de acabar (cambios de pestaña
+// rápidos). El cambio se aplica igual; solo evitamos el error no capturado.
+function withTransition(fn){
+  if(document.startViewTransition && !reduceMotion()){
+    try{ const vt = document.startViewTransition(fn);
+      if(vt){ vt.ready && vt.ready.catch(()=>{}); vt.finished && vt.finished.catch(()=>{}); }
+    }catch(_){ fn(); }
+  } else fn();
+}
 function go(tab){
   currentTab=tab;
-  const run=()=>{ render(); window.scrollTo({top:0,behavior:'instant'}); };
-  if(document.startViewTransition && !reduceMotion()) document.startViewTransition(run); else run();
+  withTransition(()=>{ render(); window.scrollTo({top:0,behavior:'instant'}); });
 }
 // Confeti de celebración (al desbloquear un logro). Respeta reduced-motion.
 function celebrate(){
