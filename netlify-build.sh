@@ -3,7 +3,7 @@
 set -euo pipefail
 rm -rf dist && mkdir -p dist
 cp VacuPet.html index.html supabase-config.js service-worker.js manifest.webmanifest \
-   icon.svg icon-maskable.svg og-image.svg \
+   icon.svg icon-maskable.svg og-image.svg og-image.png \
    apple-touch-icon.png icon-192.png icon-512.png icon-maskable-512.png \
    _headers CNAME dist/
 # Páginas legales públicas (vacupets.com/privacidad, /terminos, /reembolsos).
