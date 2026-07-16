@@ -376,6 +376,16 @@ body.hasfab{padding-bottom:calc(148px + env(safe-area-inset-bottom))}
 .pwhero h2{margin-top:10px;font-size:20px}
 .pwhero p{color:var(--muted);margin-top:6px;font-size:13.5px}
 .pwbadge{display:inline-flex;align-items:center;gap:6px;font-size:12px;font-weight:700;padding:5px 12px;border-radius:999px;background:color-mix(in srgb,var(--accent) 15%,var(--surface));color:var(--accent)}
+.cmptable{width:100%;border-collapse:collapse;margin-top:16px;font-size:13.5px}
+.cmptable th,.cmptable td{padding:9px 8px;border-bottom:1px solid var(--line);text-align:center;vertical-align:middle}
+.cmptable th:first-child,.cmptable td:first-child{text-align:left;color:var(--ink);font-weight:500}
+.cmptable thead th{font-size:12px;font-weight:700;color:var(--muted);border-bottom:1.5px solid var(--line)}
+.cmptable td{color:var(--muted);font-weight:600}
+.cmptable .cmp-prem{background:color-mix(in srgb,var(--accent) 8%,transparent);color:var(--accent);font-weight:700}
+.cmptable thead .cmp-prem{color:var(--accent)}
+.cmptable tbody tr:last-child td{border-bottom:none}
+.cmp-yes svg{width:17px;height:17px;color:var(--accent);vertical-align:middle}
+.cmp-no{color:var(--muted);opacity:.5}
 .pwbadge svg{width:15px;height:15px}
 /* Skeleton shimmer (carga) */
 .skel{position:relative;overflow:hidden;background:var(--surface-2);border-radius:10px}
@@ -654,6 +664,7 @@ const STR = {
     pw_renew_note:'Las suscripciones se renuevan automáticamente hasta que las canceles. Puedes cancelar cuando quieras.',
     legal_terms:'Términos', legal_privacy:'Privacidad', legal_refunds:'Reembolsos',
     pf_pets:'Mascotas ilimitadas', pf_sync:'Sincronización en la nube', pf_reminders:'Recordatorios push y por email', pf_pdf:'Exportar carné en PDF', pf_docs:'Bóveda de documentos', pf_travel:'Módulo de viaje internacional',
+    cmp_free:'Gratis', cmp_core:'Vacunas y desparasitación', cmp_country:'Esquema por país', cmp_offline:'Uso sin conexión', cmp_pets:'Mascotas',
     plan_lifetime:'De por vida', plan_yearly:'Anual', plan_monthly:'Mensual', plan_premium:'Premium', plan_until:'hasta',
     sec_offers:'Recomendados', partner_label:'Recomendado', partner_cta:'Ver', partner_disclaimer:'Enlaces de afiliados: podemos ganar una comisión si compras, sin coste extra para ti. Son opcionales.',
     found_lost_title:'¡Estoy perdido!', found_lost_sub:'Si me encuentras, contacta a mi familia, por favor.', found_contact:'Contacto', found_call:'Llamar', found_medical:'Datos médicos', found_nocontact:'Sin contacto disponible', found_openapp:'¿Tienes mascotas? Abre VacuPet', found_footer:'Página de hallazgo · hecha con VacuPet',
@@ -785,6 +796,7 @@ const STR = {
     pw_renew_note:'Subscriptions renew automatically until you cancel. You can cancel anytime.',
     legal_terms:'Terms', legal_privacy:'Privacy', legal_refunds:'Refunds',
     pf_pets:'Unlimited pets', pf_sync:'Cloud sync', pf_reminders:'Push & email reminders', pf_pdf:'Export PDF record', pf_docs:'Document vault', pf_travel:'International travel module',
+    cmp_free:'Free', cmp_core:'Vaccines & deworming', cmp_country:'Country schedule', cmp_offline:'Offline use', cmp_pets:'Pets',
     plan_lifetime:'Lifetime', plan_yearly:'Yearly', plan_monthly:'Monthly', plan_premium:'Premium', plan_until:'until',
     sec_offers:'Recommended', partner_label:'Recommended', partner_cta:'View', partner_disclaimer:'Affiliate links: we may earn a commission if you buy, at no extra cost to you. They are optional.',
     found_lost_title:'I am lost!', found_lost_sub:'If you found me, please contact my family.', found_contact:'Contact', found_call:'Call', found_medical:'Medical info', found_nocontact:'No contact available', found_openapp:'Have pets? Open VacuPet', found_footer:'Found page · made with VacuPet',
@@ -916,6 +928,7 @@ const STR = {
     pw_renew_note:'As assinaturas renovam automaticamente até você cancelar. Pode cancelar quando quiser.',
     legal_terms:'Termos', legal_privacy:'Privacidade', legal_refunds:'Reembolsos',
     pf_pets:'Pets ilimitados', pf_sync:'Sincronização na nuvem', pf_reminders:'Lembretes push e por email', pf_pdf:'Exportar carteira em PDF', pf_docs:'Cofre de documentos', pf_travel:'Módulo de viagem internacional',
+    cmp_free:'Grátis', cmp_core:'Vacinas e vermífugo', cmp_country:'Esquema por país', cmp_offline:'Uso sem conexão', cmp_pets:'Pets',
     plan_lifetime:'Vitalício', plan_yearly:'Anual', plan_monthly:'Mensal', plan_premium:'Premium', plan_until:'até',
     sec_offers:'Recomendados', partner_label:'Recomendado', partner_cta:'Ver', partner_disclaimer:'Links de afiliados: podemos ganhar uma comissão se você comprar, sem custo extra para você. São opcionais.',
     found_lost_title:'Estou perdido!', found_lost_sub:'Se me encontrou, contate minha família, por favor.', found_contact:'Contato', found_call:'Ligar', found_medical:'Dados médicos', found_nocontact:'Sem contato disponível', found_openapp:'Tem pets? Abra o VacuPet', found_footer:'Página de achados · feita com VacuPet',
@@ -2460,14 +2473,6 @@ async function pullEntitlement(){
     if(row){ data.premium = { active:!!row.active, plan:row.plan||'premium', until:row.valid_until||null, source:'server' }; save(false); render(); }
   }catch(_){}
 }
-const PREMIUM_FEATURES = [
-  { icon:()=>I.paw,    key:'pf_pets' },
-  { icon:()=>I.upload, key:'pf_sync' },
-  { icon:()=>I.bell,   key:'pf_reminders' },
-  { icon:()=>I.pdf,    key:'pf_pdf' },
-  { icon:()=>I.clip,   key:'pf_docs' },
-  { icon:()=>I.shield, key:'pf_travel' },
-];
 // Enlaces legales del paywall (requisito de App Store / Google Play).
 function legalLinksHTML(){
   const L = features().legal || {};
@@ -2476,12 +2481,32 @@ function legalLinksHTML(){
   if(!parts.length) return '';
   return `<p class="hint" style="margin-top:12px;text-align:center">${parts.join(' · ')}</p>`;
 }
+// Comparativa Gratis vs Premium: convierte mejor que una lista suelta porque
+// muestra lo que ya tienes gratis y exactamente qué añade pagar.
+function comparisonHTML(){
+  const yes = `<span class="cmp-yes" aria-label="sí">${I.check}</span>`;
+  const nope = `<span class="cmp-no" aria-label="no">—</span>`;
+  const rows = [
+    [t('cmp_core'),      yes, yes],
+    [t('cmp_country'),   yes, yes],
+    [t('cmp_offline'),   yes, yes],
+    [t('cmp_pets'),      String(freePetLimit()), '∞'],
+    [t('pf_reminders'),  nope, yes],
+    [t('pf_sync'),       nope, yes],
+    [t('pf_pdf'),        nope, yes],
+    [t('pf_docs'),       nope, yes],
+    [t('pf_travel'),     nope, yes],
+  ];
+  return `<table class="cmptable">
+    <thead><tr><th></th><th>${t('cmp_free')}</th><th class="cmp-prem">Premium</th></tr></thead>
+    <tbody>${rows.map(r=>`<tr><td>${r[0]}</td><td>${r[1]}</td><td class="cmp-prem">${r[2]}</td></tr>`).join('')}</tbody>
+  </table>`;
+}
 function paywallModal(trigger){
-  const items = PREMIUM_FEATURES.map(f=>`<div class="rec"><span class="ic c-accent">${f.icon()}</span><div class="rr"><b>${t(f.key)}</b></div></div>`).join('');
   const body = `
     <div class="pwhero"><span class="pwbadge">${I.shield} Premium</span>
       <h2>${t('pw_title')}</h2><p>${t('pw_sub')}</p></div>
-    <div class="card" style="margin-top:14px">${items}</div>
+    ${comparisonHTML()}
     <p class="hint" style="margin-top:12px">${t('pw_note')}</p>
     <p class="hint" style="margin-top:8px">${t('pw_renew_note')}</p>
     ${isNative() ? `<p style="margin-top:10px;text-align:center"><button class="btn btn-ghost" id="pwRestore">${t('pw_restore')}</button></p>` : ''}
