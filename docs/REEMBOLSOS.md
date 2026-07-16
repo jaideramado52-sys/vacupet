@@ -27,7 +27,7 @@ renovación. Para evitar cobros no deseados, **cancela antes** de la fecha de re
 detiene los cobros futuros y conservas Premium hasta que expire el periodo pagado.
 
 ### 2.3 Cómo pedirlo
-Escribe a _(🟦 completar: `soporte@vacupets.com`)_ desde **el correo de tu cuenta**, indicando la fecha
+Escribe a **soporte@vacupets.com** desde **el correo de tu cuenta**, indicando la fecha
 de compra. Respondemos en un plazo máximo de **5 días hábiles**. Si se aprueba, el importe se devuelve
 por el **mismo medio de pago**; el abono puede tardar según tu banco o emisor de la tarjeta.
 
@@ -70,8 +70,6 @@ primero: casi siempre tiene arreglo.
 Esta política **no limita** los derechos que te otorgue la legislación de tu país (por ejemplo, el
 derecho de desistimiento del consumidor). Si la ley aplicable te da un plazo o una protección mayor,
 prevalece la ley.
-_(🟦 Revisar con asesoría legal: derecho de desistimiento en la jurisdicción objetivo y su interacción
-con el suministro inmediato de contenido digital.)_
 
 ## 7. Contacto
-_(🟦 Completar: correo de soporte, nombre/entidad responsable y país.)_
+**soporte@vacupets.com** · VacuPet, operado desde Guatemala.

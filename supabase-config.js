@@ -68,9 +68,9 @@ window.VACUPET_FEATURES = {
   // privacidad antes de comprar. Si un enlace está vacío, no se muestra.
   // Cámbialos a vacupets.com/... cuando publiques las páginas en el dominio.
   legal: {
-    terms:   "https://github.com/jaideramado52-sys/vacupet/blob/main/docs/TERMINOS.md",
-    privacy: "https://github.com/jaideramado52-sys/vacupet/blob/main/docs/PRIVACIDAD.md",
-    refunds: "https://github.com/jaideramado52-sys/vacupet/blob/main/docs/REEMBOLSOS.md"
+    terms:   "https://vacupets.com/terminos/",
+    privacy: "https://vacupets.com/privacidad/",
+    refunds: "https://vacupets.com/reembolsos/"
   }
 };
 

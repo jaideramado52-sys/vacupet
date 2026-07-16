@@ -1,0 +1,89 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Política de privacidad — VacuPet</title>
+<meta name="robots" content="index,follow">
+<style>
+  :root{ --accent:#0C8479; --bg:#F6FBFA; --surface:#fff; --ink:#152A27; --muted:#5C6E6B; --line:#E0ECE9; }
+  @media (prefers-color-scheme: dark){
+    :root{ --accent:#2DD4BF; --bg:#0B1512; --surface:#12201C; --ink:#E6F2EF; --muted:#93AAA5; --line:#20302B; }
+  }
+  *{ box-sizing:border-box; }
+  body{ margin:0; background:var(--bg); color:var(--ink);
+        font:16px/1.65 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,system-ui,sans-serif; }
+  .wrap{ max-width:720px; margin:0 auto; padding:0 20px 72px; }
+  header.site{ position:sticky; top:0; background:color-mix(in srgb,var(--bg) 88%,transparent);
+    backdrop-filter:saturate(160%) blur(12px); border-bottom:1px solid var(--line); }
+  header.site .in{ max-width:720px; margin:0 auto; padding:12px 20px; display:flex; align-items:center; gap:10px; }
+  .brand{ display:flex; align-items:center; gap:9px; text-decoration:none; color:var(--ink); font-weight:800; font-size:18px; }
+  .logo{ width:30px; height:30px; border-radius:8px; background:var(--accent); display:grid; place-items:center; }
+  .logo svg{ width:20px; height:20px; }
+  .spacer{ flex:1; }
+  .toapp{ font-size:13px; font-weight:600; color:var(--accent); text-decoration:none; border:1px solid var(--line);
+    padding:7px 12px; border-radius:8px; }
+  h1{ font-size:1.85rem; line-height:1.2; margin:34px 0 6px; letter-spacing:-.01em; }
+  .updated{ color:var(--muted); font-size:.9rem; margin:0 0 18px; }
+  nav.docs{ display:flex; gap:8px; flex-wrap:wrap; margin:0 0 26px; }
+  nav.docs a{ font-size:13px; font-weight:600; text-decoration:none; color:var(--muted);
+    border:1px solid var(--line); background:var(--surface); padding:7px 13px; border-radius:99px; }
+  nav.docs a.on{ color:#fff; background:var(--accent); border-color:var(--accent); }
+  @media (prefers-color-scheme: dark){ nav.docs a.on{ color:#08130F; } }
+  h2{ font-size:1.25rem; margin:30px 0 8px; }
+  h3{ font-size:1.05rem; margin:22px 0 6px; }
+  p{ margin:12px 0; }
+  a{ color:var(--accent); }
+  ul{ margin:12px 0; padding-left:22px; }
+  li{ margin:6px 0; }
+  code{ font-family:ui-monospace,Consolas,monospace; font-size:.88em; background:color-mix(in srgb,var(--accent) 12%,transparent);
+    padding:.1em .35em; border-radius:4px; }
+  hr{ border:0; border-top:1px solid var(--line); margin:26px 0; }
+  .tablewrap{ overflow-x:auto; margin:16px 0; }
+  table{ border-collapse:collapse; width:100%; font-size:.92rem; }
+  th,td{ text-align:left; padding:9px 12px; border:1px solid var(--line); vertical-align:top; }
+  th{ background:color-mix(in srgb,var(--accent) 8%,transparent); font-weight:700; }
+  footer{ margin-top:40px; padding-top:20px; border-top:1px solid var(--line); color:var(--muted); font-size:.9rem; }
+  footer a{ font-weight:600; }
+</style>
+</head>
+<body>
+<header class="site"><div class="in">
+  <a class="brand" href="/">
+    <span class="logo"><svg viewBox="0 0 512 512" fill="none"><g fill="#fff"><circle cx="150" cy="180" r="46"/><circle cx="256" cy="150" r="46"/><circle cx="362" cy="180" r="46"/><path d="M256 250c-70 0-120 55-120 110 0 40 40 55 120 55s120-15 120-55c0-55-50-110-120-110z"/></g></svg></span>
+    VacuPet
+  </a>
+  <span class="spacer"></span>
+  <a class="toapp" href="/">Abrir la app</a>
+</div></header>
+<div class="wrap">
+  <h1>Política de privacidad</h1>
+  <p class="updated">Última actualización: 15 de julio de 2026</p>
+  <nav class="docs"><a href="/privacidad/" aria-current="page" class="on">Privacidad</a><a href="/terminos/">Términos</a><a href="/reembolsos/">Reembolsos</a></nav>
+  <h2>Resumen</h2>
+<p>VacuPet es un carné de salud para mascotas. Está diseñado <strong>local-first</strong>: por defecto, tus datos viven <strong>solo en tu dispositivo</strong> (almacenamiento del navegador). La nube es <strong>opcional</strong>. <strong>No vendemos tus datos ni los cedemos con fines publicitarios.</strong></p>
+<h2>Qué datos se tratan</h2>
+<ul><li><strong>De tu mascota</strong>: nombre, especie, raza, fechas, vacunas, desparasitaciones, peso, visitas, microchip, fotos. No son datos personales de salud humana.</li><li><strong>De tu cuenta (solo si usas la nube)</strong>: tu correo electrónico, para autenticación y avisos.</li><li><strong>De tu compra (solo si contratas Premium)</strong>: identificador de tu cuenta, plan contratado y estado de la suscripción. <strong>No recibimos ni almacenamos los datos de tu tarjeta.</strong></li></ul>
+<h2>Dónde se guardan</h2>
+<ul><li><strong>Modo local (por defecto):</strong> <code>localStorage</code> de tu navegador. No se envía nada a ningún servidor.</li><li><strong>Modo nube (opcional, si inicias sesión):</strong> una copia cifrada en reposo (AES-256) en Supabase, protegida por <strong>RLS</strong> (cada cuenta solo ve sus datos), sobre TLS.</li></ul>
+<h2>Cuándo se envían datos a terceros</h2>
+<p>Solo con tu acción/consentimiento explícito:</p>
+<ul><li><strong>Asistente (FAQ general):</strong> funciona con un <strong>modelo de IA que corre en tu propio navegador</strong>. Tus preguntas <strong>no salen del dispositivo</strong>.</li><li><strong>Escanear carné (OCR):</strong> la foto <strong>sí</strong> se envía al proveedor de IA para extraer los datos, y solo si usas esa función, con <strong>consentimiento explícito</strong>.</li><li><strong>Compartir carné:</strong> generas un enlace; quien lo tenga puede ver el carné (de solo lectura). Los enlaces con token caducan (30 días).</li><li><strong>Recordatorios:</strong> push/email enviados por nuestro backend (Supabase/Resend).</li><li><strong>Compra de Premium:</strong> el proveedor de pago recibe los datos necesarios para cobrar.</li></ul>
+<h2>Proveedores (encargados del tratamiento)</h2>
+<div class="tablewrap"><table><thead><tr><th>Proveedor</th><th>Para qué</th><th>Qué recibe</th></tr></thead><tbody><tr><td><strong>Supabase</strong></td><td>Base de datos, cuentas, archivos</td><td>Datos sincronizados + tu correo</td></tr><tr><td><strong>Resend</strong></td><td>Correos de recordatorio</td><td>Tu correo y el aviso</td></tr><tr><td><strong>Anthropic</strong></td><td><strong>Solo OCR</strong> del carné</td><td>La foto del carné (si usas el OCR)</td></tr><tr><td><strong>GitHub Pages / Cloudflare</strong></td><td>Hosting del sitio</td><td>Datos de conexión (IP, logs)</td></tr><tr><td><strong>RevenueCat</strong></td><td>Gestión de suscripciones</td><td>Identificador de cuenta y estado de compra</td></tr><tr><td><strong>Procesador de pago</strong> (vía RevenueCat)</td><td>Cobro en la web</td><td>Datos de facturación; la tarjeta la procesa el proveedor, nosotros no la vemos</td></tr><tr><td><strong>Apple / Google</strong></td><td>Cobro dentro de la app móvil</td><td>Los datos de tu compra, según sus políticas</td></tr></tbody></table></div>
+<p>Todos ellos están <strong>fuera de tu país</strong> (principalmente EE.UU.): al usar la nube existe una <strong>transferencia internacional</strong> de datos. La base que la legitima es tu <strong>consentimiento</strong> al activar la nube y la <strong>necesidad de prestar el servicio</strong> que solicitas.</p>
+<h2>Seguridad</h2>
+<ul><li><strong>Bloqueo</strong> con PIN (derivado con PBKDF2) y biometría opcional (WebAuthn).</li><li><strong>Respaldo cifrado</strong> con tu contraseña (AES-GCM + PBKDF2) — ni siquiera el respaldo es legible sin ella.</li><li><strong>Integridad</strong> del carné compartido mediante firma ES256 verificable.</li><li>Fotos y documentos en <strong>bucket privado</strong> con enlaces firmados temporales.</li></ul>
+<h2>Tus derechos</h2>
+<ul><li><strong>Exportar</strong>: respaldo JSON (normal o cifrado) y CSV (portabilidad).</li><li><strong>Borrar</strong>: "Borrar mis datos" (este dispositivo) y, con cuenta, "Eliminar cuenta" (borra tu cuenta, datos, suscripciones, enlaces y fotos de la nube de forma permanente).</li><li>Cancelar tu suscripción no borra tus datos: puedes seguir viéndolos y exportándolos.</li></ul>
+<h2>Menores y descargo</h2>
+<p>VacuPet es un registro de apoyo y <strong>no reemplaza el carné oficial ni la consulta veterinaria</strong>.</p>
+<h2>Responsable y contacto</h2>
+<p><strong>Responsable:</strong> VacuPet, operado desde Guatemala. <strong>Contacto</strong> (privacidad y ejercicio de derechos): <strong>soporte@vacupets.com</strong> — respondemos en un plazo máximo de 5 días hábiles.</p>
+  <footer>
+    <p>¿Dudas? Escríbenos a <a href="mailto:soporte@vacupets.com">soporte@vacupets.com</a>.</p>
+    <p><a href="/">← Volver a VacuPet</a> · © VacuPet</p>
+  </footer>
+</div>
+</body>
+</html>

@@ -90,7 +90,7 @@ Google**, no por la nuestra.
 En la medida permitida por la ley aplicable, no respondemos por daños indirectos, lucro cesante ni
 pérdida de datos derivados del uso de la app. **VacuPet no es un dispositivo médico veterinario ni un
 certificado oficial de vacunación**, y no responde por decisiones sanitarias tomadas a partir de la
-información que registras. _(🟦 Revisar el alcance con asesoría legal según jurisdicción.)_
+información que registras.
 
 ## 10. Cambios
 Estos términos pueden actualizarse. Los cambios sustanciales, y en particular los que afecten a
@@ -98,5 +98,8 @@ precios o condiciones de cobro, se comunicarán antes de que surtan efecto. El u
 la aceptación de los cambios.
 
 ## 11. Contacto, ley aplicable y disputas
-_(🟦 Completar: nombre/entidad responsable, correo de contacto (¿`soporte@vacupets.com`?), domicilio,
-país, **ley aplicable** y **mecanismo de resolución de disputas**.)_
+**Responsable:** VacuPet, operado desde Guatemala. **Contacto:** soporte@vacupets.com.
+Estos términos se rigen por la **legislación de la República de Guatemala**. Cualquier disputa se
+intentará resolver primero de buena fe escribiendo a soporte@vacupets.com; en su defecto, se someterá
+a los tribunales competentes de Guatemala, sin perjuicio de los derechos que la ley de tu país de
+residencia te reconozca como consumidor.

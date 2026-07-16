@@ -40,11 +40,12 @@ Solo con tu acción/consentimiento explícito:
 | **Anthropic** | **Solo OCR** del carné | La foto del carné (si usas el OCR) |
 | **GitHub Pages / Cloudflare** | Hosting del sitio | Datos de conexión (IP, logs) |
 | **RevenueCat** | Gestión de suscripciones | Identificador de cuenta y estado de compra |
-| **Proveedor de pago** _(🟦 concretar)_ | Cobro en la web | Datos de facturación y tarjeta |
+| **Procesador de pago** (vía RevenueCat) | Cobro en la web | Datos de facturación; la tarjeta la procesa el proveedor, nosotros no la vemos |
 | **Apple / Google** | Cobro dentro de la app móvil | Los datos de tu compra, según sus políticas |
 
 Todos ellos están **fuera de tu país** (principalmente EE.UU.): al usar la nube existe una
-**transferencia internacional** de datos. _(🟦 Definir con asesoría legal la base que la legitima.)_
+**transferencia internacional** de datos. La base que la legitima es tu **consentimiento** al
+activar la nube y la **necesidad de prestar el servicio** que solicitas.
 
 ## Seguridad
 - **Bloqueo** con PIN (derivado con PBKDF2) y biometría opcional (WebAuthn).
@@ -62,4 +63,6 @@ Todos ellos están **fuera de tu país** (principalmente EE.UU.): al usar la nub
 VacuPet es un registro de apoyo y **no reemplaza el carné oficial ni la consulta veterinaria**.
 
 ## Responsable y contacto
-_(🟦 Completar: nombre/entidad, correo de contacto, país.)_
+**Responsable:** VacuPet, operado desde Guatemala.
+**Contacto** (privacidad y ejercicio de derechos): **soporte@vacupets.com** — respondemos en un
+plazo máximo de 5 días hábiles.
