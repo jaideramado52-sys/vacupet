@@ -1,0 +1,43 @@
+<!-- VacuPet — Plantilla de correo de ACCESO (código / magic link)
+     Pegar en: Supabase → Authentication → Emails → "Magic Link".
+     Variables de Supabase: {{ .Token }} = código de 6 dígitos · {{ .ConfirmationURL }} = enlace.
+     HTML apto para clientes de correo (estilos inline, sin flex/grid). -->
+<table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background:#f2f7f6;margin:0;padding:24px 0;font-family:-apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif">
+  <tr><td align="center">
+    <table role="presentation" width="440" cellpadding="0" cellspacing="0" style="width:440px;max-width:92%;background:#ffffff;border-radius:14px;overflow:hidden;border:1px solid #e2ece9">
+      <!-- Cabecera -->
+      <tr><td style="background:#0C8479;padding:22px 28px" align="left">
+        <span style="display:inline-block;vertical-align:middle;width:34px;height:34px;background:#ffffff;border-radius:9px;text-align:center;line-height:34px;font-size:18px">🐾</span>
+        <span style="color:#ffffff;font-size:20px;font-weight:700;vertical-align:middle;margin-left:10px">VacuPet</span>
+      </td></tr>
+      <!-- Cuerpo -->
+      <tr><td style="padding:32px 28px 8px">
+        <h1 style="margin:0 0 6px;font-size:20px;color:#152a27">Tu código de acceso</h1>
+        <p style="margin:0 0 22px;font-size:14.5px;line-height:1.55;color:#5c6e6b">
+          Usa este código para entrar en VacuPet. Caduca en 1 hora y solo funciona una vez.
+        </p>
+        <!-- Código -->
+        <div style="background:#eef6f4;border:1px solid #d6e8e3;border-radius:10px;padding:18px;text-align:center;margin-bottom:22px">
+          <span style="font-size:34px;font-weight:800;letter-spacing:8px;color:#0C8479;font-family:Consolas,Menlo,monospace">{{ .Token }}</span>
+        </div>
+        <!-- Botón alternativo -->
+        <table role="presentation" cellpadding="0" cellspacing="0" style="margin:0 auto 22px"><tr>
+          <td style="border-radius:10px;background:#0C8479" align="center">
+            <a href="{{ .ConfirmationURL }}" style="display:inline-block;padding:12px 26px;font-size:15px;font-weight:700;color:#ffffff;text-decoration:none">Entrar directamente</a>
+          </td>
+        </tr></table>
+        <p style="margin:0 0 8px;font-size:12.5px;line-height:1.5;color:#8a978f">
+          Si no intentaste iniciar sesión, ignora este correo: tu cuenta sigue segura.
+        </p>
+      </td></tr>
+      <!-- Pie -->
+      <tr><td style="padding:18px 28px;border-top:1px solid #eef2f0">
+        <p style="margin:0;font-size:12px;color:#9aa6a1">
+          VacuPet · <a href="https://vacupets.com" style="color:#0C8479;text-decoration:none">vacupets.com</a><br>
+          ¿Dudas? <a href="mailto:soporte@vacupets.com" style="color:#0C8479;text-decoration:none">soporte@vacupets.com</a>
+        </p>
+      </td></tr>
+    </table>
+    <p style="margin:16px 0 0;font-size:11px;color:#aab4b0">No reemplaza el carné oficial ni la consulta veterinaria.</p>
+  </td></tr>
+</table>

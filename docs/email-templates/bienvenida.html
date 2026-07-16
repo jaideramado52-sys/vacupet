@@ -1,0 +1,43 @@
+<!-- VacuPet — Correo de BIENVENIDA (opcional).
+     No lo envía Supabase Auth solo: se manda vía Resend desde una Edge Function
+     (p. ej. un trigger al crear el primer perfil, o un cron). Ver README.md.
+     Variables sugeridas (las rellenas tú al enviar): {{nombre}} = nombre del dueño. -->
+<table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background:#f2f7f6;margin:0;padding:24px 0;font-family:-apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif">
+  <tr><td align="center">
+    <table role="presentation" width="460" cellpadding="0" cellspacing="0" style="width:460px;max-width:92%;background:#ffffff;border-radius:14px;overflow:hidden;border:1px solid #e2ece9">
+      <tr><td style="background:#0C8479;padding:28px;text-align:center">
+        <div style="width:56px;height:56px;background:#ffffff;border-radius:15px;text-align:center;line-height:56px;font-size:30px;margin:0 auto 12px">🐾</div>
+        <div style="color:#ffffff;font-size:24px;font-weight:700">¡Bienvenido a VacuPet!</div>
+      </td></tr>
+      <tr><td style="padding:30px 30px 6px">
+        <p style="margin:0 0 16px;font-size:15px;line-height:1.6;color:#152a27">
+          Hola{{nombre}}, gracias por confiarnos la salud de tu mascota. 🐶🐱
+        </p>
+        <p style="margin:0 0 18px;font-size:14.5px;line-height:1.6;color:#5c6e6b">
+          Con VacuPet tienes su carné siempre a mano. Para empezar:
+        </p>
+        <!-- Pasos -->
+        <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="margin-bottom:20px">
+          <tr><td style="padding:8px 0;font-size:14px;color:#152a27"><b style="color:#0C8479">1.</b>&nbsp; Añade a tu mascota y su primera vacuna</td></tr>
+          <tr><td style="padding:8px 0;font-size:14px;color:#152a27"><b style="color:#0C8479">2.</b>&nbsp; Activa los recordatorios para no perder ninguna dosis</td></tr>
+          <tr><td style="padding:8px 0;font-size:14px;color:#152a27"><b style="color:#0C8479">3.</b>&nbsp; Revisa las guías por etapa y el detector de alimentos tóxicos</td></tr>
+        </table>
+        <table role="presentation" cellpadding="0" cellspacing="0" style="margin:4px 0 22px"><tr>
+          <td style="border-radius:10px;background:#0C8479">
+            <a href="https://vacupets.com" style="display:inline-block;padding:13px 30px;font-size:15px;font-weight:700;color:#ffffff;text-decoration:none">Abrir VacuPet</a>
+          </td>
+        </tr></table>
+        <p style="margin:0 0 6px;font-size:13px;line-height:1.55;color:#8a978f">
+          Lo esencial siempre es gratis. Tus datos viven en tu dispositivo; la nube es opcional.
+        </p>
+      </td></tr>
+      <tr><td style="padding:18px 30px;border-top:1px solid #eef2f0">
+        <p style="margin:0;font-size:12px;color:#9aa6a1">
+          VacuPet · <a href="https://vacupets.com" style="color:#0C8479;text-decoration:none">vacupets.com</a> ·
+          <a href="mailto:soporte@vacupets.com" style="color:#0C8479;text-decoration:none">soporte@vacupets.com</a><br>
+          No reemplaza el carné oficial ni la consulta veterinaria.
+        </p>
+      </td></tr>
+    </table>
+  </td></tr>
+</table>
