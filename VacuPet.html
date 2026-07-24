@@ -189,7 +189,7 @@ section.block{margin:22px 0 0}
 .rec .iconmini svg{width:16px;height:16px;display:block}
 .empty{text-align:center;color:var(--muted);padding:30px 20px;font-size:13.5px}
 .empty svg{width:26px;height:26px}
-.empty .eicon{width:58px;height:58px;border-radius:18px;margin:0 auto 12px;display:grid;place-items:center;background:color-mix(in srgb,var(--accent) 12%,var(--surface));color:var(--accent)}
+.empty .eicon{width:58px;height:58px;border-radius:50%;margin:0 auto 12px;display:grid;place-items:center;background:color-mix(in srgb,var(--accent) 8%,var(--surface));border:2px dashed color-mix(in srgb,var(--accent) 42%,transparent);color:var(--accent)}
 
 /* ---- Selector de color de acento ---- */
 .swatches{display:flex;gap:12px;flex-wrap:wrap;justify-content:center;padding:4px 0}
@@ -440,11 +440,51 @@ body.hasfab{padding-bottom:calc(148px + env(safe-area-inset-bottom))}
 
 /* ---- Logros ---- */
 .ach{display:grid;grid-template-columns:repeat(4,1fr);gap:9px}
-.ach .a{background:var(--surface);border:1px solid var(--line);border-radius:13px;padding:12px 6px;text-align:center;box-shadow:var(--shadow);opacity:.42}
-.ach .a.got{opacity:1}
-.ach .a .ai{width:30px;height:30px;margin:0 auto 6px;border-radius:9px;display:grid;place-items:center}
+.ach .a{background:var(--surface);border:1px solid var(--line);border-radius:13px;padding:12px 6px;text-align:center;box-shadow:var(--shadow)}
+/* Medallas: las pendientes se ven en silueta gris punteada ("por descubrir"),
+   las ganadas llevan un aro de medalla en el acento. */
+.ach .a:not(.got){opacity:.5;border-style:dashed;box-shadow:none}
+.ach .a:not(.got) .ai{filter:grayscale(1);opacity:.65}
+.ach .a .ai{width:30px;height:30px;margin:0 auto 6px;border-radius:50%;display:grid;place-items:center}
+.ach .a.got .ai{box-shadow:0 0 0 2px color-mix(in srgb,var(--accent) 40%,transparent)}
 .ach .a .ai svg{width:17px;height:17px}
 .ach .a span{font-size:10.5px;color:var(--muted);display:block;line-height:1.2}
+
+/* Check de celebración al registrar un dato de salud (successPop) */
+.spop{position:fixed;inset:0;z-index:96;display:grid;place-items:center;pointer-events:none}
+.spop .c{width:92px;height:92px;border-radius:50%;background:var(--accent);display:grid;place-items:center;box-shadow:var(--shadow-lg);animation:spopIn .45s cubic-bezier(.34,1.56,.64,1) both}
+.spop svg{width:46px;height:46px;stroke:var(--on-accent)}
+.spop svg path{stroke-dasharray:36;stroke-dashoffset:36;animation:spopDraw .35s ease .18s forwards}
+.spop.out{animation:spopOut .25s ease forwards}
+@keyframes spopIn{from{transform:scale(.3);opacity:0}to{transform:scale(1);opacity:1}}
+@keyframes spopDraw{to{stroke-dashoffset:0}}
+@keyframes spopOut{to{opacity:0}}
+
+/* Loader de marca: huellitas que "caminan" (pawLoad) */
+.pawload{position:fixed;inset:0;z-index:97;display:grid;place-items:center;background:color-mix(in srgb,var(--bg) 74%,transparent);backdrop-filter:blur(2px)}
+.pawload .in{display:flex;flex-direction:column;align-items:center;gap:12px;color:var(--muted);font-size:13.5px;font-weight:600}
+.pawload .paws{display:flex;gap:13px}
+.pawload .paws svg{width:24px;height:24px;fill:var(--accent);opacity:.15;animation:pawstep 1.3s ease infinite}
+.pawload .paws svg:nth-child(2){animation-delay:.18s;transform:rotate(9deg)}
+.pawload .paws svg:nth-child(3){animation-delay:.36s}
+.pawload .paws svg:nth-child(4){animation-delay:.54s;transform:rotate(-9deg)}
+@keyframes pawstep{0%,100%{opacity:.15}30%{opacity:1}}
+@media (prefers-reduced-motion: reduce){ .pawload .paws svg{animation:none;opacity:.7} }
+
+/* Sello "al día": tampón que certifica el carné completo */
+.sello{transform:rotate(-8deg)}
+
+/* Racha de cuidado: pill centrada bajo los chips del inicio */
+.streakpill{margin:11px auto 0;width:fit-content;max-width:100%;font-size:12.5px;font-weight:700;color:var(--accent-ink);
+  background:color-mix(in srgb,var(--accent) 10%,var(--surface));border:1px solid color-mix(in srgb,var(--accent) 30%,var(--line));
+  border-radius:999px;padding:6px 14px}
+
+/* Último punto del gráfico de peso, enfatizado con un halo */
+.chart-dot-last{fill:none;stroke:var(--accent);stroke-width:2;opacity:.45}
+
+/* Morph de la foto de la mascota entre Inicio y su perfil (View Transitions) */
+.phero img{view-transition-name:pet-photo}
+.petprofile .av.big{view-transition-name:pet-photo}
 
 /* ---- Pantalla de bloqueo ---- */
 .lockscreen{position:fixed;inset:0;z-index:90;background:var(--bg);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:16px;padding:32px;text-align:center}
@@ -462,7 +502,7 @@ body.hasfab{padding-bottom:calc(148px + env(safe-area-inset-bottom))}
 @media print{
   body{padding:0;background:#fff;color:#000}
   header.app,nav.tabbar,main,.toast,.scrim,.sharebar{display:none !important}
-  #printArea{display:block;padding:24px;font-family:var(--font);color:#000}
+  #printArea{display:block;position:relative;padding:24px;font-family:var(--font);color:#000}
   #printArea h1{font-size:22px;margin-bottom:2px}
   #printArea table{width:100%;border-collapse:collapse;margin-top:14px;font-size:12px}
   #printArea th,#printArea td{border:1px solid #ccc;padding:6px 8px;text-align:left}
@@ -507,6 +547,7 @@ body.hasfab{padding-bottom:calc(148px + env(safe-area-inset-bottom))}
 /* ---------------------------- Iconos SVG ---------------------------- */
 const I = {
   paw:'<svg viewBox="0 0 24 24" fill="currentColor"><circle cx="6" cy="10" r="2.1"/><circle cx="10.5" cy="6.5" r="2.1"/><circle cx="15.5" cy="6.5" r="2.1"/><circle cx="19" cy="10.5" r="2"/><path d="M12.5 11c-2.4 0-4.3 1.7-5.2 3.4-.9 1.7-1.6 3.6.2 4.6 1.2.7 2.6-.2 4-.2s2.8.9 4 .2c1.8-1 .9-2.9 0-4.6C14.8 12.7 14.9 11 12.5 11z"/></svg>',
+  shieldpaw:'<svg viewBox="0 0 24 24"><path d="M12 2 L20.5 5.25 V12 C20.5 17 16.75 20.25 12 22.25 C7.25 20.25 3.5 17 3.5 12 V5.25 Z" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"/><g fill="currentColor" transform="translate(4.75,5) scale(.58)"><circle cx="6" cy="10" r="2.1"/><circle cx="10.5" cy="6.5" r="2.1"/><circle cx="15.5" cy="6.5" r="2.1"/><circle cx="19" cy="10.5" r="2"/><path d="M12.5 11c-2.4 0-4.3 1.7-5.2 3.4-.9 1.7-1.6 3.6.2 4.6 1.2.7 2.6-.2 4-.2s2.8.9 4 .2c1.8-1 .9-2.9 0-4.6C14.8 12.7 14.9 11 12.5 11z"/></g></svg>',
   home:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M3 10.5 12 4l9 6.5"/><path d="M5 9.5V20h14V9.5"/></svg>',
   card:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="14" rx="2.5"/><path d="M3 9.5h18M7 14h5"/></svg>',
   pet:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-3.6 3.6-6 8-6s8 2.4 8 6"/></svg>',
@@ -659,6 +700,9 @@ const STR = {
     a11y_big:'Texto grande', a11y_big_sub:'Aumenta el tamaño de la interfaz', update_ready:'Nueva versión disponible. Recarga la app.',
     demo_view:'Ver ejemplo', demo_loaded:'6 mascotas de ejemplo creadas · cámbialas en el carrusel y bórralas cuando quieras',
     sec_cares:'Cuidados', tile_care:'Cuidado', tile_care_sub:'Baño, uñas, medicación…', add_care:'Añadir cuidado', no_cares:'Sin cuidados programados', reg_care:'Registrar cuidado', saved_care:'Cuidado guardado',
+    sello_aldia:'AL DÍA', bday:'¡Feliz cumpleaños, {name}!', bday_sub:'Hoy cumple {n} 🎂',
+    streak_w:'🔥 {n} semanas con todo al día', streak_d:'🔥 {n} días con todo al día',
+    m_shareimg:'Tarjeta para compartir', m_shareimg_sub:'Imagen del carné para WhatsApp o redes', m_shareimg_done:'Imagen del carné lista',
     care_kind:'Tipo', care_title:'Título', care_last:'Última vez / fecha', care_freq:'Frecuencia', care_freq_none:'Una vez', care_every:'Cada {n} días', care_yearly:'Cada año', care_notes:'Notas',
     care_bano:'Baño', care_unas:'Corte de uñas', care_medic:'Medicación', care_grooming:'Peluquería', care_cumple:'Cumpleaños', care_otro:'Otro', care_cita:'Cita veterinaria', lbl_blood:'Grupo sanguíneo', lbl_allergies:'Alergias', lbl_conditions:'Condiciones', emerg_open:'Tarjeta de emergencia', emerg_open_sub:'Datos críticos de un toque', emerg_title:'Tarjeta de emergencia', emerg_vet24:'Buscar veterinaria 24h', emerg_none:'Sin datos', nudge_notif:'Activa los avisos para no perderte las próximas dosis', nudge_enable:'Activar', nudge_login:'Inicia sesión para recibir avisos con la app cerrada',
     sec_owner:'Dueño y contactos', owner_edit:'Datos del dueño', owner_edit_sub:'Para la tarjeta de emergencia', owner_title:'Dueño y contacto de emergencia', owner_name:'Tu nombre', owner_phone:'Tu teléfono', owner_alt:'Contacto alternativo', owner_alt_name:'Nombre', owner_alt_phone:'Teléfono', owner_saved:'Datos guardados', emerg_owner:'Dueño', emerg_call:'Llamar', emerg_lost:'Si me encuentras, contacta a:',
@@ -791,6 +835,9 @@ const STR = {
     a11y_big:'Large text', a11y_big_sub:'Increase the interface size', update_ready:'New version available. Reload the app.',
     demo_view:'View example', demo_loaded:'6 example pets created · switch in the carousel and delete anytime',
     sec_cares:'Care', tile_care:'Care', tile_care_sub:'Bath, nails, medication…', add_care:'Add care', no_cares:'No care scheduled', reg_care:'Add care task', saved_care:'Care saved',
+    sello_aldia:'UP TO DATE', bday:'Happy birthday, {name}!', bday_sub:'Turns {n} today 🎂',
+    streak_w:'🔥 {n} weeks all up to date', streak_d:'🔥 {n} days all up to date',
+    m_shareimg:'Shareable card', m_shareimg_sub:'Record image for WhatsApp or socials', m_shareimg_done:'Record image ready',
     care_kind:'Type', care_title:'Title', care_last:'Last done / date', care_freq:'Frequency', care_freq_none:'Once', care_every:'Every {n} days', care_yearly:'Yearly', care_notes:'Notes',
     care_bano:'Bath', care_unas:'Nail trim', care_medic:'Medication', care_grooming:'Grooming', care_cumple:'Birthday', care_otro:'Other', care_cita:'Vet appointment', lbl_blood:'Blood type', lbl_allergies:'Allergies', lbl_conditions:'Conditions', emerg_open:'Emergency card', emerg_open_sub:'Critical info in one tap', emerg_title:'Emergency card', emerg_vet24:'Find a 24h vet', emerg_none:'No data', nudge_notif:'Turn on alerts so you never miss a dose', nudge_enable:'Turn on', nudge_login:'Sign in to get alerts when the app is closed',
     sec_owner:'Owner & contacts', owner_edit:'Owner details', owner_edit_sub:'For the emergency card', owner_title:'Owner & emergency contact', owner_name:'Your name', owner_phone:'Your phone', owner_alt:'Alternate contact', owner_alt_name:'Name', owner_alt_phone:'Phone', owner_saved:'Details saved', emerg_owner:'Owner', emerg_call:'Call', emerg_lost:'If you find me, please contact:',
@@ -923,6 +970,9 @@ const STR = {
     a11y_big:'Texto grande', a11y_big_sub:'Aumenta o tamanho da interface', update_ready:'Nova versão disponível. Recarregue o app.',
     demo_view:'Ver exemplo', demo_loaded:'6 pets de exemplo criados · troque no carrossel e exclua quando quiser',
     sec_cares:'Cuidados', tile_care:'Cuidado', tile_care_sub:'Banho, unhas, medicação…', add_care:'Adicionar cuidado', no_cares:'Sem cuidados agendados', reg_care:'Registrar cuidado', saved_care:'Cuidado salvo',
+    sello_aldia:'EM DIA', bday:'Feliz aniversário, {name}!', bday_sub:'Faz {n} hoje 🎂',
+    streak_w:'🔥 {n} semanas com tudo em dia', streak_d:'🔥 {n} dias com tudo em dia',
+    m_shareimg:'Cartão para compartilhar', m_shareimg_sub:'Imagem da carteira para WhatsApp ou redes', m_shareimg_done:'Imagem da carteira pronta',
     care_kind:'Tipo', care_title:'Título', care_last:'Última vez / data', care_freq:'Frequência', care_freq_none:'Uma vez', care_every:'A cada {n} dias', care_yearly:'A cada ano', care_notes:'Notas',
     care_bano:'Banho', care_unas:'Corte de unhas', care_medic:'Medicação', care_grooming:'Banho e tosa', care_cumple:'Aniversário', care_otro:'Outro', care_cita:'Consulta veterinária', lbl_blood:'Tipo sanguíneo', lbl_allergies:'Alergias', lbl_conditions:'Condições', emerg_open:'Cartão de emergência', emerg_open_sub:'Dados críticos num toque', emerg_title:'Cartão de emergência', emerg_vet24:'Buscar veterinário 24h', emerg_none:'Sem dados', nudge_notif:'Ative os avisos para não perder as próximas doses', nudge_enable:'Ativar', nudge_login:'Entre para receber avisos com o app fechado',
     sec_owner:'Dono e contatos', owner_edit:'Dados do dono', owner_edit_sub:'Para o cartão de emergência', owner_title:'Dono e contato de emergência', owner_name:'Seu nome', owner_phone:'Seu telefone', owner_alt:'Contato alternativo', owner_alt_name:'Nome', owner_alt_phone:'Telefone', owner_saved:'Dados salvos', emerg_owner:'Dono', emerg_call:'Ligar', emerg_lost:'Se me encontrar, contate:',
@@ -1387,6 +1437,35 @@ function petSummary(pet){
   return {aplicadas,vencidas,proximas,next,estado,pct,rem};
 }
 
+/* ---------------------------- Racha de cuidado ---------------------------- */
+// Días seguidos con todo al día. Se rompe si hay vencidas AHORA; si no, cuenta
+// desde la última vez que una dosis se aplicó tarde (aplicación posterior a la
+// "próxima" prometida del registro anterior del mismo ítem) o desde el primer
+// registro si nunca hubo retraso.
+function careStreak(pet){
+  const s=petSummary(pet);
+  if(s.vencidas>0) return 0;
+  const items=[...(pet.vaccines||[]).map(v=>({k:'v:'+(v.nombre||''),f:v.fecha,p:v.proxima})),
+               ...(pet.dewormings||[]).map(d=>({k:'d:'+(d.tipo||''),f:d.fecha,p:d.proxima}))]
+    .filter(x=>x.f);
+  if(!items.length) return 0;
+  let lastLate=null;
+  const groups={}; items.forEach(x=>{ (groups[x.k]=groups[x.k]||[]).push(x); });
+  Object.values(groups).forEach(arr=>{
+    arr.sort((a,b)=>a.f<b.f?-1:1);
+    for(let i=0;i<arr.length-1;i++){ const p=arr[i].p, nf=arr[i+1].f;
+      if(p&&nf&&nf>p&&(!lastLate||nf>lastLate)) lastLate=nf; }
+  });
+  const from = lastLate || items.map(x=>x.f).sort()[0];
+  return Math.max(0, daysBetween(from, todayISO()));
+}
+function streakHTML(pet){
+  const d=careStreak(pet);
+  if(d<7) return '';
+  const txt = d>=14 ? tf('streak_w',{n:Math.floor(d/7)}) : tf('streak_d',{n:d});
+  return `<div class="streakpill">${txt}</div>`;
+}
+
 /* ---------------------------- Anillo de progreso ---------------------------- */
 function ringSVG(pct, color, size=58, sw=6){
   const r=(size-sw)/2, c=2*Math.PI*r, off=c*(1-pct/100);
@@ -1427,8 +1506,11 @@ function weightChart(weights){
   const line = pts.map((p,i)=>`${i?'L':'M'}${sx(p.x).toFixed(1)} ${sy(p.y).toFixed(1)}`).join(' ');
   const area = `M${sx(pts[0].x).toFixed(1)} ${(H-pad)} ` + pts.map(p=>`L${sx(p.x).toFixed(1)} ${sy(p.y).toFixed(1)}`).join(' ') + ` L${sx(pts[pts.length-1].x).toFixed(1)} ${(H-pad)} Z`;
   const dots = pts.map(p=>`<circle class="chart-dot" cx="${sx(p.x).toFixed(1)}" cy="${sy(p.y).toFixed(1)}" r="3.4"/>`).join('');
+  // El último punto (el dato vigente) se enfatiza con un halo.
+  const lp=pts[pts.length-1];
+  const halo=`<circle class="chart-dot-last" cx="${sx(lp.x).toFixed(1)}" cy="${sy(lp.y).toFixed(1)}" r="7.5"/>`;
   return `<div class="chartwrap"><svg viewBox="0 0 ${W} ${H}">
-    <path class="chart-area" d="${area}"/><path class="chart-line" d="${line}"/>${dots}
+    <path class="chart-area" d="${area}"/><path class="chart-line" d="${line}"/>${dots}${halo}
     <text class="chart-lbl" x="${pad}" y="14">${maxY} kg</text>
     <text class="chart-lbl" x="${pad}" y="${H-8}">${minY} kg</text></svg></div>`;
 }
@@ -1464,6 +1546,7 @@ function go(tab){
 }
 // Confeti de celebración (al desbloquear un logro). Respeta reduced-motion.
 function celebrate(){
+  try{ navigator.vibrate && navigator.vibrate([40,60,40]); }catch(_){}
   if(reduceMotion()) return;
   const box=document.createElement('div'); box.className='confetti';
   const colors=['#16A34A','#2563EB','#7C3AED','#DB2777','#EA580C','#F59E0B'];
@@ -1474,12 +1557,64 @@ function celebrate(){
   setTimeout(()=>box.remove(), 2400);
 }
 function achCount(pet){ return achievements(pet).filter(a=>a.got).length; }
+// Check que hace "pop" al registrar un dato de salud (+ háptica). El momento
+// clave de la app merece más que un toast: micro-festejo de ~1 s, no bloqueante.
+function successPop(){
+  try{ navigator.vibrate && navigator.vibrate(35); }catch(_){}
+  if(reduceMotion()) return;
+  const d=document.createElement('div'); d.className='spop';
+  d.innerHTML='<div class="c"><svg viewBox="0 0 24 24" fill="none" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.5 L10 17.5 L19 7.5"/></svg></div>';
+  document.body.appendChild(d);
+  setTimeout(()=>d.classList.add('out'),750); setTimeout(()=>d.remove(),1050);
+}
+// Loader de marca: overlay con huellitas que caminan. pawLoad(true,msg)/pawLoad(false).
+let pawLoadEl=null;
+function pawLoad(show, msg){
+  if(!show){ if(pawLoadEl){ pawLoadEl.remove(); pawLoadEl=null; } return; }
+  if(pawLoadEl){ const s=pawLoadEl.querySelector('.in span'); if(s&&msg) s.textContent=msg; return; }
+  pawLoadEl=document.createElement('div'); pawLoadEl.className='pawload';
+  pawLoadEl.innerHTML=`<div class="in"><div class="paws">${I.paw}${I.paw}${I.paw}${I.paw}</div><span>${esc(msg||t('loading'))}</span></div>`;
+  document.body.appendChild(pawLoadEl);
+}
+// Sello circular "al día" (tipo tampón). Hereda color vía currentColor: sirve
+// en la app (var(--green)) y en el carné impreso (#16A34A).
+function selloSVG(size=64){
+  const txt=t('sello_aldia');
+  return `<svg class="sello" width="${size}" height="${size}" viewBox="0 0 96 96" role="img" aria-label="${esc(txt)}">
+    <circle cx="48" cy="48" r="44" fill="none" stroke="currentColor" stroke-width="3.5"/>
+    <circle cx="48" cy="48" r="35" fill="none" stroke="currentColor" stroke-width="1.4" stroke-dasharray="3 4"/>
+    <path d="M32 44 L44 56 L65 31" fill="none" stroke="currentColor" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"/>
+    <text x="48" y="72" text-anchor="middle" font-size="10.5" font-weight="800" letter-spacing="1" textLength="52" lengthAdjust="spacingAndGlyphs" fill="currentColor">${esc(txt)}</text>
+  </svg>`;
+}
+function selloIf(s, size, extraStyle){
+  return (s.estado==='aldia' && s.aplicadas>0)
+    ? `<span style="color:var(--green);flex:none;line-height:0;${extraStyle||''}">${selloSVG(size)}</span>` : '';
+}
+// Cumpleaños de la mascota (comparación mes/día en horario local).
+function isBirthdayToday(nac){
+  const d=parseISO(nac); if(!d) return false; const now=new Date();
+  return d.getDate()===now.getDate() && d.getMonth()===now.getMonth() && d.getFullYear()!==now.getFullYear();
+}
+function yearsOld(nac){
+  const d=parseISO(nac); if(!d) return 0; const now=new Date();
+  let y=now.getFullYear()-d.getFullYear(); const m=now.getMonth()-d.getMonth();
+  if(m<0||(m===0&&now.getDate()<d.getDate())) y--; return y;
+}
+// Confeti de cumpleaños una sola vez al día por mascota (flag en localStorage,
+// no en data: es efímero y no debe disparar sync).
+function maybeBdayParty(pet){
+  try{ const k='vp_bday_'+pet.info.id+'_'+todayISO(); if(localStorage.getItem(k)) return '';
+    localStorage.setItem(k,'1'); setTimeout(celebrate, 450);
+  }catch(_){}
+  return '';
+}
 
 function renderChrome(){
   applyAccent();
   applyTheme();
   document.documentElement.classList.toggle('bigtext', !!data.bigText);
-  document.getElementById('brandLogo').innerHTML = (brandOn() && brand().logo) ? `<img src="${esc(brand().logo)}" alt="" style="width:100%;height:100%;object-fit:contain">` : I.paw;
+  document.getElementById('brandLogo').innerHTML = (brandOn() && brand().logo) ? `<img src="${esc(brand().logo)}" alt="" style="width:100%;height:100%;object-fit:contain">` : I.shieldpaw;
   const bn=document.getElementById('brandName'); if(bn) bn.textContent = appName();
   document.title = appName();
   const bk=document.getElementById('btnBackup'); bk.innerHTML = I.settings; bk.classList.toggle('hide', !!(shared||found||caregiver));
@@ -1572,6 +1707,10 @@ function viewHome(){
   const lostBn = isLost(pet) ? `<button class="lostbig" id="lostHome" style="width:100%;border:0;text-align:left;cursor:pointer;margin-top:14px">${I.shield}<div><b>${esc(pet.info.nombre)}: ${t('lost_on')}</b><span>${t('lost_tap_manage')}</span></div></button>` : '';
 
   const logros = achievements(pet).filter(a=>a.got).length;
+  // Cumpleaños de la mascota activa: banner festivo + confeti (una vez al día).
+  const bday = isBirthdayToday(pet.info.nacimiento) ? `${maybeBdayParty(pet)}<div class="banner c-accent" style="margin-top:14px">
+      <span class="ic c-accent" style="font-size:17px">🎂</span>
+      <div class="bb"><b>${tf('bday',{name:esc(pet.info.nombre)})}</b><span>${tf('bday_sub',{n:yearsOld(pet.info.nacimiento)})}</span></div></div>` : '';
   // Aviso: hay próxima dosis pero los avisos no están activados.
   const showNudge = !data.nudgeDismissed && s.next && ('Notification' in window) && Notification.permission!=='granted';
   const nudge = showNudge ? `<div class="banner c-accent" style="margin-top:14px">
@@ -1598,8 +1737,10 @@ function viewHome(){
       <div class="chip" data-go="card"><div class="n" data-count="${s.vencidas}" style="color:var(--red)">${s.vencidas}</div><div class="l">${t('chip_overdue')}</div></div>
       <div class="chip" data-go="pet"><div class="n" data-count="${logros}" style="color:var(--green)">${logros}</div><div class="l">${t('sec_achievements')}</div></div>
     </div>
+    ${streakHTML(pet)}
     ${coachCard('home', t('coach_home'))}
     ${lostBn}
+    ${bday}
     ${banner}
     ${nudge}
     ${clinicCard()}
@@ -1709,7 +1850,7 @@ function medModal(existing){
     const rec={ nombre, dosis:val('md-dosis').trim(), via:val('md-via'), cada:Number(val('md-cada')), veces:Number(val('md-veces'))||1, hora:val('md-hora'),
       inicio:val('md-inicio'), fin, proxima:val('md-proxima'), activo, notas:val('md-notas').trim() };
     if(existing){ Object.assign(existing, rec); } else { pet.meds.push({ id:uid(), ...rec }); }
-    save(); closeModal(); toast(t('saved_med')); render();
+    save(); closeModal(); toast(t('saved_med')); render(); successPop();
   });
 }
 // Estado del peso frente al objetivo (puro, testeable). Devuelve 'low'|'ok'|'high'|null.
@@ -1731,7 +1872,17 @@ function weightGoalBadge(pet){
 }
 function weightSection(pet){
   const weights=(pet.weights||[]).slice().sort((a,b)=>(b.fecha||'')<(a.fecha||'')?-1:1);
-  return `<section class="block"><div class="block-title"><span>${t('sec_weight')}</span>${weights.length?`<span style="text-transform:none;font-weight:600;color:var(--ink)">${t('latest_weight')}: ${weights[0].kg} kg</span>`:''}</div>
+  // Tendencia: variación % entre los dos últimos registros. Sin juicio médico
+  // (subir o bajar puede ser bueno o malo según el caso): ámbar solo si el
+  // cambio es notable (≥8%), que es cuando conviene mirarlo con el veterinario.
+  let trend='';
+  if(weights.length>1 && Number(weights[1].kg)>0){
+    const pct=(Number(weights[0].kg)-Number(weights[1].kg))/Number(weights[1].kg)*100;
+    const arrow=pct>0.5?'↗':pct<-0.5?'↘':'→';
+    const col=Math.abs(pct)>=8?'var(--amber)':'var(--muted)';
+    trend=` <span style="color:${col};font-weight:700">${arrow} ${pct>0?'+':''}${pct.toFixed(1)}%</span>`;
+  }
+  return `<section class="block"><div class="block-title"><span>${t('sec_weight')}</span>${weights.length?`<span style="text-transform:none;font-weight:600;color:var(--ink)">${t('latest_weight')}: ${weights[0].kg} kg${trend}</span>`:''}</div>
       <div class="card">
         ${weightGoalBadge(pet)}
         ${weights.length?weightChart(pet.weights):`<div class="pad empty"><div class="eicon">${I.scale}</div><div>${t('no_weight')}</div></div>`}
@@ -1748,8 +1899,9 @@ function viewCard(){
   const vis=(pet.vetVisits||[]).slice().sort((a,b)=>(b.fecha||'')<(a.fecha||'')?-1:1);
   const car=(pet.cares||[]).filter(c=>matchF(c.proxima)).sort((a,b)=>(a.proxima||'9')<(b.proxima||'9')?-1:1);
   const FILTERS=['todos','proximas','vencidas'];
+  const s=petSummary(pet);
   return `<div class="view">
-    <h1 style="font-size:22px">${t('card_of')} ${esc(pet.info.nombre)}</h1>
+    <div style="display:flex;align-items:center;justify-content:space-between;gap:10px"><h1 style="font-size:22px">${t('card_of')} ${esc(pet.info.nombre)}</h1>${selloIf(s,60)}</div>
     <div class="seg" id="cardFilterSeg" style="margin-top:12px">${FILTERS.map(f=>`<button type="button" data-cardf="${f}" class="${F===f?'on':''}">${t('cf_'+f)}</button>`).join('')}</div>
     ${coachCard('card', t('coach_card'))}
     ${all?`<button class="tile" id="timelineOpen" style="margin-top:12px"><span class="ic c-blue">${I.clock}</span><span class="tt"><b>${t('timeline_open')}</b><span>${t('timeline_open_sub')}</span></span><span class="chev">${I.chev}</span></button>`:''}
@@ -1914,6 +2066,7 @@ function viewMore(){
 
     <section class="block"><div class="block-title">${t('sec_export')}</div>
       <button class="tile" id="shareCard"><span class="ic c-accent">${I.share}</span><span class="tt"><b>${t('m_share')}</b><span>${t('m_share_sub')}</span></span><span class="chev">${I.chev}</span></button>
+      <button class="tile" id="shareImg" style="margin-top:11px"><span class="ic c-green">${I.camera}</span><span class="tt"><b>${t('m_shareimg')}</b><span>${t('m_shareimg_sub')}</span></span><span class="chev">${I.chev}</span></button>
       <button class="tile" id="expPdf" style="margin-top:11px"><span class="ic c-red">${I.pdf}</span><span class="tt"><b>${t('m_pdf')}</b><span>${t('m_pdf_sub')}</span></span><span class="chev">${I.chev}</span></button>
       <button class="tile" id="expCsv" style="margin-top:11px"><span class="ic c-violet">${I.download}</span><span class="tt"><b>${t('m_csv')}</b><span>${t('m_csv_sub')}</span></span><span class="chev">${I.chev}</span></button>
       <button class="tile" id="expJson" style="margin-top:11px"><span class="ic c-blue">${I.download}</span><span class="tt"><b>${t('m_json')}</b><span>${t('m_json_sub')}</span></span><span class="chev">${I.chev}</span></button>
@@ -1988,7 +2141,8 @@ function viewShared(){
     ${sharedSig?`<div id="vbadge" class="vbadge unk">${esc(t('verifying'))}</div>`:''}
     <div class="card hero" style="margin-top:14px">
       <div class="av" style="width:60px;height:60px;border-radius:50%;background:var(--surface-2);border:1px solid var(--line);overflow:hidden;flex:none"><img src="${petFoto(pet.info)}" alt="" style="width:100%;height:100%;object-fit:cover"></div>
-      <div><h2>${esc(pet.info.nombre)}</h2><div class="sub">${esc(cap(pet.info.especie))}${pet.info.raza?` · ${esc(pet.info.raza)}`:''}${pet.info.nacimiento?` · ${ageText(pet.info.nacimiento)}`:''}</div></div>
+      <div style="flex:1;min-width:0"><h2>${esc(pet.info.nombre)}</h2><div class="sub">${esc(cap(pet.info.especie))}${pet.info.raza?` · ${esc(pet.info.raza)}`:''}${pet.info.nacimiento?` · ${ageText(pet.info.nacimiento)}`:''}</div></div>
+      ${selloIf(s,54)}
     </div>
     <section class="block"><div class="block-title">${t('sec_vaccines')}</div>
       ${vac.length?`<div class="card">${vac.map(v=>vacRow(v,true)).join('')}</div>`:`<div class="card pad empty">${t('no_vac')}</div>`}</section>
@@ -2138,7 +2292,7 @@ function vaccineModal(existing){
     const rec={ nombre, fecha, dosis:val('v-dosis').trim(), proxima:val('v-proxima'), marca:val('v-marca').trim(),
       lote:val('v-lote').trim(), lugar:val('v-lugar').trim(), via:val('v-via'), aplicada_por:val('v-por').trim(), notas:val('v-notas').trim() };
     if(existing){ Object.assign(existing, rec); } else { pet.vaccines.push({ id:uid(), source:'manual', ...rec }); }
-    save(); closeModal(); toast(t('saved_vac')); render(); if(achCount(pet)>_a0) celebrate(); });
+    save(); closeModal(); toast(t('saved_vac')); render(); if(achCount(pet)>_a0) celebrate(); else successPop(); });
 }
 
 /* ---- Desparasitación ---- */
@@ -2161,7 +2315,7 @@ function dewormModal(existing){
     const _a0=achCount(pet);
     const rec={ tipo, producto:val('d-prod').trim(), fecha, peso:val('d-peso'), proxima:val('d-proxima'), notas:val('d-notas').trim() };
     if(existing){ Object.assign(existing, rec); } else { pet.dewormings.push({ id:uid(), ...rec }); }
-    save(); closeModal(); toast(t('saved_dew')); render(); if(achCount(pet)>_a0) celebrate(); });
+    save(); closeModal(); toast(t('saved_dew')); render(); if(achCount(pet)>_a0) celebrate(); else successPop(); });
 }
 
 /* ---- Peso ---- */
@@ -2176,7 +2330,7 @@ function weightModal(existing){
     if(existing){ existing.fecha=fecha; existing.kg=Number(kg); } else { pet.weights.push({id:uid(), fecha, kg:Number(kg)}); }
     // el peso del perfil pasa a ser el más reciente
     const latest=pet.weights.slice().sort((a,b)=>a.fecha<b.fecha?1:-1)[0]; if(latest) pet.info.peso=latest.kg;
-    save(); closeModal(); toast(t('saved_weight')); render(); if(achCount(pet)>_a0) celebrate(); });
+    save(); closeModal(); toast(t('saved_weight')); render(); if(achCount(pet)>_a0) celebrate(); else successPop(); });
 }
 
 /* ---- Visita vet ---- */
@@ -2199,7 +2353,7 @@ function visitModal(existing){
     if(!motivo){document.getElementById('f-vmotivo').classList.add('err');ok=false;} if(!fecha){document.getElementById('f-vfecha2').classList.add('err');ok=false;} if(!ok) return;
     const rec={ fecha, motivo, clinica:val('vt-clinica').trim(), diagnostico:val('vt-diag').trim(), pesoDia:val('vt-peso'), foto:visitFotoTmp||null, notas:val('vt-notas').trim() };
     if(existing){ Object.assign(existing, rec); } else { pet.vetVisits.push({id:uid(), ...rec}); }
-    save(); closeModal(); toast(t('saved_visit')); render(); });
+    save(); closeModal(); toast(t('saved_visit')); render(); successPop(); });
 }
 function visitAttachHTML(){
   return visitFotoTmp
@@ -2383,8 +2537,18 @@ function exportPDF(){
   const rowW=w=>`<tr><td>${fmt(w.fecha)}</td><td>${esc(w.kg)} kg</td></tr>`;
   const rowI=v=>`<tr><td>${fmt(v.fecha)}</td><td>${esc(v.motivo||'')}</td><td>${esc(v.diagnostico||'')}</td><td>${v.pesoDia?esc(v.pesoDia)+' kg':''}</td><td>${esc(v.clinica||'')}</td></tr>`;
   const rowM=m=>`<tr><td>${esc(m.nombre)}</td><td>${esc(m.dosis||'')}</td><td>${esc(medFreqLabel(m))}${m.hora?' · '+esc(m.hora):''}</td><td>${m.inicio?fmt(m.inicio):''}${m.fin?' → '+fmt(m.fin):''}</td><td>${m.activo===false?t('med_ended'):t('med_active')}</td></tr>`;
-  document.getElementById('printArea').innerHTML=`${brandOn()?`<div style="display:flex;align-items:center;gap:10px;border-bottom:2px solid ${esc(brand().accent||'#0D9488')};padding-bottom:8px;margin-bottom:10px">${brand().logo?`<img src="${esc(brand().logo)}" style="height:40px">`:''}<div><b style="font-size:16px">${esc(brand().clinicName||appName())}</b>${(brand().clinicPhone||brand().web)?`<div style="font-size:11px;color:#555">${[esc(brand().clinicPhone||''),esc(brand().web||'')].filter(Boolean).join(' · ')}</div>`:''}</div></div>`:''}
-    <h1>🐾 ${t('card_of')} ${esc(info.nombre)}</h1>
+  // Estética "pasaporte": banda de marca arriba + sello "al día" si el carné
+  // está completo. print-color-adjust para que la banda no salga blanca al imprimir.
+  const s=petSummary(pet);
+  const stamp=(s.estado==='aldia'&&s.aplicadas>0)?`<div style="position:absolute;top:78px;right:26px;color:#16A34A;-webkit-print-color-adjust:exact;print-color-adjust:exact">${selloSVG(92)}</div>`:'';
+  const band = brandOn()
+    ? `<div style="display:flex;align-items:center;gap:10px;border-bottom:2px solid ${esc(brand().accent||'#0D9488')};padding-bottom:8px;margin-bottom:10px">${brand().logo?`<img src="${esc(brand().logo)}" style="height:40px">`:''}<div><b style="font-size:16px">${esc(brand().clinicName||appName())}</b>${(brand().clinicPhone||brand().web)?`<div style="font-size:11px;color:#555">${[esc(brand().clinicPhone||''),esc(brand().web||'')].filter(Boolean).join(' · ')}</div>`:''}</div></div>`
+    : `<div style="display:flex;align-items:center;gap:9px;background:#0D9488;color:#fff;padding:10px 14px;border-radius:10px;margin-bottom:14px;-webkit-print-color-adjust:exact;print-color-adjust:exact">
+        <span style="width:20px;height:20px;display:inline-block;line-height:0">${I.paw}</span>
+        <b style="font-size:12.5px;letter-spacing:.13em">${esc(appName()).toUpperCase()}</b>
+        <span style="margin-left:auto;font-size:11px;opacity:.92">${fmt(todayISO())}</span></div>`;
+  document.getElementById('printArea').innerHTML=`${band}${stamp}
+    <h1>${t('card_of')} ${esc(info.nombre)}</h1>
     <div>${esc(cap(info.especie))}${info.raza?` · ${esc(info.raza)}`:''}${info.nacimiento?` · ${fmt(info.nacimiento)} (${ageText(info.nacimiento)})`:''}</div>
     <div>${info.microchip?`Microchip: ${esc(info.microchip)} · `:''}${info.esterilizado===true?'Esterilizado/a · ':''}${info.veterinario?`Vet: ${esc(info.veterinario)}`:''}</div>
     ${(info.sangre||info.alergias||info.condiciones)?`<div style="margin-top:4px">${[info.sangre?`${t('lbl_blood')}: ${esc(info.sangre)}`:'', info.alergias?`<b>${t('lbl_allergies')}: ${esc(info.alergias)}</b>`:'', info.condiciones?`${t('lbl_conditions')}: ${esc(info.condiciones)}`:''].filter(Boolean).join(' · ')}</div>`:''}
@@ -2397,6 +2561,93 @@ function exportPDF(){
     <p style="margin-top:18px;font-size:11px;color:#666">${esc(appName())} · ${fmt(todayISO())}. ${t('disc')}</p>`;
   setTimeout(()=>window.print(),60);
 }
+/* ---- Tarjeta-imagen del carné (canvas → Web Share / descarga) ----
+   Genera una imagen 1080×1350 (4:5, ideal para WhatsApp/IG) con la foto,
+   el estado, el sello "al día" y las últimas vacunas. Sin dependencias. */
+function _rr(ctx,X,Y,W,H,R){ if(ctx.roundRect){ ctx.beginPath(); ctx.roundRect(X,Y,W,H,R); return; }
+  ctx.beginPath(); ctx.moveTo(X+R,Y); ctx.arcTo(X+W,Y,X+W,Y+H,R); ctx.arcTo(X+W,Y+H,X,Y+H,R); ctx.arcTo(X,Y+H,X,Y,R); ctx.arcTo(X,Y,X+W,Y,R); ctx.closePath(); }
+function _drawPaw(ctx,cx,cy,s,color){
+  ctx.save(); ctx.translate(cx,cy); ctx.scale(s,s); ctx.translate(-12.5,-12.5); ctx.fillStyle=color;
+  [[6,10,2.1],[10.5,6.5,2.1],[15.5,6.5,2.1],[19,10.5,2]].forEach(([x,y,r])=>{ ctx.beginPath(); ctx.arc(x,y,r,0,7); ctx.fill(); });
+  ctx.fill(new Path2D('M12.5 11c-2.4 0-4.3 1.7-5.2 3.4-.9 1.7-1.6 3.6.2 4.6 1.2.7 2.6-.2 4-.2s2.8.9 4 .2c1.8-1 .9-2.9 0-4.6C14.8 12.7 14.9 11 12.5 11z'));
+  ctx.restore();
+}
+function _loadImg(src){ return new Promise((res,rej)=>{ const i=new Image(); i.onload=()=>res(i); i.onerror=rej; i.src=src; }); }
+async function shareCardImage(){
+  const pet=activePet(), info=pet.info, s=petSummary(pet);
+  const STC={aldia:'#16A34A',proximas:'#D97706',vencidas:'#DC2626'};
+  const stCol=STC[s.estado], stLbl=stateMeta()[s.estado].label;
+  const W=1080,H=1350,F='system-ui,"Segoe UI",Roboto,sans-serif';
+  const cv=document.createElement('canvas'); cv.width=W; cv.height=H; const x=cv.getContext('2d');
+  x.fillStyle='#EFF6F5'; x.fillRect(0,0,W,H);
+  // tarjeta blanca
+  x.fillStyle='#FFFFFF'; _rr(x,50,50,W-100,H-100,44); x.fill();
+  x.strokeStyle='#DCEBE8'; x.lineWidth=2; x.stroke();
+  // banda superior teal
+  x.fillStyle='#0D9488'; _rr(x,50,50,W-100,140,44); x.fill();
+  x.fillStyle='#0D9488'; x.fillRect(50,140,W-100,50); // cuadrar la base de la banda
+  _drawPaw(x,120,120,3.4,'#fff');
+  x.fillStyle='#fff'; x.textBaseline='middle';
+  x.font='800 52px '+F; x.fillText(appName().toUpperCase(),175,122);
+  x.font='600 32px '+F; x.textAlign='right'; x.fillText(fmt(todayISO()),W-100,122); x.textAlign='left';
+  // foto circular con aro del color del estado
+  try{
+    const img=await _loadImg(petFoto(info));
+    x.save(); x.beginPath(); x.arc(W/2,410,155,0,7); x.clip();
+    const r=Math.max(310/img.width,310/img.height);
+    x.drawImage(img,W/2-img.width*r/2,410-img.height*r/2,img.width*r,img.height*r); x.restore();
+  }catch(_){ x.fillStyle='#F6FBFA'; x.beginPath(); x.arc(W/2,410,155,0,7); x.fill(); }
+  x.strokeStyle=stCol; x.lineWidth=10; x.beginPath(); x.arc(W/2,410,166,0,7); x.stroke();
+  // nombre + datos
+  x.fillStyle='#102A28'; x.textAlign='center'; x.font='800 68px '+F;
+  x.fillText(info.nombre||'',W/2,650);
+  x.fillStyle='#5C6E6B'; x.font='500 36px '+F;
+  x.fillText([cap(info.especie||''),info.raza||'',info.nacimiento?ageText(info.nacimiento):''].filter(Boolean).join(' · '),W/2,708);
+  // pill de estado
+  x.font='700 34px '+F; const pw=x.measureText(stLbl).width+90;
+  _rr(x,W/2-pw/2,750,pw,64,32); x.fillStyle=stCol+'22'; x.fill();
+  x.fillStyle=stCol; x.beginPath(); x.arc(W/2-pw/2+40,782,10,0,7); x.fill();
+  x.fillText(stLbl,W/2+16,784); x.textAlign='left';
+  // sello al día (rotado, esquina derecha)
+  if(s.estado==='aldia'&&s.aplicadas>0){
+    x.save(); x.translate(W-190,330); x.rotate(-0.17); x.strokeStyle='#16A34A'; x.fillStyle='#16A34A';
+    x.lineWidth=7; x.beginPath(); x.arc(0,0,86,0,7); x.stroke();
+    x.setLineDash([6,8]); x.lineWidth=3; x.beginPath(); x.arc(0,0,68,0,7); x.stroke(); x.setLineDash([]);
+    x.lineWidth=12; x.lineCap='round'; x.lineJoin='round';
+    x.beginPath(); x.moveTo(-30,-6); x.lineTo(-6,18); x.lineTo(34,-28); x.stroke();
+    x.font='800 22px '+F; x.textAlign='center'; x.fillText(t('sello_aldia'),0,46); x.textAlign='left';
+    x.restore();
+  }
+  // últimas vacunas
+  const vac=(pet.vaccines||[]).slice().sort((a,b)=>(b.fecha||'')<(a.fecha||'')?-1:1).slice(0,4);
+  let y=900;
+  x.fillStyle='#5C6E6B'; x.font='700 30px '+F; x.fillText(t('sec_vaccines').toUpperCase(),110,y-24);
+  vac.forEach(v=>{
+    x.fillStyle='#F6FBFA'; _rr(x,110,y,W-220,84,20); x.fill();
+    _drawPaw(x,155,y+42,1.6,'#0C8479');
+    x.fillStyle='#102A28'; x.font='700 34px '+F; x.fillText(String(v.nombre||'').slice(0,26),200,y+44);
+    x.fillStyle='#5C6E6B'; x.font='500 30px '+F; x.textAlign='right'; x.fillText(fmt(v.fecha),W-140,y+44); x.textAlign='left';
+    y+=100;
+  });
+  const extra=(pet.vaccines||[]).length-vac.length;
+  if(!vac.length){ x.fillStyle='#5C6E6B'; x.font='500 32px '+F; x.fillText('—',110,y+30); y+=70; }
+  if(extra>0){ x.fillStyle='#5C6E6B'; x.font='600 28px '+F; x.fillText('+'+extra,110,y+18); }
+  // pie
+  x.fillStyle='#5C6E6B'; x.font='600 30px '+F; x.textAlign='center';
+  _drawPaw(x,W/2-150,H-104,1.5,'#0C8479');
+  x.fillText('vacupets.com',W/2+20,H-102); x.textAlign='left';
+  // compartir (nativo si se puede) o descargar
+  const blob=await new Promise(r=>cv.toBlob(r,'image/png'));
+  if(!blob){ toast('Error','error'); return; }
+  const file=new File([blob],`vacupet-${slug(info.nombre)}.png`,{type:'image/png'});
+  if(navigator.canShare && navigator.canShare({files:[file]})){
+    try{ await navigator.share({files:[file],title:appName()}); return; }
+    catch(e){ if(e && e.name==='AbortError') return; }
+  }
+  const u=URL.createObjectURL(blob); const a=document.createElement('a'); a.href=u; a.download=file.name; a.click();
+  setTimeout(()=>URL.revokeObjectURL(u),1000); toast(t('m_shareimg_done'));
+}
+
 function exportCSV(){
   const pet=activePet();
   const q=c=>`"${String(c==null?'':c).replace(/"/g,'""')}"`;
@@ -2894,7 +3145,7 @@ function authModal(){
     }
   });
 }
-async function syncNow(){ toast(t('loading'),'info'); await pullState(); await pushState(false); }
+async function syncNow(){ pawLoad(true, t('sync_syncing')); try{ await pullState(); await pushState(false); } finally{ pawLoad(false); } }
 async function signOut(){ const c=await ensureSupabase(); if(c){ try{ await c.auth.signOut(); }catch(_){} } session=null; toast(t('signed_out')); render(); }
 
 /* ======================================================================
@@ -3079,7 +3330,7 @@ function ocrStart(){
   inp.click();
 }
 async function ocrSend(dataUrl){
-  const ai=window.VACUPET_AI||{}; toast(t('ocr_sending'));
+  const ai=window.VACUPET_AI||{}; pawLoad(true, t('ocr_sending'));
   try{
     const r=await fetch(ai.ocrEndpoint,{ method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify({ image:dataUrl, lang:data.lang||'es' }) });
     const j=await r.json();
@@ -3088,6 +3339,7 @@ async function ocrSend(dataUrl){
     if(!items.length){ toast(t('ocr_none')); return; }
     ocrReview(items);
   }catch(e){ console.warn('ocr:', e); toast(t('ocr_err')); }
+  finally{ pawLoad(false); }
 }
 function ocrReview(items){
   const rows=items.map((it,i)=>{
@@ -3106,7 +3358,7 @@ function ocrReview(items){
       if(it.kind==='vacuna'){ pet.vaccines.push({ id:uid(), nombre:it.nombre||'Vacuna', fecha:it.fecha||todayISO(), dosis:it.dosis||'', proxima:it.proxima||'', marca:it.marca||'', lote:it.lote||'', lugar:'', via:'', aplicada_por:'', notas:'', source:'ocr' }); n++; }
       else { pet.dewormings.push({ id:uid(), tipo:it.tipo==='externa'?'externa':'interna', producto:it.producto||'', fecha:it.fecha||todayISO(), peso:'', proxima:it.proxima||'', notas:'', source:'ocr' }); n++; }
     });
-    save(); closeModal(); toast(tf('ocr_saved',{n})); render();
+    save(); closeModal(); toast(tf('ocr_saved',{n})); render(); if(n>0) successPop();
   });
 }
 
@@ -3717,7 +3969,7 @@ function careModal(existing){
   document.getElementById('saveCare').onclick=()=>{ const fecha=val('c-fecha'); if(!fecha){document.getElementById('f-cfecha').classList.add('err');return;}
     const rec={ kind, titulo:val('c-title').trim()||t('care_'+kind), fecha, cada:Number(val('c-freq')), proxima:val('c-proxima'), notas:val('c-notas').trim() };
     if(existing){ Object.assign(existing, rec); } else { pet.cares.push({ id:uid(), ...rec }); }
-    save(); closeModal(); toast(t('saved_care')); render(); };
+    save(); closeModal(); toast(t('saved_care')); render(); successPop(); };
 }
 
 /* ======================================================================
@@ -3962,6 +4214,7 @@ document.addEventListener('click', e=>{
   const th0=t0.closest('[data-theme-set]'); if(th0){ data.theme=th0.dataset.themeSet; save(); render(); return; }
   const aa=t0.closest('[data-accentauto]'); if(aa){ data.accentAuto = aa.dataset.accentauto==='1'; save(); render(); return; }
   if(t0.closest('#shareCard')){ shareModal(); return; }
+  if(t0.closest('#shareImg')){ shareCardImage(); return; }
   if(t0.closest('#expIcs')){ exportICS(); return; }
   if(t0.closest('#expPdf')){ if(requirePremium('pdf')) exportPDF(); return; }
   if(t0.closest('#expCsv')){ exportCSV(); return; }
