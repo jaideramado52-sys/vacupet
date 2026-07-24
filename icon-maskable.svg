@@ -1,11 +1,14 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" role="img" aria-label="VacuPet">
-  <!-- Maskable: fondo a sangre (sin esquinas redondeadas) y patita dentro de la zona segura (~60% central) -->
+  <!-- Maskable: fondo a sangre y escudo dentro de la zona segura (~65% central) -->
   <rect width="512" height="512" fill="#0D9488"/>
-  <g fill="#ffffff" transform="translate(93,100) scale(13)">
-    <circle cx="6" cy="10" r="2.1"/>
-    <circle cx="10.5" cy="6.5" r="2.1"/>
-    <circle cx="15.5" cy="6.5" r="2.1"/>
-    <circle cx="19" cy="10.5" r="2"/>
-    <path d="M12.5 11c-2.4 0-4.3 1.7-5.2 3.4-.9 1.7-1.6 3.6.2 4.6 1.2.7 2.6-.2 4-.2s2.8.9 4 .2c1.8-1 .9-2.9 0-4.6C14.8 12.7 14.9 11 12.5 11z"/>
+  <g transform="translate(88,86) scale(7)">
+    <path d="M24 4 L41 10.5 V24 C41 34 33.5 40.5 24 44.5 C14.5 40.5 7 34 7 24 V10.5 Z" fill="none" stroke="#ffffff" stroke-width="3.4" stroke-linejoin="round"/>
+    <g fill="#ffffff" transform="translate(9.5,10) scale(1.16)">
+      <circle cx="6" cy="10" r="2.1"/>
+      <circle cx="10.5" cy="6.5" r="2.1"/>
+      <circle cx="15.5" cy="6.5" r="2.1"/>
+      <circle cx="19" cy="10.5" r="2"/>
+      <path d="M12.5 11c-2.4 0-4.3 1.7-5.2 3.4-.9 1.7-1.6 3.6.2 4.6 1.2.7 2.6-.2 4-.2s2.8.9 4 .2c1.8-1 .9-2.9 0-4.6C14.8 12.7 14.9 11 12.5 11z"/>
+    </g>
   </g>
 </svg>

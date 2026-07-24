@@ -9,12 +9,15 @@
   <!-- Tarjeta del logo -->
   <g transform="translate(140,190)">
     <rect width="250" height="250" rx="56" fill="#ffffff"/>
-    <g fill="#0D9488" transform="translate(37.5,41) scale(7)">
-      <circle cx="6" cy="10" r="2.1"/>
-      <circle cx="10.5" cy="6.5" r="2.1"/>
-      <circle cx="15.5" cy="6.5" r="2.1"/>
-      <circle cx="19" cy="10.5" r="2"/>
-      <path d="M12.5 11c-2.4 0-4.3 1.7-5.2 3.4-.9 1.7-1.6 3.6.2 4.6 1.2.7 2.6-.2 4-.2s2.8.9 4 .2c1.8-1 .9-2.9 0-4.6C14.8 12.7 14.9 11 12.5 11z"/>
+    <g transform="translate(23,22) scale(4.25)">
+      <path d="M24 4 L41 10.5 V24 C41 34 33.5 40.5 24 44.5 C14.5 40.5 7 34 7 24 V10.5 Z" fill="none" stroke="#0D9488" stroke-width="3.4" stroke-linejoin="round"/>
+      <g fill="#0D9488" transform="translate(9.5,10) scale(1.16)">
+        <circle cx="6" cy="10" r="2.1"/>
+        <circle cx="10.5" cy="6.5" r="2.1"/>
+        <circle cx="15.5" cy="6.5" r="2.1"/>
+        <circle cx="19" cy="10.5" r="2"/>
+        <path d="M12.5 11c-2.4 0-4.3 1.7-5.2 3.4-.9 1.7-1.6 3.6.2 4.6 1.2.7 2.6-.2 4-.2s2.8.9 4 .2c1.8-1 .9-2.9 0-4.6C14.8 12.7 14.9 11 12.5 11z"/>
+      </g>
     </g>
   </g>
   <!-- Texto -->
