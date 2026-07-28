@@ -486,6 +486,40 @@ body.hasfab{padding-bottom:calc(148px + env(safe-area-inset-bottom))}
 .phero img{view-transition-name:pet-photo}
 .petprofile .av.big{view-transition-name:pet-photo}
 
+/* Tipografía expresiva (dirección M3 Expressive): héroes y cifras con carácter */
+h1{font-weight:850;letter-spacing:-.03em}
+.pinfo h2,.petprofile h2{font-weight:850;letter-spacing:-.02em}
+.chip .n{font-weight:800;letter-spacing:-.03em}
+
+/* Onboarding de 3 pasos */
+.onb-dots{display:flex;gap:7px;justify-content:center;margin-top:18px}
+.onb-dots i{width:8px;height:8px;border-radius:50%;background:var(--line);transition:all .25s ease}
+.onb-dots i.on{background:var(--accent);width:22px;border-radius:5px}
+.onb-strip{display:flex;justify-content:center;gap:10px;margin:10px 0 4px}
+.onb-strip .sp{width:54px;height:54px;border-radius:50%;overflow:hidden;border:2px solid var(--line);background:var(--surface-2);flex:none}
+.onb-strip .sp img{width:100%;height:100%;object-fit:cover}
+.onb-ico{display:inline-block;width:62px;height:62px}
+.onb-ico svg{width:62px;height:62px}
+
+/* Modo presentación del carné: fondo blanco fijo (máximo contraste para
+   escanear/leer), independiente del tema */
+.present{position:fixed;inset:0;z-index:98;background:#fff;color:#102A28;display:flex;flex-direction:column;align-items:center;gap:8px;padding:26px 20px 34px;overflow:auto;text-align:center}
+.present .x{position:absolute;top:14px;right:14px;width:40px;height:40px;border-radius:50%;border:1px solid #DCEBE8;background:#F6FBFA;font-size:17px;display:grid;place-items:center;color:#102A28;cursor:pointer}
+.present .ph{width:96px;height:96px;border-radius:50%;overflow:hidden;border:4px solid #0D9488;margin-top:8px;flex:none}
+.present .ph img{width:100%;height:100%;object-fit:cover}
+.present h2{font-size:26px;margin:2px 0 0;font-weight:850;letter-spacing:-.02em}
+.present .qr{background:#fff;padding:10px;border:1px solid #DCEBE8;border-radius:14px;margin-top:6px}
+.present .qr img{display:block;width:min(60vw,250px);height:auto;image-rendering:pixelated}
+
+/* Selector de plan del paywall (anual destacado) */
+.plans{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:14px}
+.plan{border:1.5px solid var(--line);border-radius:13px;padding:12px 10px;text-align:center;cursor:pointer;background:var(--surface);font-family:inherit;color:var(--ink)}
+.plan.on{border-color:var(--accent);box-shadow:0 0 0 3px color-mix(in srgb,var(--accent) 18%,transparent)}
+.plan .pn{font-weight:800;font-size:14px}
+.plan .pp{font-size:18px;font-weight:800;letter-spacing:-.02em;margin-top:2px;font-variant-numeric:tabular-nums}
+.plan .ps{font-size:11px;color:var(--green);font-weight:700;margin-top:2px}
+.plan .best{display:inline-block;font-size:9.5px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;background:var(--accent);color:var(--on-accent);border-radius:999px;padding:2px 8px;margin-bottom:5px}
+
 /* ---- Pantalla de bloqueo ---- */
 .lockscreen{position:fixed;inset:0;z-index:90;background:var(--bg);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:16px;padding:32px;text-align:center}
 .lockscreen .lk-logo{width:64px;height:64px;border-radius:18px;background:var(--accent);display:grid;place-items:center;color:var(--on-accent)}
@@ -703,6 +737,16 @@ const STR = {
     sello_aldia:'AL DÍA', bday:'¡Feliz cumpleaños, {name}!', bday_sub:'Hoy cumple {n} 🎂',
     streak_w:'🔥 {n} semanas con todo al día', streak_d:'🔥 {n} días con todo al día',
     m_shareimg:'Tarjeta para compartir', m_shareimg_sub:'Imagen del carné para WhatsApp o redes', m_shareimg_done:'Imagen del carné lista',
+    onb_s1_t:'Todo su cuidado en un solo lugar', onb_s1_s:'Vacunas, desparasitación, peso y recordatorios: el carné digital completo de tu mascota, incluso sin internet.',
+    onb_s2_t:'Tus datos son tuyos', onb_s2_s:'Viven en tu dispositivo. Exportarlos es gratis para siempre, sin anuncios y sin letra pequeña.',
+    onb_next:'Siguiente', onb_back:'Atrás',
+    manif_open:'Tus datos son tuyos', manif_open_sub:'Nuestra promesa de datos',
+    manif_1:'Tus datos viven en tu dispositivo. La nube es opcional y viaja cifrada con tu cuenta.',
+    manif_2:'Exportar todo (JSON/CSV) es gratis hoy y siempre.',
+    manif_3:'Lo que hoy es gratis nunca pasará a ser de pago. Sin paywalls retroactivos.',
+    manif_4:'Sin anuncios y sin vender tus datos. El negocio es Premium, no tú.',
+    present_open:'Mostrar carné', present_open_sub:'Pantalla completa con QR, para enseñar donde te lo pidan', present_scan:'Escanea el QR para ver el carné (solo lectura)',
+    pw_trial:'{n} días gratis', pw_best:'Mejor valor', plan_per_m:'/mes', plan_per_y:'/año',
     care_kind:'Tipo', care_title:'Título', care_last:'Última vez / fecha', care_freq:'Frecuencia', care_freq_none:'Una vez', care_every:'Cada {n} días', care_yearly:'Cada año', care_notes:'Notas',
     care_bano:'Baño', care_unas:'Corte de uñas', care_medic:'Medicación', care_grooming:'Peluquería', care_cumple:'Cumpleaños', care_otro:'Otro', care_cita:'Cita veterinaria', lbl_blood:'Grupo sanguíneo', lbl_allergies:'Alergias', lbl_conditions:'Condiciones', emerg_open:'Tarjeta de emergencia', emerg_open_sub:'Datos críticos de un toque', emerg_title:'Tarjeta de emergencia', emerg_vet24:'Buscar veterinaria 24h', emerg_none:'Sin datos', nudge_notif:'Activa los avisos para no perderte las próximas dosis', nudge_enable:'Activar', nudge_login:'Inicia sesión para recibir avisos con la app cerrada',
     sec_owner:'Dueño y contactos', owner_edit:'Datos del dueño', owner_edit_sub:'Para la tarjeta de emergencia', owner_title:'Dueño y contacto de emergencia', owner_name:'Tu nombre', owner_phone:'Tu teléfono', owner_alt:'Contacto alternativo', owner_alt_name:'Nombre', owner_alt_phone:'Teléfono', owner_saved:'Datos guardados', emerg_owner:'Dueño', emerg_call:'Llamar', emerg_lost:'Si me encuentras, contacta a:',
@@ -838,6 +882,16 @@ const STR = {
     sello_aldia:'UP TO DATE', bday:'Happy birthday, {name}!', bday_sub:'Turns {n} today 🎂',
     streak_w:'🔥 {n} weeks all up to date', streak_d:'🔥 {n} days all up to date',
     m_shareimg:'Shareable card', m_shareimg_sub:'Record image for WhatsApp or socials', m_shareimg_done:'Record image ready',
+    onb_s1_t:'All their care in one place', onb_s1_s:'Vaccines, deworming, weight and reminders: your pet’s complete digital record, even offline.',
+    onb_s2_t:'Your data is yours', onb_s2_s:'It lives on your device. Exporting it is free forever, with no ads and no fine print.',
+    onb_next:'Next', onb_back:'Back',
+    manif_open:'Your data is yours', manif_open_sub:'Our data promise',
+    manif_1:'Your data lives on your device. The cloud is optional and travels encrypted with your account.',
+    manif_2:'Exporting everything (JSON/CSV) is free today and always.',
+    manif_3:'What is free today will never become paid. No retroactive paywalls.',
+    manif_4:'No ads and no selling your data. The business is Premium, not you.',
+    present_open:'Show record', present_open_sub:'Full screen with QR, to show wherever it’s required', present_scan:'Scan the QR to view the record (read-only)',
+    pw_trial:'{n} days free', pw_best:'Best value', plan_per_m:'/mo', plan_per_y:'/yr',
     care_kind:'Type', care_title:'Title', care_last:'Last done / date', care_freq:'Frequency', care_freq_none:'Once', care_every:'Every {n} days', care_yearly:'Yearly', care_notes:'Notes',
     care_bano:'Bath', care_unas:'Nail trim', care_medic:'Medication', care_grooming:'Grooming', care_cumple:'Birthday', care_otro:'Other', care_cita:'Vet appointment', lbl_blood:'Blood type', lbl_allergies:'Allergies', lbl_conditions:'Conditions', emerg_open:'Emergency card', emerg_open_sub:'Critical info in one tap', emerg_title:'Emergency card', emerg_vet24:'Find a 24h vet', emerg_none:'No data', nudge_notif:'Turn on alerts so you never miss a dose', nudge_enable:'Turn on', nudge_login:'Sign in to get alerts when the app is closed',
     sec_owner:'Owner & contacts', owner_edit:'Owner details', owner_edit_sub:'For the emergency card', owner_title:'Owner & emergency contact', owner_name:'Your name', owner_phone:'Your phone', owner_alt:'Alternate contact', owner_alt_name:'Name', owner_alt_phone:'Phone', owner_saved:'Details saved', emerg_owner:'Owner', emerg_call:'Call', emerg_lost:'If you find me, please contact:',
@@ -973,6 +1027,16 @@ const STR = {
     sello_aldia:'EM DIA', bday:'Feliz aniversário, {name}!', bday_sub:'Faz {n} hoje 🎂',
     streak_w:'🔥 {n} semanas com tudo em dia', streak_d:'🔥 {n} dias com tudo em dia',
     m_shareimg:'Cartão para compartilhar', m_shareimg_sub:'Imagem da carteira para WhatsApp ou redes', m_shareimg_done:'Imagem da carteira pronta',
+    onb_s1_t:'Todo o cuidado em um só lugar', onb_s1_s:'Vacinas, vermífugos, peso e lembretes: a carteira digital completa do seu pet, mesmo sem internet.',
+    onb_s2_t:'Seus dados são seus', onb_s2_s:'Eles vivem no seu aparelho. Exportá-los é grátis para sempre, sem anúncios e sem letras miúdas.',
+    onb_next:'Avançar', onb_back:'Voltar',
+    manif_open:'Seus dados são seus', manif_open_sub:'Nossa promessa de dados',
+    manif_1:'Seus dados vivem no seu aparelho. A nuvem é opcional e viaja criptografada com a sua conta.',
+    manif_2:'Exportar tudo (JSON/CSV) é grátis hoje e sempre.',
+    manif_3:'O que hoje é grátis nunca passará a ser pago. Sem paywalls retroativos.',
+    manif_4:'Sem anúncios e sem vender seus dados. O negócio é o Premium, não você.',
+    present_open:'Mostrar carteira', present_open_sub:'Tela cheia com QR, para mostrar onde pedirem', present_scan:'Escaneie o QR para ver a carteira (somente leitura)',
+    pw_trial:'{n} dias grátis', pw_best:'Melhor valor', plan_per_m:'/mês', plan_per_y:'/ano',
     care_kind:'Tipo', care_title:'Título', care_last:'Última vez / data', care_freq:'Frequência', care_freq_none:'Uma vez', care_every:'A cada {n} dias', care_yearly:'A cada ano', care_notes:'Notas',
     care_bano:'Banho', care_unas:'Corte de unhas', care_medic:'Medicação', care_grooming:'Banho e tosa', care_cumple:'Aniversário', care_otro:'Outro', care_cita:'Consulta veterinária', lbl_blood:'Tipo sanguíneo', lbl_allergies:'Alergias', lbl_conditions:'Condições', emerg_open:'Cartão de emergência', emerg_open_sub:'Dados críticos num toque', emerg_title:'Cartão de emergência', emerg_vet24:'Buscar veterinário 24h', emerg_none:'Sem dados', nudge_notif:'Ative os avisos para não perder as próximas doses', nudge_enable:'Ativar', nudge_login:'Entre para receber avisos com o app fechado',
     sec_owner:'Dono e contatos', owner_edit:'Dados do dono', owner_edit_sub:'Para o cartão de emergência', owner_title:'Dono e contato de emergência', owner_name:'Seu nome', owner_phone:'Seu telefone', owner_alt:'Contato alternativo', owner_alt_name:'Nome', owner_alt_phone:'Telefone', owner_saved:'Dados salvos', emerg_owner:'Dono', emerg_call:'Ligar', emerg_lost:'Se me encontrar, contate:',
@@ -1666,17 +1730,32 @@ function render(){
   runCountUps();
 }
 
-/* ---- Onboarding ---- */
+/* ---- Onboarding (3 pasos: qué es → promesa de datos → añade tu mascota).
+   Meta: valor visible en <60 s. El paso 2 vende la promesa que ningún
+   competidor cumple (los datos son del dueño); el 3 es la acción. ---- */
+let onbStep = 0;
 function viewOnboarding(){
+  const strip = sps => `<div class="onb-strip">${sps.map(s=>`<div class="sp"><img src="${speciesArt(s)}" alt=""></div>`).join('')}</div>`;
+  const dots = `<div class="onb-dots" aria-hidden="true">${[0,1,2].map(i=>`<i class="${i===onbStep?'on':''}"></i>`).join('')}</div>`;
+  const steps = [
+    `${strip(['perro','gato','conejo','ave'])}
+     <h2 style="margin-top:10px">${t('onb_s1_t')}</h2>
+     <p style="color:var(--muted);margin:8px 0 4px">${t('onb_s1_s')}</p>
+     <button class="btn btn-primary btn-block" data-onb="next" style="margin-top:16px">${t('onb_next')}</button>`,
+    `<span class="onb-ico" style="color:var(--accent)">${I.shieldpaw}</span>
+     <h2 style="margin-top:8px">${t('onb_s2_t')}</h2>
+     <p style="color:var(--muted);margin:8px 0 4px">${t('onb_s2_s')}</p>
+     <button class="btn btn-primary btn-block" data-onb="next" style="margin-top:16px">${t('onb_next')}</button>
+     <button class="btn btn-ghost btn-block" data-onb="back" style="margin-top:8px">${t('onb_back')}</button>`,
+    `<div style="font-size:46px">🐾</div>
+     <h2 style="margin-top:10px">${t('onb_title')}</h2>
+     <p style="color:var(--muted);margin:8px 0 18px">${t('onb_sub')}</p>
+     <button class="btn btn-primary btn-block" id="onbAdd">${I.plus} ${t('onb_add')}</button>
+     ${demoAllowed()?`<button class="btn btn-ghost btn-block" id="onbDemo" style="margin-top:8px">${I.paw} ${t('demo_view')}</button>`:''}`
+  ];
   return `<div class="view">
-    <div class="card pad" style="text-align:center;margin-top:30px">
-      <div style="font-size:46px">🐾</div>
-      <h2 style="margin-top:10px">${t('onb_title')}</h2>
-      <p style="color:var(--muted);margin:8px 0 18px">${t('onb_sub')}</p>
-      <button class="btn btn-primary btn-block" id="onbAdd">${I.plus} ${t('onb_add')}</button>
-      ${demoAllowed()?`<button class="btn btn-ghost btn-block" id="onbDemo" style="margin-top:8px">${I.paw} ${t('demo_view')}</button>`:''}
-    </div>
-    ${cloudConfigured()&&!session?`<button class="tile" id="signIn" style="margin-top:14px"><span class="ic c-accent">${I.upload}</span><span class="tt"><b>${t('acc_signin')}</b><span>${t('acc_signin_sub')}</span></span><span class="chev">${I.chev}</span></button>`:''}
+    <div class="card pad" style="text-align:center;margin-top:30px">${steps[onbStep]}${dots}</div>
+    ${onbStep===2 && cloudConfigured()&&!session?`<button class="tile" id="signIn" style="margin-top:14px"><span class="ic c-accent">${I.upload}</span><span class="tt"><b>${t('acc_signin')}</b><span>${t('acc_signin_sub')}</span></span><span class="chev">${I.chev}</span></button>`:''}
     <p class="disclaimer">${t('disc_full')}</p>
   </div>`;
 }
@@ -1904,6 +1983,7 @@ function viewCard(){
     <div style="display:flex;align-items:center;justify-content:space-between;gap:10px"><h1 style="font-size:22px">${t('card_of')} ${esc(pet.info.nombre)}</h1>${selloIf(s,60)}</div>
     <div class="seg" id="cardFilterSeg" style="margin-top:12px">${FILTERS.map(f=>`<button type="button" data-cardf="${f}" class="${F===f?'on':''}">${t('cf_'+f)}</button>`).join('')}</div>
     ${coachCard('card', t('coach_card'))}
+    ${all?`<button class="tile" id="presentOpen" style="margin-top:12px"><span class="ic c-accent">${I.card}</span><span class="tt"><b>${t('present_open')}</b><span>${t('present_open_sub')}</span></span><span class="chev">${I.chev}</span></button>`:''}
     ${all?`<button class="tile" id="timelineOpen" style="margin-top:12px"><span class="ic c-blue">${I.clock}</span><span class="tt"><b>${t('timeline_open')}</b><span>${t('timeline_open_sub')}</span></span><span class="chev">${I.chev}</span></button>`:''}
     <section class="block"><div class="block-title">${t('sec_vaccines')}</div>
       ${vac.length?`<div class="card">${vac.map(v=>vacRow(v,false)).join('')}</div>`:emptyBox(I.syringe, all?t('no_vac'):t('cf_none'))}
@@ -2121,6 +2201,7 @@ function viewMore(){
     </section>
 
     <section class="block"><div class="block-title">${t('sec_about')}</div>
+      <button class="tile" id="manifOpen" style="margin-bottom:11px"><span class="ic c-green">${I.shieldpaw}</span><span class="tt"><b>${t('manif_open')}</b><span>${t('manif_open_sub')}</span></span><span class="chev">${I.chev}</span></button>
       <div class="card pad" style="font-size:13px;color:var(--muted)">${t('about_body')}<br><br>${t('disc')}</div>
     </section>
   </div>`;
@@ -2415,6 +2496,44 @@ async function shareModal(){
   ensureQR(ok=>{ const box=document.getElementById('qrbox'); if(!box) return;
     if(ok && window.qrcode){ try{ const qr=window.qrcode(0,'M'); qr.addData(link); qr.make(); box.innerHTML=qr.createImgTag(4,0); }catch(e){ box.innerHTML='<span class="hint">QR no disponible offline</span>'; } }
     else box.innerHTML='<span class="hint">QR no disponible offline</span>'; });
+}
+
+/* ---- Modo presentación: el carné a pantalla completa (fondo blanco de máximo
+   contraste, QR de solo-lectura, sello y wake lock) para enseñarlo en la
+   veterinaria, guardería o un viaje — como un boarding pass. ---- */
+let wakeLockS = null;
+async function presentCard(){
+  const pet=activePet(); const s=petSummary(pet);
+  // Payload compacto (últimas 12 vacunas) para que el QR no se desborde.
+  let link=null;
+  try{
+    const payload={ app:'vacupet', v:1, pet:{ info:{...pet.info, foto:undefined},
+      vaccines:(pet.vaccines||[]).slice(-12), dewormings:(pet.dewormings||[]).slice(-8) } };
+    link=location.origin+location.pathname+'#v='+b64urlEncode(JSON.stringify(payload));
+  }catch(_){}
+  const rab=(pet.vaccines||[]).filter(v=>/rab|rai/i.test(v.nombre||'')).sort((a,b)=>(b.fecha||'')<(a.fecha||'')?-1:1)[0];
+  const d=document.createElement('div'); d.className='present'; d.id='presentOv';
+  d.innerHTML=`<button class="x" id="presentX" aria-label="${t('close')}">✕</button>
+    <div class="ph"><img src="${petFoto(pet.info)}" alt=""></div>
+    <h2>${esc(pet.info.nombre)}</h2>
+    <div style="color:#5C6E6B;font-size:14px">${SPECIES_EMOJI[pet.info.especie]||'🐾'} ${esc(cap(pet.info.especie))}${pet.info.raza?` · ${esc(pet.info.raza)}`:''}${pet.info.nacimiento?` · ${ageText(pet.info.nacimiento)}`:''}</div>
+    ${pet.info.microchip?`<div style="font-size:13px;color:#5C6E6B">Microchip: <b style="color:#102A28">${esc(pet.info.microchip)}</b></div>`:''}
+    ${rab?`<div style="font-size:14px;margin-top:2px">💉 ${esc(rab.nombre)}: <b>${fmt(rab.fecha)}</b>${rab.proxima?` · ${fmt(rab.proxima)}`:''}</div>`:''}
+    ${(s.estado==='aldia'&&s.aplicadas>0)?`<span style="color:#16A34A;line-height:0;margin-top:2px">${selloSVG(80)}</span>`:''}
+    ${link?`<div class="qr" id="presentQR"><span style="font-size:12px;color:#5C6E6B">QR…</span></div>
+    <div style="font-size:12px;color:#5C6E6B;max-width:42ch">${t('present_scan')}</div>`:''}`;
+  document.body.appendChild(d);
+  document.getElementById('presentX').onclick=closePresent;
+  if(link) ensureQR(ok=>{ const box=document.getElementById('presentQR'); if(!box) return;
+    if(ok && window.qrcode){ try{ const qr=window.qrcode(0,'M'); qr.addData(link); qr.make(); box.innerHTML=qr.createImgTag(5,0); }catch(_){ box.remove(); } }
+    else box.remove(); });
+  try{ if(navigator.wakeLock) wakeLockS=await navigator.wakeLock.request('screen'); }catch(_){}
+  try{ if(d.requestFullscreen) await d.requestFullscreen(); }catch(_){}
+}
+function closePresent(){
+  const d=document.getElementById('presentOv'); if(d) d.remove();
+  try{ if(wakeLockS){ wakeLockS.release(); wakeLockS=null; } }catch(_){}
+  try{ if(document.fullscreenElement) document.exitFullscreen(); }catch(_){}
 }
 
 // Carga un carné compartido por TOKEN (#s=<uuid>) vía RPC get_share (lectura pública si no ha caducado).
@@ -2772,18 +2891,40 @@ function comparisonHTML(){
     <tbody>${rows.map(r=>`<tr><td>${r[0]}</td><td>${r[1]}</td><td class="cmp-prem">${r[2]}</td></tr>`).join('')}</tbody>
   </table>`;
 }
+// Selector de plan: anual destacado ("mejor valor" + trial si está configurado).
+// Los benchmarks (RevenueCat 2025-26) muestran que el anual retiene 2.5x más;
+// los precios mostrados vienen de VACUPET_FEATURES.prices (los reales los pone
+// la tienda/Stripe — esto es solo el display del paywall).
+let pwPlan = 'yearly';
+function planBoxHTML(){
+  const pr = features().prices || {};
+  const trial = Number(features().trialDays || 0);
+  const price = (v,per)=> v?`<div class="pp">${esc(v)}<span style="font-size:11px;font-weight:600;color:var(--muted)">${t(per)}</span></div>`:'';
+  return `<div class="plans" id="pwPlans">
+    <button type="button" class="plan ${pwPlan==='yearly'?'on':''}" data-plan="yearly">
+      <span class="best">${t('pw_best')}</span><div class="pn">${t('plan_yearly')}</div>
+      ${price(pr.yearly,'plan_per_y')}${trial?`<div class="ps">${tf('pw_trial',{n:trial})}</div>`:''}</button>
+    <button type="button" class="plan ${pwPlan==='monthly'?'on':''}" data-plan="monthly">
+      <div class="pn" style="margin-top:22px">${t('plan_monthly')}</div>${price(pr.monthly,'plan_per_m')}</button>
+  </div>`;
+}
 function paywallModal(trigger){
   const body = `
     <div class="pwhero"><span class="pwbadge">${I.shield} Premium</span>
       <h2>${t('pw_title')}</h2><p>${t('pw_sub')}</p></div>
     ${comparisonHTML()}
+    ${planBoxHTML()}
     <p class="hint" style="margin-top:12px">${t('pw_note')}</p>
     <p class="hint" style="margin-top:8px">${t('pw_renew_note')}</p>
     ${isNative() ? `<p style="margin-top:10px;text-align:center"><button class="btn btn-ghost" id="pwRestore">${t('pw_restore')}</button></p>` : ''}
     ${legalLinksHTML()}`;
   const foot = `<button class="btn btn-ghost" id="pwRedeem" style="flex:none">${t('pw_redeem')}</button><button class="btn btn-primary btn-block" id="pwBuy">${t('pw_cta')}</button>`;
   openModal(modalShell(t('pw_title'), body, foot));
-  document.getElementById('pwBuy').onclick = ()=>startCheckout();
+  document.getElementById('pwPlans').addEventListener('click', e=>{
+    const b=e.target.closest('.plan'); if(!b) return; pwPlan=b.dataset.plan;
+    document.querySelectorAll('#pwPlans .plan').forEach(p=>p.classList.toggle('on', p===b));
+  });
+  document.getElementById('pwBuy').onclick = ()=>startCheckout(pwPlan);
   document.getElementById('pwRedeem').onclick = redeemModal;
   const pr = document.getElementById('pwRestore');
   if(pr) pr.onclick = async ()=>{ const ok = await rcRestore(); await pullEntitlement(); if(ok||isPremium()){ closeModal(); toast(t('pw_restored')); } else toast(t('pw_redeem_bad'),'error'); };
@@ -2895,6 +3036,17 @@ function startCheckout(plan){
   }
   const u = url + (url.includes('?')?'&':'?') + p.toString();
   try{ window.open(u,'_blank'); }catch(_){ location.href=u; }
+}
+// Manifiesto de datos: la arquitectura local-first convertida en promesa
+// explícita (el pain point #1 del sector es pérdida/secuestro de datos).
+function manifModal(){
+  const items=[t('manif_1'),t('manif_2'),t('manif_3'),t('manif_4')];
+  const row=(txt,i)=>`<div style="display:flex;gap:10px;align-items:flex-start;padding:10px 0;${i<items.length-1?'border-bottom:1px solid var(--line-2)':''}">
+    <span style="color:var(--green);flex:none;width:20px;height:20px">${I.check}</span>
+    <span style="font-size:13.5px">${txt}</span></div>`;
+  const body = `<div style="text-align:center;margin:2px 0 12px"><span class="onb-ico" style="color:var(--accent)">${I.shieldpaw}</span></div>
+    <div class="card pad" style="padding-top:2px;padding-bottom:2px">${items.map(row).join('')}</div>`;
+  openModal(modalShell(t('manif_open'), body, `<button class="btn btn-primary btn-block" data-close>${t('close')}</button>`));
 }
 function redeemModal(){
   const body = `<div class="field"><label>${t('pw_redeem_ph')}</label><input id="rdCode" placeholder="XXXX-XXXX" autocomplete="off"></div>`;
@@ -4137,8 +4289,11 @@ document.addEventListener('click', e=>{
   const goEl=t0.closest('[data-go]'); if(goEl){ go(goEl.dataset.go); return; }
   if(t0.closest('#hdrAccount')){ if(session) go('more'); else authModal(); return; }
   if(t0.closest('#btnBackup')){ go('more'); return; }
+  const ob=t0.closest('[data-onb]'); if(ob){ onbStep=Math.max(0,Math.min(2,onbStep+(ob.dataset.onb==='next'?1:-1))); render(); return; }
   if(t0.closest('#onbAdd')||t0.closest('#addPet')){ if(canAddPet()) petModal(null); else paywallModal('pets'); return; }
   if(t0.closest('#onbDemo')){ if(demoAllowed()) loadDemoPet(); return; }
+  if(t0.closest('#presentOpen')){ presentCard(); return; }
+  if(t0.closest('#manifOpen')){ manifModal(); return; }
   const pa=t0.closest('[data-pet]'); if(pa){ data.activeId=pa.dataset.pet; save(); render(); return; }
   const sw=t0.closest('[data-switch]'); if(sw){ data.activeId=sw.dataset.switch; save(); closeModal(); go('home'); return; }
   if(t0.closest('#switchPet')){ switchModal(); return; }

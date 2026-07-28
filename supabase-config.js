@@ -51,6 +51,13 @@ window.VACUPET_FEATURES = {
   manageUrl: "",     // portal de gestión / restaurar compra
   devCode: "",
 
+  // --- Display del paywall (solo texto; los precios REALES los definen la
+  //     tienda/Stripe). Rellenar cuando actives monetize. Ver docs/PRECIOS_REGIONALES.md.
+  //     prices: { yearly:"US$29.99", monthly:"US$3.49" }
+  //     trialDays: 14   (solo si el trial existe de verdad en la tienda/Stripe)
+  prices: {},
+  trialDays: 0,
+
   // --- RevenueCat (compras in-app nativas, Capacitor) --------------------
   // En iOS/Android las tiendas OBLIGAN a usar su IAP para lo digital, así que
   // la app nativa compra con RevenueCat y la web usa checkoutUrl. Las API keys
