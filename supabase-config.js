@@ -58,6 +58,10 @@ window.VACUPET_FEATURES = {
   prices: {},
   trialDays: 0,
 
+  // --- Google Wallet (Fase 2): URL de la Edge Function vacupet-wallet.
+  //     Vacío = el botón no aparece. Ver docs/GOOGLE_WALLET.md.
+  walletEndpoint: "",
+
   // --- RevenueCat (compras in-app nativas, Capacitor) --------------------
   // En iOS/Android las tiendas OBLIGAN a usar su IAP para lo digital, así que
   // la app nativa compra con RevenueCat y la web usa checkoutUrl. Las API keys

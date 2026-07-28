@@ -27,6 +27,7 @@ echo "── Desplegando funciones ───────────────
 supabase functions deploy vacupet-faq  --no-verify-jwt
 supabase functions deploy vacupet-ocr  --no-verify-jwt
 supabase functions deploy vacupet-sign --no-verify-jwt
+supabase functions deploy vacupet-wallet --no-verify-jwt || true
 # Backend (cron / servidor): push, recordatorios, eliminar-cuenta
 supabase functions deploy vacupet-push
 supabase functions deploy recordatorios   || true
@@ -47,6 +48,9 @@ set_secret VAPID_PRIVATE_KEY   "${VAPID_PRIVATE_KEY:-}"
 set_secret VAPID_SUBJECT       "${VAPID_SUBJECT:-}"
 set_secret RESEND_API_KEY      "${RESEND_API_KEY:-}"
 set_secret CRON_SECRET         "${CRON_SECRET:-}"
+set_secret WALLET_SA_JSON      "${WALLET_SA_JSON:-}"
+set_secret WALLET_ISSUER_ID    "${WALLET_ISSUER_ID:-}"
+set_secret WALLET_CLASS_ID     "${WALLET_CLASS_ID:-}"
 
 echo "──────────────────────────────────────────────────────────"
 echo "✓ Listo. Recuerda:"

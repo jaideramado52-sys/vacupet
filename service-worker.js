@@ -1,5 +1,5 @@
 /* VacuPet — Service Worker (Fase 2 PWA) */
-const CACHE = "vacupet-v6";
+const CACHE = "vacupet-v7";
 const CORE = [
   "./VacuPet.html",
   "./manifest.webmanifest",
@@ -91,10 +91,28 @@ self.addEventListener("push", (e) => {
 // Al tocar una notificación, enfoca o abre la app.
 self.addEventListener("notificationclick", (e) => {
   e.notification.close();
-  const url = (e.notification.data && e.notification.data.url) || "./VacuPet.html";
+  const d = e.notification.data || {};
+  // Acción "posponer": reprograma la misma notificación +24h sin abrir la app
+  // (solo donde el navegador soporta triggers programados).
+  if (e.action === "snooze" && "showTrigger" in Notification.prototype) {
+    e.waitUntil(self.registration.showNotification("VacuPet", {
+      tag: (e.notification.tag || "vacupet-rem") + "-z",
+      body: d.body || "",
+      icon: "./icon.svg", badge: "./icon.svg",
+      data: d,
+      actions: d.actions || [],
+      showTrigger: new TimestampTrigger(Date.now() + 24 * 3600 * 1000),
+    }));
+    return;
+  }
+  // Clic normal o "registrar ahora": abre/enfoca la app en el deep link.
+  const url = d.url || "./VacuPet.html";
   e.waitUntil(
     self.clients.matchAll({ type: "window" }).then((cs) => {
-      for (const c of cs) { if ("focus" in c) return c.focus(); }
+      for (const c of cs) {
+        if ("navigate" in c && e.action === "reg") return c.navigate(url).then((cc) => cc && cc.focus());
+        if ("focus" in c) return c.focus();
+      }
       if (self.clients.openWindow) return self.clients.openWindow(url);
     })
   );

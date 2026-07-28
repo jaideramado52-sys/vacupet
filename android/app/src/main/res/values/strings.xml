@@ -4,4 +4,7 @@
     <string name="title_activity_main">VacuPet</string>
     <string name="package_name">com.vacupets.app</string>
     <string name="custom_url_scheme">com.vacupets.app</string>
+    <string name="widget_label">VacuPet · Próxima dosis</string>
+    <string name="widget_desc">La próxima vacuna o dosis de tu mascota, de un vistazo.</string>
+    <string name="widget_empty">Añade tu mascota en VacuPet</string>
 </resources>
