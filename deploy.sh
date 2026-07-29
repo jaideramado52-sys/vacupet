@@ -28,6 +28,7 @@ supabase functions deploy vacupet-faq  --no-verify-jwt
 supabase functions deploy vacupet-ocr  --no-verify-jwt
 supabase functions deploy vacupet-sign --no-verify-jwt
 supabase functions deploy vacupet-wallet --no-verify-jwt || true
+supabase functions deploy vacupet-whatsapp || true
 # Backend (cron / servidor): push, recordatorios, eliminar-cuenta
 supabase functions deploy vacupet-push
 supabase functions deploy recordatorios   || true
@@ -51,6 +52,9 @@ set_secret CRON_SECRET         "${CRON_SECRET:-}"
 set_secret WALLET_SA_JSON      "${WALLET_SA_JSON:-}"
 set_secret WALLET_ISSUER_ID    "${WALLET_ISSUER_ID:-}"
 set_secret WALLET_CLASS_ID     "${WALLET_CLASS_ID:-}"
+set_secret WA_TOKEN            "${WA_TOKEN:-}"
+set_secret WA_PHONE_ID         "${WA_PHONE_ID:-}"
+set_secret WA_TEMPLATE         "${WA_TEMPLATE:-}"
 
 echo "──────────────────────────────────────────────────────────"
 echo "✓ Listo. Recuerda:"
