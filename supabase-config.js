@@ -136,6 +136,8 @@ window.VACUPET_AI = (function () {
     faqEndpoint: null,
     // Escanear carné veterinario con IA (visión). La foto va a Claude con tu consentimiento.
     ocrEndpoint: base ? base + "/functions/v1/vacupet-ocr" : null,
+    // Chequeo por foto (piel/ojos/dientes → orientación, premium). Misma privacidad que el OCR.
+    checkupEndpoint: base ? base + "/functions/v1/vacupet-checkup" : null,
     // Firma del QR de integridad del carné (exportación profesional)
     signEndpoint: base ? base + "/functions/v1/vacupet-sign" : null,
     // Recordatorios push reales (Web Push). Pega aquí tu clave PÚBLICA VAPID

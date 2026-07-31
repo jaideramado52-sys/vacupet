@@ -747,6 +747,14 @@ const STR = {
     manif_4:'Sin anuncios y sin vender tus datos. El negocio es Premium, no tú.',
     present_open:'Mostrar carné', present_open_sub:'Pantalla completa con QR, para enseñar donde te lo pidan', present_scan:'Escanea el QR para ver el carné (solo lectura)',
     pw_trial:'{n} días gratis', pw_best:'Mejor valor', plan_per_m:'/mes', plan_per_y:'/año',
+    chk_open:'Chequeo por foto (IA)', chk_open_sub:'Piel, ojos, dientes: orientación en segundos', chk_title:'Chequeo por foto',
+    chk_consent:'La foto se envía al asistente de IA en la nube para orientarte (no diagnostica). ¿Continuar?',
+    chk_zone:'Zona', chk_z_piel:'Piel', chk_z_ojos:'Ojos', chk_z_dientes:'Dientes', chk_z_oidos:'Oídos', chk_z_otro:'Otra',
+    chk_note:'Nota (opcional)', chk_note_ph:'¿Qué te preocupa?', chk_take:'Elegir foto', chk_sending:'Analizando la foto…',
+    chk_v:'Sin señales de alarma visibles', chk_a:'Vigilar de cerca', chk_r:'Consulta veterinaria pronto',
+    chk_photo_bad:'La foto no permite valorar bien: intenta con más luz y de cerca',
+    chk_save:'Guardar en el diario', chk_saved:'Guardado en el diario', chk_err:'El chequeo no está disponible ahora',
+    chk_disc:'Orientación automática, NO un diagnóstico. Ante cualquier duda, acude a tu veterinario.',
     manada_open:'Manada', manada_open_sub:'Familia y cuidadores: quién hizo qué', manada_title:'Manada',
     manada_add:'Añadir miembro', manada_me:'Soy yo', manada_who:'¿Quién eres en este dispositivo?',
     manada_hint:'Con la manada activa, cada registro guarda quién lo hizo. Inicia sesión con la misma cuenta en otros dispositivos para compartir el carné con tu familia.',
@@ -907,6 +915,14 @@ const STR = {
     manif_4:'No ads and no selling your data. The business is Premium, not you.',
     present_open:'Show record', present_open_sub:'Full screen with QR, to show wherever it’s required', present_scan:'Scan the QR to view the record (read-only)',
     pw_trial:'{n} days free', pw_best:'Best value', plan_per_m:'/mo', plan_per_y:'/yr',
+    chk_open:'Photo checkup (AI)', chk_open_sub:'Skin, eyes, teeth: guidance in seconds', chk_title:'Photo checkup',
+    chk_consent:'The photo is sent to the cloud AI assistant for guidance (not a diagnosis). Continue?',
+    chk_zone:'Area', chk_z_piel:'Skin', chk_z_ojos:'Eyes', chk_z_dientes:'Teeth', chk_z_oidos:'Ears', chk_z_otro:'Other',
+    chk_note:'Note (optional)', chk_note_ph:'What worries you?', chk_take:'Choose photo', chk_sending:'Analyzing the photo…',
+    chk_v:'No visible warning signs', chk_a:'Watch closely', chk_r:'See a vet soon',
+    chk_photo_bad:'The photo is hard to assess: try closer and with more light',
+    chk_save:'Save to diary', chk_saved:'Saved to diary', chk_err:'Checkup is unavailable right now',
+    chk_disc:'Automatic guidance, NOT a diagnosis. When in doubt, see your vet.',
     manada_open:'Pack', manada_open_sub:'Family & caregivers: who did what', manada_title:'Pack',
     manada_add:'Add member', manada_me:'That’s me', manada_who:'Who are you on this device?',
     manada_hint:'With the pack on, every entry records who did it. Sign in with the same account on other devices to share the record with your family.',
@@ -1067,6 +1083,14 @@ const STR = {
     manif_4:'Sem anúncios e sem vender seus dados. O negócio é o Premium, não você.',
     present_open:'Mostrar carteira', present_open_sub:'Tela cheia com QR, para mostrar onde pedirem', present_scan:'Escaneie o QR para ver a carteira (somente leitura)',
     pw_trial:'{n} dias grátis', pw_best:'Melhor valor', plan_per_m:'/mês', plan_per_y:'/ano',
+    chk_open:'Check-up por foto (IA)', chk_open_sub:'Pele, olhos, dentes: orientação em segundos', chk_title:'Check-up por foto',
+    chk_consent:'A foto é enviada ao assistente de IA na nuvem para orientar (não é diagnóstico). Continuar?',
+    chk_zone:'Área', chk_z_piel:'Pele', chk_z_ojos:'Olhos', chk_z_dientes:'Dentes', chk_z_oidos:'Ouvidos', chk_z_otro:'Outra',
+    chk_note:'Nota (opcional)', chk_note_ph:'O que te preocupa?', chk_take:'Escolher foto', chk_sending:'Analisando a foto…',
+    chk_v:'Sem sinais de alerta visíveis', chk_a:'Observar de perto', chk_r:'Consulte um veterinário em breve',
+    chk_photo_bad:'A foto não permite avaliar bem: tente mais perto e com mais luz',
+    chk_save:'Salvar no diário', chk_saved:'Salvo no diário', chk_err:'Check-up indisponível agora',
+    chk_disc:'Orientação automática, NÃO um diagnóstico. Na dúvida, procure seu veterinário.',
     manada_open:'Matilha', manada_open_sub:'Família e cuidadores: quem fez o quê', manada_title:'Matilha',
     manada_add:'Adicionar membro', manada_me:'Sou eu', manada_who:'Quem é você neste aparelho?',
     manada_hint:'Com a matilha ativa, cada registro guarda quem fez. Entre com a mesma conta em outros aparelhos para compartilhar a carteira com sua família.',
@@ -2186,6 +2210,7 @@ function viewCare(){
 
     <section class="block"><div class="block-title">${t('sec_tools')}</div>
       <button class="tile" data-asst><span class="ic c-violet">${I.spark}</span><span class="tt"><b>${t('asst_open')}</b><span>${t('asst_open_sub')}</span></span><span class="chev">${I.chev}</span></button>
+      <button class="tile" id="chkOpen" style="margin-top:11px"><span class="ic c-green">${I.camera}</span><span class="tt"><b>${t('chk_open')}</b><span>${t('chk_open_sub')}</span></span><span class="chev">${I.chev}</span></button>
       <button class="tile" id="travelOpen" style="margin-top:11px"><span class="ic c-blue">${I.shield}</span><span class="tt"><b>${t('travel_open')}</b><span>${t('travel_open_sub')}</span></span><span class="chev">${I.chev}</span></button>
       <button class="tile" id="newsOpen" style="margin-top:11px"><span class="ic c-amber">${I.info}</span><span class="tt"><b>${t('news_open')}</b><span>${t('news_open_sub')}</span></span><span class="chev">${I.chev}</span></button>
     </section>
@@ -3600,6 +3625,60 @@ function renderAssistant(){
   const body=document.getElementById('chatBody'); body.scrollTop=body.scrollHeight;
 }
 
+// --- Chequeo por foto con IA (Fase 4, premium). Triaje orientativo: nivel
+// verde/ámbar/rojo + observaciones. NUNCA diagnostica; disclaimer siempre. ---
+function checkupStart(){
+  const ai=window.VACUPET_AI||{};
+  if(!ai.checkupEndpoint){ toast(t('chk_err')); return; }
+  if(!requirePremium('checkup')) return;
+  let zona='piel';
+  const zones=['piel','ojos','dientes','oidos','otro'];
+  const body=`<p class="hint">${esc(t('chk_consent'))}</p>
+    <div class="field"><label>${t('chk_zone')}</label><div class="seg" id="chkZona">${zones.map(z=>`<button type="button" data-v="${z}" class="${z==='piel'?'on':''}">${t('chk_z_'+z)}</button>`).join('')}</div></div>
+    <div class="field"><label>${t('chk_note')}</label><input id="chkNota" placeholder="${t('chk_note_ph')}"></div>`;
+  openModal(modalShell(t('chk_title'), body,
+    `<button class="btn btn-ghost" data-close style="flex:none">${t('cancel')}</button><button class="btn btn-primary btn-block" id="chkGo">${I.camera} ${t('chk_take')}</button>`));
+  document.getElementById('chkZona').addEventListener('click',e=>{ const b=e.target.closest('button'); if(!b) return; zona=b.dataset.v; [...e.currentTarget.children].forEach(c=>c.classList.toggle('on',c===b)); });
+  document.getElementById('chkGo').onclick=()=>{ const nota=val('chkNota').trim(); closeModal();
+    const inp=document.getElementById('photoInput'); inp.value='';
+    inp.onchange=()=>{ const f=inp.files[0]; if(f) compressImage(f, url=>checkupSend(url, zona, nota), 1100); };
+    inp.click(); };
+}
+async function checkupSend(dataUrl, zona, nota){
+  const ai=window.VACUPET_AI||{}; pawLoad(true, t('chk_sending'));
+  try{
+    const pet=activePet();
+    const r=await fetch(ai.checkupEndpoint,{ method:'POST', headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({ image:dataUrl, lang:data.lang||'es', especie:pet?pet.info.especie:'', zona, nota }) });
+    const j=await r.json();
+    if(!r.ok || j.error){ toast(j.error||t('chk_err'),'error'); return; }
+    checkupResult(j, zona);
+  }catch(e){ console.warn('checkup:', e); toast(t('chk_err'),'error'); }
+  finally{ pawLoad(false); }
+}
+function checkupResult(res, zona){
+  const NIV={ verde:{c:'var(--green)', bg:'c-green', lbl:t('chk_v'), icon:I.check},
+              ambar:{c:'var(--amber)', bg:'c-amber', lbl:t('chk_a'), icon:I.bell},
+              rojo:{c:'var(--red)', bg:'c-red', lbl:t('chk_r'), icon:I.stetho} };
+  const nv=NIV[res.nivel]||NIV.ambar;
+  const body=`
+    <div class="card pad" style="display:flex;gap:10px;align-items:center;border-left:4px solid ${nv.c}">
+      <span class="ic ${nv.bg}" style="width:38px;height:38px;border-radius:10px;display:grid;place-items:center;flex:none">${nv.icon}</span>
+      <b style="font-size:15px">${nv.lbl}</b></div>
+    ${res.calidad_foto==='mejorable'?`<p class="hint" style="margin-top:10px">📷 ${esc(t('chk_photo_bad'))}</p>`:''}
+    ${(res.observaciones&&res.observaciones.length)?`<div class="card" style="margin-top:12px">${res.observaciones.map(o=>`<div class="rec"><span class="ic c-blue" style="flex:none">${I.info}</span><div class="rr" style="white-space:normal"><span style="color:var(--ink);font-size:13.5px">${esc(o)}</span></div></div>`).join('')}</div>`:''}
+    ${res.recomendacion?`<div class="card pad" style="margin-top:12px;font-size:13.5px">${esc(res.recomendacion)}</div>`:''}
+    <p class="hint" style="margin-top:12px">⚕️ ${esc(t('chk_disc'))}</p>`;
+  openModal(modalShell(t('chk_title'), body,
+    `<button class="btn btn-ghost" data-close style="flex:none">${t('close')}</button><button class="btn btn-primary btn-block" id="chkSave">${t('chk_save')}</button>`));
+  document.getElementById('chkSave').onclick=()=>{
+    const pet=activePet(); if(!pet) return;
+    const resumen=(`[IA · ${t('chk_z_'+zona)}] ${nv.lbl}. `+(res.observaciones||[]).join('; ')).slice(0,300);
+    (pet.symptoms||(pet.symptoms=[])).push({ id:uid(), fecha:todayISO(), animo:'normal', apetito:'normal', sintomas:resumen, nota:res.recomendacion||'', por:porTag()||undefined });
+    save(); closeModal(); toast(t('chk_saved')); render(); successPop();
+  };
+}
+
 // --- OCR: escanear carné con IA (revisión obligatoria) ---
 function ocrStart(){
   const ai=window.VACUPET_AI||{};
@@ -4542,6 +4621,7 @@ document.addEventListener('click', e=>{
   if(t0.closest('#disOpen')){ diseasesModal(); return; }
   const cx=t0.closest('[data-coachx]'); if(cx){ markCoach(cx.dataset.coachx); render(); return; }
   if(t0.closest('#ocrScan')){ ocrStart(); return; }
+  if(t0.closest('#chkOpen')){ checkupStart(); return; }
   if(t0.closest('#signIn')){ authModal(); return; }
   if(t0.closest('#syncNow')){ syncNow(); return; }
   if(t0.closest('#signOut')){ signOut(); return; }

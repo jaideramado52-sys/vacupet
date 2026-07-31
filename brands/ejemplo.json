@@ -1,0 +1,13 @@
+{
+  "slug": "clinica-patitas",
+  "brand": {
+    "name": "Patitas",
+    "logo": "",
+    "accent": "#7C3AED",
+    "clinicName": "Clínica Veterinaria Patitas",
+    "clinicPhone": "+52 55 1234 5678",
+    "clinicWhatsApp": "+525512345678",
+    "bookUrl": "https://clinicapatitas.mx/citas",
+    "web": "https://clinicapatitas.mx"
+  }
+}

@@ -29,6 +29,7 @@ supabase functions deploy vacupet-ocr  --no-verify-jwt
 supabase functions deploy vacupet-sign --no-verify-jwt
 supabase functions deploy vacupet-wallet --no-verify-jwt || true
 supabase functions deploy vacupet-whatsapp || true
+supabase functions deploy vacupet-checkup --no-verify-jwt || true
 # Backend (cron / servidor): push, recordatorios, eliminar-cuenta
 supabase functions deploy vacupet-push
 supabase functions deploy recordatorios   || true

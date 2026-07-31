@@ -56,3 +56,6 @@ keys.txt
 # que es pública por diseño; es seguro versionarla. Si prefieres no subirla,
 # descomenta la línea siguiente y crea el archivo en cada despliegue:
 # supabase-config.js
+
+# Builds de marca blanca (generados por scripts/make-brand.mjs)
+dist-brands/
