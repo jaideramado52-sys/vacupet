@@ -124,6 +124,7 @@ test.describe('VacuPet — humo', () => {
   test('herramienta: detector de tóxicos filtra', async ({ page }) => {
     await seedDemo(page);
     await page.locator('[data-tab="care"]').click();
+    await page.locator('#libOpen').click();               // tóxicos vive ahora en Biblioteca
     await page.locator('#toxOpen').click();
     await expect(page.locator('.modal-head h3')).toHaveText('Detector de tóxicos');
     await page.locator('#toxQ').fill('chocolate');
@@ -183,6 +184,7 @@ test.describe('VacuPet — humo', () => {
   test('biblioteca de enfermedades filtra', async ({ page }) => {
     await seedDemo(page);
     await page.locator('[data-tab="care"]').click();
+    await page.locator('#libOpen').click();               // enfermedades vive ahora en Biblioteca
     await page.locator('#disOpen').click();
     await expect(page.locator('.modal-head h3')).toHaveText('Enfermedades');
     await page.locator('#disQ').fill('parvo');
