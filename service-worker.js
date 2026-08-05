@@ -1,5 +1,5 @@
 /* VacuPet — Service Worker (Fase 2 PWA) */
-const CACHE = "vacupet-v9";
+const CACHE = "vacupet-v10";
 const CORE = [
   "./VacuPet.html",
   "./manifest.webmanifest",
