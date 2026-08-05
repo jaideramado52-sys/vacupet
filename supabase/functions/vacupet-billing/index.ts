@@ -90,14 +90,14 @@ Deno.serve(async (req) => {
       user_id: appUserId, active: true, plan, valid_until: until,
       provider: "revenuecat", store, customer_id: customer, updated_at: new Date().toISOString(),
     }, { onConflict: "user_id" });
-    if (error) return new Response(JSON.stringify({ error: error.message }), { status: 500 });
+    if (error) { console.error("billing db error:", error.message); return new Response(JSON.stringify({ error: "db error" }), { status: 500 }); }
     result = "granted";
   } else if (REVOKE.has(type)) {
     const { error } = await supa.from("entitlements").upsert({
       user_id: appUserId, active: false, plan, provider: "revenuecat",
       store, customer_id: customer, updated_at: new Date().toISOString(),
     }, { onConflict: "user_id" });
-    if (error) return new Response(JSON.stringify({ error: error.message }), { status: 500 });
+    if (error) { console.error("billing db error:", error.message); return new Response(JSON.stringify({ error: "db error" }), { status: 500 }); }
     result = "revoked";
   }
   // CANCELLATION / BILLING_ISSUE / TRANSFER / TEST → 200 sin cambiar acceso.

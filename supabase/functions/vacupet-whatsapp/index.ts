@@ -49,7 +49,8 @@ function resumen(items: { nombre: string; fecha: string; mascota: string }[]): s
 const LANG: Record<string, string> = { es: "es", en: "en_US", pt: "pt_BR" };
 
 Deno.serve(async (req) => {
-  if (CRON_SECRET) {
+  if (!CRON_SECRET) return new Response("misconfigured: CRON_SECRET requerido", { status: 500 });
+  {
     const url = new URL(req.url);
     const provided = req.headers.get("x-cron-secret") || url.searchParams.get("secret");
     if (provided !== CRON_SECRET) return new Response("forbidden", { status: 403 });
@@ -89,7 +90,7 @@ Deno.serve(async (req) => {
       await supa.from("vacupet_state").update({ last_wa: today }).eq("user_id", row.user_id);
       sent++;
     } else {
-      console.error("WA error:", r.status, await r.text());
+      console.error("WA error status:", r.status);
     }
   }
   return new Response(JSON.stringify({ ok: true, sent }), { headers: { "Content-Type": "application/json" } });

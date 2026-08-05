@@ -2,6 +2,12 @@
 <html lang="es">
 <head>
 <meta charset="utf-8">
+<!-- CSP: defensa en profundidad (el XSS ya se cierra en origen con esc()/safeImgUrl).
+     object-src/base-uri/form-action bloquean plugins, secuestro de <base> y envío de
+     formularios a terceros. script-src limita orígenes de código (esm.run/jsdelivr/esm.sh
+     para web-llm y el generador de QR); connect-src queda en https: para no romper el
+     asistente IA (descarga de modelo de varios CDN) ni el sync de Supabase. -->
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval' https://esm.run https://cdn.jsdelivr.net https://esm.sh; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob: https://*.supabase.co; font-src 'self' data:; connect-src https:; worker-src 'self' blob:; child-src 'self' blob:; object-src 'none'; base-uri 'self'; form-action 'self'">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="theme-color" content="#0D9488">
 <meta name="description" content="Carné de salud digital para tu mascota: vacunas, desparasitación, peso y recordatorios.">
@@ -641,7 +647,12 @@ function speciesArt(especie){
   const svg = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 400"><defs><linearGradient id="g" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="'+bg[0]+'"/><stop offset="1" stop-color="'+bg[1]+'"/></linearGradient></defs><rect width="400" height="400" fill="url(#g)"/>'+face+'</svg>';
   return 'data:image/svg+xml;base64,' + btoa(svg);
 }
-function petFoto(info){ return (info && info.foto) || speciesArt(info ? info.especie : 'otro'); }
+// La foto puede venir de datos NO confiables (carné compartido #v=/#s=, sync).
+// petFotoRaw = URL saneada por esquema (para Image.src/canvas). petFoto = además
+// escapada para incrustar en `<img src="…">` (una URL https válida podría llevar
+// `" onerror=…`, así que el saneo de esquema NO basta sin escapar la comilla).
+function petFotoRaw(info){ return safeImgUrl(info && info.foto) || speciesArt(info ? info.especie : 'otro'); }
+function petFoto(info){ return esc(petFotoRaw(info)); }
 
 /* ======================================================================
    i18n (es / en / pt) — chrome y pantallas principales.
@@ -718,7 +729,7 @@ const STR = {
     pv_delacc:'Eliminar cuenta', pv_delacc_sub:'Borra tu cuenta y datos en la nube',
     lock_title:'Desbloquear', lock_ph:'Tu PIN', lock_unlock:'Desbloquear', lock_bio:'Usar biometría', lock_wrong:'PIN incorrecto',
     lock_set_title:'Bloqueo de la app', lock_new:'Nuevo PIN (4+ dígitos)', lock_confirm:'Repite el PIN', lock_enable:'Activar bloqueo', lock_disable:'Desactivar bloqueo',
-    lock_bio_enable:'Activar biometría', lock_bio_on:'Biometría activada', lock_mismatch:'Los PIN no coinciden', lock_short:'El PIN es muy corto (mín. 4)',
+    lock_bio_enable:'Activar biometría', lock_bio_on:'Biometría activada', lock_mismatch:'Los PIN no coinciden', lock_short:'El PIN es muy corto (mín. 6)',
     lock_enabled:'Bloqueo activado', lock_disabled:'Bloqueo desactivado', bio_unsupported:'Biometría no disponible aquí', bio_enabled:'Biometría activada',
     enc_title:'Respaldo cifrado', enc_pass:'Contraseña', enc_export:'Exportar cifrado', enc_import:'Importar cifrado',
     enc_done:'Respaldo cifrado descargado', enc_bad:'Contraseña incorrecta o archivo inválido', enc_restored:'Respaldo restaurado', enc_working:'Cifrando…',
@@ -887,7 +898,7 @@ const STR = {
     pv_delacc:'Delete account', pv_delacc_sub:'Deletes your account and cloud data',
     lock_title:'Unlock', lock_ph:'Your PIN', lock_unlock:'Unlock', lock_bio:'Use biometrics', lock_wrong:'Wrong PIN',
     lock_set_title:'App lock', lock_new:'New PIN (4+ digits)', lock_confirm:'Repeat PIN', lock_enable:'Enable lock', lock_disable:'Disable lock',
-    lock_bio_enable:'Enable biometrics', lock_bio_on:'Biometrics on', lock_mismatch:"PINs don't match", lock_short:'PIN too short (min 4)',
+    lock_bio_enable:'Enable biometrics', lock_bio_on:'Biometrics on', lock_mismatch:"PINs don't match", lock_short:'PIN too short (min 6)',
     lock_enabled:'Lock enabled', lock_disabled:'Lock disabled', bio_unsupported:'Biometrics not available here', bio_enabled:'Biometrics enabled',
     enc_title:'Encrypted backup', enc_pass:'Password', enc_export:'Export encrypted', enc_import:'Import encrypted',
     enc_done:'Encrypted backup downloaded', enc_bad:'Wrong password or invalid file', enc_restored:'Backup restored', enc_working:'Encrypting…',
@@ -1056,7 +1067,7 @@ const STR = {
     pv_delacc:'Excluir conta', pv_delacc_sub:'Apaga sua conta e dados na nuvem',
     lock_title:'Desbloquear', lock_ph:'Seu PIN', lock_unlock:'Desbloquear', lock_bio:'Usar biometria', lock_wrong:'PIN incorreto',
     lock_set_title:'Bloqueio do app', lock_new:'Novo PIN (4+ dígitos)', lock_confirm:'Repita o PIN', lock_enable:'Ativar bloqueio', lock_disable:'Desativar bloqueio',
-    lock_bio_enable:'Ativar biometria', lock_bio_on:'Biometria ativada', lock_mismatch:'Os PINs não coincidem', lock_short:'PIN muito curto (mín. 4)',
+    lock_bio_enable:'Ativar biometria', lock_bio_on:'Biometria ativada', lock_mismatch:'Os PINs não coincidem', lock_short:'PIN muito curto (mín. 6)',
     lock_enabled:'Bloqueio ativado', lock_disabled:'Bloqueio desativado', bio_unsupported:'Biometria indisponível aqui', bio_enabled:'Biometria ativada',
     enc_title:'Backup criptografado', enc_pass:'Senha', enc_export:'Exportar criptografado', enc_import:'Importar criptografado',
     enc_done:'Backup criptografado baixado', enc_bad:'Senha incorreta ou arquivo inválido', enc_restored:'Backup restaurado', enc_working:'Criptografando…',
@@ -1397,7 +1408,18 @@ function ageText(nac){
   const y=Math.floor(m/12), r=m%12;
   return `${y} ${y===1?U[2]:U[3]}${r?` ${r}m`:''}`;
 }
-function esc(s){ return String(s??'').replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c])); }
+function esc(s){ return String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
+// Sanea una URL de imagen: solo data:image/... o http(s). Bloquea "x" onerror=…,
+// javascript:, y cualquier ruptura del atributo. Devuelve '' si no es segura.
+function safeImgUrl(u){
+  u=String(u||'').trim();
+  return (/^data:image\/(png|jpe?g|webp|gif|avif|bmp)[;,]/i.test(u) || /^https?:\/\//i.test(u)) ? u : '';
+}
+// Sanea una URL de enlace/navegación: solo http(s)/tel/mailto/wa. Bloquea javascript:/data:.
+function safeLinkUrl(u){
+  u=String(u||'').trim();
+  return /^(https?:|tel:|mailto:|wa:|https:\/\/wa\.me)/i.test(u) ? u : '';
+}
 function cap(s){ return s?s.charAt(0).toUpperCase()+s.slice(1):''; }
 function emptyBox(icon, txt){ return `<div class="card pad empty"><div class="eicon">${icon}</div><div>${esc(txt)}</div></div>`; }
 
@@ -2669,7 +2691,10 @@ async function walletSave(pet, link, s){
   try{
     toast(t('loading'),'info');
     const rab=(pet.vaccines||[]).filter(v=>/rab|rai/i.test(v.nombre||'')).sort((a,b)=>(b.fecha||'')<(a.fecha||'')?-1:1)[0];
-    const r=await fetch(features().walletEndpoint,{ method:'POST', headers:{'Content-Type':'application/json'},
+    // vacupet-wallet exige sesión (no debe ser pública): manda el JWT.
+    const whead={'Content-Type':'application/json'};
+    if(session && session.access_token) whead['Authorization']='Bearer '+session.access_token;
+    const r=await fetch(features().walletEndpoint,{ method:'POST', headers:whead,
       body:JSON.stringify({ pet:{
         nombre:pet.info.nombre, especie:cap(pet.info.especie||''), raza:pet.info.raza||'',
         microchip:pet.info.microchip||'',
@@ -2752,10 +2777,28 @@ function b64urlDecode(s){ s=s.replace(/-/g,'+').replace(/_/g,'/'); while(s.lengt
 
 // Convierte un carné compartido (firmado o no) en {pet} + fija sharedSig si lo lleva.
 let sharedSig = null;
+// Normaliza un pet NO confiable de un enlace compartido: recorta a los campos
+// esperados y a tipos/longitudes sanas. Impide que un objeto arbitrario del
+// atacante llegue al render (defensa junto al escape de salida).
+function sanitizePet(p){
+  if(!p || typeof p!=='object' || typeof p.info!=='object' || !p.info) return null;
+  const str=(v,n)=> typeof v==='string' ? v.slice(0,n) : '';
+  const arr=(a,f)=> Array.isArray(a) ? a.slice(0,200).map(f).filter(Boolean) : [];
+  const i=p.info;
+  const info={ id:str(i.id,64), nombre:str(i.nombre,80), especie:str(i.especie,30),
+    raza:str(i.raza,60), nacimiento:str(i.nacimiento,10), microchip:str(i.microchip,40),
+    sexo:str(i.sexo,10), foto: safeImgUrl(i.foto) || undefined };
+  const vac=v=>{ if(!v||typeof v!=='object') return null; return { id:str(v.id,64), nombre:str(v.nombre,80),
+    fecha:str(v.fecha,10), dosis:str(v.dosis,40), proxima:str(v.proxima,10), marca:str(v.marca,60),
+    lote:str(v.lote,40), lugar:str(v.lugar,80), sello: (v.sello&&typeof v.sello==='object')?{clinica:str(v.sello.clinica,80)}:undefined }; };
+  const dew=d=>{ if(!d||typeof d!=='object') return null; return { id:str(d.id,64), producto:str(d.producto,80),
+    tipo: d.tipo==='externa'?'externa':'interna', fecha:str(d.fecha,10), peso:str(String(d.peso??''),10), proxima:str(d.proxima,10) }; };
+  return { info, vaccines:arr(p.vaccines,vac), dewormings:arr(p.dewormings,dew) };
+}
 function decodeShareObj(obj){
   if(!obj || obj.app!=='vacupet') return null;
-  if(obj.sig){ try{ const pet=JSON.parse(b64urlDecode(obj.sig.split('.')[1])); sharedSig=obj.sig; return pet; }catch(e){ return null; } }
-  if(obj.pet){ sharedSig=null; return obj.pet; }
+  if(obj.sig){ try{ const pet=JSON.parse(b64urlDecode(obj.sig.split('.')[1])); sharedSig=obj.sig; return sanitizePet(pet); }catch(e){ return null; } }
+  if(obj.pet){ sharedSig=null; return sanitizePet(obj.pet); }
   return null;
 }
 function readShareHash(){
@@ -2769,7 +2812,10 @@ async function buildIntegrityToken(payload){
   const ai=window.VACUPET_AI||{};
   if(!ai.signEndpoint) return null;
   try{
-    const r=await fetch(ai.signEndpoint,{ method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify({ payload }) });
+    // vacupet-sign exige sesión (evita el oráculo de firma abierto): manda el JWT.
+    const headers={'Content-Type':'application/json'};
+    if(session && session.access_token) headers['Authorization']='Bearer '+session.access_token;
+    const r=await fetch(ai.signEndpoint,{ method:'POST', headers, body:JSON.stringify({ payload }) });
     const j=await r.json(); return j.token||null;
   }catch(e){ console.warn('sign:', e); return null; }
 }
@@ -2780,12 +2826,18 @@ async function verifyIntegrity(token, signEndpoint){
     const jwksUrl = signEndpoint + (signEndpoint.includes('?')?'&':'?') + 'jwks=1';
     const jwks = await (await fetch(jwksUrl)).json();
     const header = JSON.parse(b64urlDecode(h));
-    const jwk = (jwks.keys||[]).find(k=>k.kid===header.kid) || (jwks.keys||[])[0];
+    // Exige coincidencia de kid (no caer a la primera clave) y algoritmo ES256.
+    if(header.alg && header.alg!=='ES256') return false;
+    const jwk = (jwks.keys||[]).find(k=>k.kid===header.kid);
     if(!jwk) return false;
     const key = await crypto.subtle.importKey('jwk', jwk, { name:'ECDSA', namedCurve:'P-256' }, false, ['verify']);
     const sig = urlB64ToUint8(s);
     const dataBytes = new TextEncoder().encode(h+'.'+p);
-    return await crypto.subtle.verify({ name:'ECDSA', hash:'SHA-256' }, key, sig, dataBytes);
+    const ok = await crypto.subtle.verify({ name:'ECDSA', hash:'SHA-256' }, key, sig, dataBytes);
+    if(!ok) return false;
+    // Si el payload firmado lleva expiración, respétala.
+    try{ const pl=JSON.parse(b64urlDecode(p)); if(pl && pl.exp && Date.now()/1000 > pl.exp) return false; }catch(_){}
+    return true;
   }catch(e){ console.warn('verify:', e); return false; }
 }
 async function runShareVerify(){
@@ -2875,7 +2927,7 @@ async function shareCardImage(){
   x.font='600 32px '+F; x.textAlign='right'; x.fillText(fmt(todayISO()),W-100,122); x.textAlign='left';
   // foto circular con aro del color del estado
   try{
-    const img=await _loadImg(petFoto(info));
+    const img=await _loadImg(petFotoRaw(info));
     x.save(); x.beginPath(); x.arc(W/2,410,155,0,7); x.clip();
     const r=Math.max(310/img.width,310/img.height);
     x.drawImage(img,W/2-img.width*r/2,410-img.height*r/2,img.width*r,img.height*r); x.restore();
@@ -3268,7 +3320,8 @@ function partnerOpen(id){
   const o = (partners().offers||[]).find(x=>x.id===id); if(!o || !o.url) return;
   try{ const k='vacupet:offers'; const m=JSON.parse(localStorage.getItem(k)||'{}'); m[id]=(m[id]||0)+1; localStorage.setItem(k,JSON.stringify(m)); }catch(_){}
   const url = o.url + (o.url.includes('?')?'&':'?') + 'utm_source=vacupet&utm_medium=app';
-  try{ window.open(url,'_blank'); }catch(_){ location.href=url; }
+  const safe=safeLinkUrl(url); if(!safe) return;
+  try{ window.open(safe,'_blank'); }catch(_){ location.href=safe; }
 }
 const OFFER_ICON = { insurance:()=>I.shield, product:()=>I.heart, service:()=>I.stetho };
 function offerCard(o, opts){
@@ -3286,12 +3339,12 @@ function clinicCard(){
   const b=brand(); const name=b.clinicName||appName(); const btns=[];
   if(b.clinicPhone) btns.push(`<a class="btn btn-primary" href="${telLink(b.clinicPhone)}" style="flex:1;text-decoration:none">${t('clinic_call')}</a>`);
   if(b.clinicWhatsApp) btns.push(`<a class="btn" href="${waLink(b.clinicWhatsApp)}" target="_blank" rel="noopener" style="flex:1;text-decoration:none">WhatsApp</a>`);
-  if(b.bookUrl) btns.push(`<a class="btn" href="${esc(b.bookUrl)}" target="_blank" rel="noopener" style="flex:1;text-decoration:none">${t('clinic_book')}</a>`);
+  if(b.bookUrl) btns.push(`<a class="btn" href="${esc(safeLinkUrl(b.bookUrl))}" target="_blank" rel="noopener" style="flex:1;text-decoration:none">${t('clinic_book')}</a>`);
   return `<div class="card pad" style="margin-top:14px">
     <div style="display:flex;align-items:center;gap:11px">
       <span class="ic c-accent" style="width:38px;height:38px;border-radius:11px;display:grid;place-items:center;flex:none">${I.stetho}</span>
       <div style="flex:1;min-width:0"><b style="font-size:14.5px">${esc(name)}</b><div class="hint">${t('clinic_card_sub')}</div></div>
-      ${b.web?`<a class="iconbtn" href="${esc(b.web)}" target="_blank" rel="noopener" aria-label="Web" style="text-decoration:none">${I.info}</a>`:''}</div>
+      ${b.web?`<a class="iconbtn" href="${esc(safeLinkUrl(b.web))}" target="_blank" rel="noopener" aria-label="Web" style="text-decoration:none">${I.info}</a>`:''}</div>
     ${btns.length?`<div class="row-actions" style="margin-top:11px">${btns.join('')}</div>`:''}</div>`;
 }
 function premiumManageModal(){
@@ -3301,6 +3354,7 @@ function premiumManageModal(){
     + (url ? `<button class="btn btn-primary btn-block" id="pmManage">${t('pw_manage')}</button>` : `<button class="btn btn-block" data-close>${t('close')}</button>`);
   openModal(modalShell('Premium', body, foot));
   const mg=document.getElementById('pmManage'); if(mg) mg.onclick=()=>{
+    if(!safeLinkUrl(url)) return;
     const u = url + (url.includes('?')?'&':'?') + (session&&session.user?('email='+encodeURIComponent(session.user.email||'')):'');
     try{ window.open(u,'_blank'); }catch(_){ location.href=u; }
   };
@@ -3749,7 +3803,10 @@ async function deriveAesKey(pass, salt, it){
   const km=await crypto.subtle.importKey('raw', new TextEncoder().encode(pass), 'PBKDF2', false, ['deriveKey']);
   return crypto.subtle.deriveKey({ name:'PBKDF2', salt, iterations:it, hash:'SHA-256' }, km, { name:'AES-GCM', length:256 }, false, ['encrypt','decrypt']);
 }
-const KDF_IT = 150000;
+// PBKDF2-SHA256 a 600k iteraciones (mínimo OWASP 2024). Los respaldos/PINs
+// antiguos siguen funcionando: cada envelope guarda su propio `it`.
+const KDF_IT = 600000;
+const PIN_MIN = 6;   // 6 dígitos = 1M combinaciones (antes 4 = 10k)
 
 // --- PIN ---
 async function hashPin(pin, saltBytes, it){ return bytesToB64(await pbkdf2Bits(pin, saltBytes, it||KDF_IT, 256)); }
@@ -3848,9 +3905,9 @@ function lockModal(){
   } else {
     document.getElementById('lockOn').onclick=async()=>{
       const p1=val('lk-p1'), p2=val('lk-p2');
-      document.getElementById('f-p1').classList.toggle('err', p1.length<4);
+      document.getElementById('f-p1').classList.toggle('err', p1.length<PIN_MIN);
       document.getElementById('f-p2').classList.toggle('err', p1!==p2);
-      if(p1.length<4 || p1!==p2) return;
+      if(p1.length<PIN_MIN || p1!==p2) return;
       await setPin(p1); closeModal(); toast(t('lock_enabled')); if(currentTab==='more') render();
     };
   }

@@ -62,8 +62,10 @@ function bodyFor(lang: string, i: { nombre: string; fecha: string; mascota: stri
 }
 
 Deno.serve(async (req) => {
-  // Protección opcional del cron
-  if (CRON_SECRET) {
+  // CRON_SECRET obligatorio: falla cerrado si no está configurado (evita que la
+  // función pública se dispare desde cualquier origen).
+  if (!CRON_SECRET) return new Response("misconfigured: CRON_SECRET requerido", { status: 500 });
+  {
     const url = new URL(req.url);
     const provided = req.headers.get("x-cron-secret") || url.searchParams.get("secret");
     if (provided !== CRON_SECRET) return new Response("forbidden", { status: 403 });

@@ -23,13 +23,15 @@ else
 fi
 
 echo "── Desplegando funciones ───────────────────────────────"
-# Públicas (la app las llama sin sesión): faq, ocr, sign
-supabase functions deploy vacupet-faq  --no-verify-jwt
+# vacupet-faq quedó obsoleta (FAQ = WebLLM local). Si sigue desplegada, bórrala:
+#   supabase functions delete vacupet-faq
+# Públicas (con tope de tamaño interno): ocr, checkup.
 supabase functions deploy vacupet-ocr  --no-verify-jwt
-supabase functions deploy vacupet-sign --no-verify-jwt
-supabase functions deploy vacupet-wallet --no-verify-jwt || true
-supabase functions deploy vacupet-whatsapp || true
 supabase functions deploy vacupet-checkup --no-verify-jwt || true
+# Exigen JWT del usuario (verify_jwt=true en config.toml): sign, wallet.
+supabase functions deploy vacupet-sign
+supabase functions deploy vacupet-wallet || true
+supabase functions deploy vacupet-whatsapp || true
 # Backend (cron / servidor): push, recordatorios, eliminar-cuenta
 supabase functions deploy vacupet-push
 supabase functions deploy recordatorios   || true

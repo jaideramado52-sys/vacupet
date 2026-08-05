@@ -74,6 +74,8 @@ Deno.serve(async (req) => {
   const m = imageData.match(/^data:(image\/[a-zA-Z+]+);base64,(.*)$/);
   if (m) { mediaType = m[1]; imageData = m[2]; }
   if (!imageData) return json({ error: "Falta la imagen" }, 400);
+  // Tope de tamaño: acota el coste por llamada y frena el abuso de una función pública.
+  if (imageData.length > 7_000_000) return json({ error: "Imagen demasiado grande (máx. ~5 MB)" }, 413);
 
   const lang = ["es", "en", "pt"].includes(body.lang || "") ? body.lang : "es";
   const ctx = [

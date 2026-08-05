@@ -29,7 +29,7 @@ code += `;globalThis.__VP = {
   reminders, statusOf, petSummary, weightChart, t, tf,
   b64urlEncode, b64urlDecode, urlB64ToUint8, cloudConfigured, shouldAdoptRemote,
   classify, missingVaccines, aWhatsMissing, aNextDose, aNextDeworm, handleIntent, askFaq,
-  verifyIntegrity, decodeShareObj, getSig:()=>sharedSig,
+  verifyIntegrity, decodeShareObj, getSig:()=>sharedSig, safeImgUrl, safeLinkUrl, esc, petFoto, sanitizePet,
   setPin, checkPin, encryptBackup, decryptBackup,
   hasValidRabies, recentDeworm, checkReq, achievements, DESTINOS,
   nextAnniversary, freqLabel, CARE_KINDS, weightStatus,
@@ -519,6 +519,25 @@ section('Edge: ventana de vencimientos (dueItems)');
   ok('incluye vencida+pronto+borde', r.includes('Vencida')&&r.includes('Pronto')&&r.includes('Borde'));
   ok('excluye lejos (>remDays)', !r.includes('Lejos'));
   ok('estado vacío → []', dueItems({}).length===0);
+}
+
+// =========================================================================
+// Seguridad: saneo de foto/URL y del carné compartido (regresión del XSS crítico).
+section('Seguridad: sanitización XSS');
+{
+  const evil = 'x" onerror="alert(1)';
+  ok('safeImgUrl rechaza breakout de atributo', VP.safeImgUrl(evil) === '');
+  ok('safeImgUrl rechaza javascript:', VP.safeImgUrl('javascript:alert(1)') === '');
+  ok('safeImgUrl acepta data:image', VP.safeImgUrl('data:image/png;base64,AAAA').startsWith('data:image/png'));
+  ok('safeImgUrl acepta https', VP.safeImgUrl('https://x/y.png') === 'https://x/y.png');
+  ok('safeLinkUrl rechaza javascript:', VP.safeLinkUrl('javascript:alert(1)') === '');
+  ok('safeLinkUrl acepta https/tel', VP.safeLinkUrl('https://x')==='https://x' && VP.safeLinkUrl('tel:+57')==='tel:+57');
+  ok('esc escapa comilla simple', VP.esc("a'b").includes('&#39;'));
+  ok('petFoto neutraliza foto maliciosa', !VP.petFoto({foto:evil, especie:'perro'}).includes('onerror'));
+  const dirty = VP.sanitizePet({ info:{ nombre:'N', especie:'perro', foto:evil, basura:'x' }, vaccines:'no-array' });
+  ok('sanitizePet limpia foto insegura', !dirty.info.foto);
+  ok('sanitizePet descarta campos extra', !('basura' in dirty.info));
+  ok('sanitizePet fuerza array de vacunas', Array.isArray(dirty.vaccines) && dirty.vaccines.length===0);
 }
 
 // =========================================================================

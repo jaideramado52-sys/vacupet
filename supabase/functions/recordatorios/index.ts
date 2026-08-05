@@ -44,10 +44,13 @@ const I18N: Record<string, { subject: string; intro: string; foot: string }> = {
   pt: { subject: "Lembrete do VacuPet 🐾", intro: "Seu pet tem cuidados próximos:", foot: "Orientativo. Não substitui a consulta veterinária." },
 };
 
+function escHtml(s: string): string {
+  return String(s ?? "").replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]!));
+}
 function emailHtml(lang: string, items: { nombre: string; fecha: string; kind: string; mascota: string }[]): string {
   const L = I18N[lang] || I18N.es;
   const rows = items.map((i) =>
-    `<tr><td style="padding:6px 10px;border-bottom:1px solid #eee">${i.mascota}</td><td style="padding:6px 10px;border-bottom:1px solid #eee">${i.kind} — ${i.nombre}</td><td style="padding:6px 10px;border-bottom:1px solid #eee">${i.fecha}</td></tr>`
+    `<tr><td style="padding:6px 10px;border-bottom:1px solid #eee">${escHtml(i.mascota)}</td><td style="padding:6px 10px;border-bottom:1px solid #eee">${escHtml(i.kind)} — ${escHtml(i.nombre)}</td><td style="padding:6px 10px;border-bottom:1px solid #eee">${escHtml(i.fecha)}</td></tr>`
   ).join("");
   return `<div style="font-family:system-ui,Segoe UI,Roboto,sans-serif;max-width:520px;margin:0 auto">
     <h2 style="color:#16A34A">🐾 VacuPet</h2><p>${L.intro}</p>
@@ -56,7 +59,10 @@ function emailHtml(lang: string, items: { nombre: string; fecha: string; kind: s
 }
 
 Deno.serve(async (req) => {
-  if (CRON_SECRET) {
+  // CRON_SECRET obligatorio: sin él, esta función pública podría dispararse desde
+  // cualquier origen y quemar cuota de email. Falla cerrado.
+  if (!CRON_SECRET) return new Response("misconfigured: CRON_SECRET requerido", { status: 500 });
+  {
     const url = new URL(req.url);
     const provided = req.headers.get("x-cron-secret") || url.searchParams.get("secret");
     if (provided !== CRON_SECRET) return new Response("forbidden", { status: 403 });
@@ -91,7 +97,7 @@ Deno.serve(async (req) => {
       await supa.from("vacupet_state").update({ last_notified: today }).eq("user_id", row.user_id);
       sent++;
     } else {
-      console.error("Resend error:", r.status, await r.text());
+      console.error("Resend error status:", r.status);
     }
   }
 

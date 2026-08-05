@@ -53,7 +53,7 @@ Deno.serve(async (req) => {
 
     // 3) Borra el usuario de auth
     const { error: derr } = await svc.auth.admin.deleteUser(uid);
-    if (derr) return json({ error: derr.message }, 500);
+    if (derr) { console.error("delete error:", derr.message); return json({ error: "No se pudo eliminar la cuenta" }, 500); }
 
     return json({ ok: true });
   } catch (e) {

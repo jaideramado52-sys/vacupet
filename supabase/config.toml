@@ -3,25 +3,40 @@
 project_id = "vacupet"
 
 # --- Edge Functions ---
-# Públicas (la app las llama sin sesión); su seguridad la dan los secrets/CORS.
-[functions.vacupet-faq]
-verify_jwt = false
+# vacupet-faq quedó obsoleta (la FAQ corre con WebLLM local). NO se despliega;
+# si sigue en la nube, bórrala: supabase functions delete vacupet-faq
 
+# OCR/checkup: públicas por ahora (el cliente las llama). Mitigadas con tope de
+# tamaño de imagen en la función; el gating premium real lo impone el servidor
+# cuando monetize=true. Endurecer a verify_jwt cuando el cliente envíe sesión.
 [functions.vacupet-ocr]
 verify_jwt = false
 
-[functions.vacupet-sign]
+[functions.vacupet-checkup]
 verify_jwt = false
+
+# Firma del carné: EXIGE JWT — antes era un oráculo abierto que firmaba cualquier
+# payload sin auth (cualquiera forjaba un carné "verificado"). El cliente manda
+# la sesión de Supabase en Authorization al firmar.
+[functions.vacupet-sign]
+verify_jwt = true
+
+# Google Wallet: EXIGE JWT (firma pases con tu issuer; no debe ser pública).
+[functions.vacupet-wallet]
+verify_jwt = true
 
 # Webhook de facturación: lo protege BILLING_WEBHOOK_SECRET (header), no un JWT.
 [functions.vacupet-billing]
 verify_jwt = false
 
-# Cron: protegidas con CRON_SECRET (no por JWT), para que pg_cron pueda invocarlas.
+# Cron: protegidas con CRON_SECRET (obligatorio; la función falla cerrado sin él).
 [functions.vacupet-push]
 verify_jwt = false
 
 [functions.recordatorios]
+verify_jwt = false
+
+[functions.vacupet-whatsapp]
 verify_jwt = false
 
 # Borrado de cuenta: requiere el JWT del usuario (lo verifica el gateway y la función).
