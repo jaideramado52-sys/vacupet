@@ -584,7 +584,23 @@ h1{font-weight:850;letter-spacing:-.03em}
 <script>
 "use strict";
 /* ======================================================================
-   VacuPet — Fases 0 + 1 (MVP local, carné pro). Todo en localStorage.
+   VacuPet — aplicación (front completo en un solo archivo).
+   Arquitectura y ruta de modularización: ver HANDOFF.md §3.
+
+   MAPA DEL ARCHIVO (busca los banners de sección "---- … ----"):
+     • Iconos SVG (I) y arte por especie
+     • i18n: STR{es,en,pt}, t()/tf()            ← traducciones (conservar, §5)
+     • Esquema vacunal + fichas de dominio       ← motor de recordatorios (§5)
+     • Estado / persistencia (data, save, migrate, localStorage)
+     • Utilidades (fechas, esc, safeImgUrl/safeLinkUrl — saneo XSS)
+     • Recordatorios · Manada · Racha · Anillo · Gráfico de peso
+     • Navegación (tabs, FAB contextual, render principal)
+     • Vistas: Onboarding · Inicio · Carné · Mascota · Cuidado · Más
+     • Modales: mascota/vacuna/… · compartir · presentación · manifiesto
+     • Viajero · sello de clínica · chequeo IA · OCR
+     • Nube (Supabase): auth, sync, entitlements, pagos
+     • Seguridad: PIN/biometría, respaldo cifrado, verifyIntegrity
+     • Arranque (parseo del hash, deep links, lock)
    ====================================================================== */
 
 /* ---------------------------- Iconos SVG ---------------------------- */

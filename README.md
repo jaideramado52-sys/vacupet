@@ -1,66 +1,83 @@
 # VacuPet
 
-Carné de salud digital para mascotas (PWA de un solo archivo).
-Vacunas, **desparasitación**, **peso**, visitas al veterinario y microchip — con esquema
-inteligente por **especie**, recordatorios, exportación profesional (PDF/QR de integridad)
-y nube opcional (Supabase).
+**El carné de salud digital de tu mascota** — vacunas, desparasitación, peso, visitas y
+documentos, con esquema inteligente por especie/país, recordatorios, carné compartible y
+verificable, y nube opcional. Funciona offline y **los datos son del dueño**.
 
-> Inspirado en la arquitectura de **VacunaFam** (carné de vacunas humano), adaptado al
-> dominio veterinario. Ver `docs/SPEC.md` para la visión y `docs/ROADMAP.md` para el plan.
+- **En producción:** https://vacupets.com (PWA) · Android vía Google Play (Capacitor)
+- **Idiomas:** español · inglés · portugués
+- **Licencia:** propietaria — ver [`LICENSE`](LICENSE)
 
-## Estructura del proyecto
+> 📦 **¿Vas a trabajar en el proyecto o recibirlo?** Empieza por **[`HANDOFF.md`](HANDOFF.md)**:
+> la narrativa completa (idea, arquitectura, qué conservar, backlog priorizado y decisiones).
+
+---
+
+## Empezar en 2 minutos
+
+```bash
+npm install            # tooling (lint/format/tests e2e)
+npm run serve          # sirve la app en http://127.0.0.1:8080
+npm test               # 259 pruebas unitarias (node, sin navegador)
+npm run e2e            # 20 pruebas end-to-end (Playwright/Chromium)
+```
+
+La app es **estática**: también puedes abrir `VacuPet.html` directo en el navegador. El
+backend (nube, IA, push) **degrada con elegancia** — si no está desplegado, la app sigue
+funcionando en local.
+
+## Mapa del repositorio
 
 ```
 VacuPet/
-├─ VacuPet.html            ← la app (todo el front en un archivo)   [Fase 0]
-├─ index.html              ← entrada / redirección a la app (conserva el hash)
-├─ supabase-config.js      ← configuración (claves públicas + endpoints)
+├─ VacuPet.html            ← la app completa (front en un solo archivo)
+├─ index.html              ← entrada / redirección (conserva el hash de enlaces compartidos)
+├─ supabase-config.js      ← configuración pública (claves anon + endpoints + feature flags)
 ├─ service-worker.js       ← PWA: offline + push
 ├─ manifest.webmanifest    ← PWA: instalación
-├─ icon.svg · icon-maskable.svg · og-image.svg   ← iconos / social   [Fase 2]
-├─ _headers                ← cabeceras de hosting (Cloudflare/Netlify)   [Fase 2]
+├─ icon*.svg · og-image*   ← iconos y previsualización social (logo escudo)
+├─ _headers · netlify.toml ← cabeceras/hosting
 │
-├─ deploy.sh               ← despliega los Edge Functions + secrets   [Fase 4]
-├─ .env.deploy.example     ← plantilla de secretos (copiar a .env.deploy)
-│
-├─ scripts/
-│   └─ gen-keys.mjs        ← genera claves ES256 (firma) y VAPID (push)   [Fase 4]
+├─ deploy.sh               ← despliega Edge Functions + secrets a Supabase
+├─ scripts/                ← generación de claves · build de marca blanca
+├─ brands/                 ← configs de white-label por clínica (make-brand.mjs)
 │
 ├─ supabase/
-│   ├─ schema.sql          ← tablas + RLS + RPC + bucket (ejecutar en SQL Editor)
-│   └─ functions/          ← Edge Functions (Deno)
-│       ├─ vacupet-faq/    ← asistente FAQ veterinaria (Claude)
-│       ├─ vacupet-ocr/    ← escanear carné veterinario (Claude visión)
-│       ├─ vacupet-sign/   ← firma del QR de integridad
-│       ├─ vacupet-push/   ← recordatorios push (vacunas + desparasitación)
-│       ├─ recordatorios/  ← recordatorios por email
-│       └─ eliminar-cuenta/← borrado de cuenta/datos
+│   ├─ config.toml         ← auth por función (verify_jwt)
+│   ├─ schema.sql          ← tablas + RLS + RPC + bucket
+│   └─ functions/          ← 10 Edge Functions (Deno/TS)
 │
-├─ tests/
-│   └─ run.mjs             ← suite de tests (node tests/run.mjs)
+├─ android/                ← proyecto Capacitor (Google Play) + widget nativo
+├─ tests/                  ← run.mjs (unitarias) · e2e/ (Playwright)
 │
-└─ docs/
-    ├─ SPEC.md             ← especificación del producto
-    ├─ ROADMAP.md          ← plan por fases de todo lo que se va a implementar
-    ├─ ESQUEMA_VACUNAL.md  ← dominio veterinario (backbone del motor)
-    └─ brief/              ← notas/brief originales
+├─ HANDOFF.md              ← ★ narrativa de entrega para el equipo
+├─ LICENSE                 ← propietaria
+└─ docs/                   ← ver docs/README.md (índice)
 ```
 
 > ⚠️ **No muevas los archivos de la raíz** (`VacuPet.html`, `index.html`,
 > `supabase-config.js`, `service-worker.js`, `manifest.webmanifest`, iconos, `_headers`):
 > la PWA y el despliegue dependen de esas rutas relativas.
 
-## Estado
+## Documentación
 
-**Fases 0–9 completas** (ver `docs/ROADMAP.md`). PWA offline funcional; backend opcional
-(nube, push/email, IA, firma) que degrada con elegancia. Tests: `node tests/run.mjs` (63 OK).
+Todo está indexado en **[`docs/README.md`](docs/README.md)**. Los imprescindibles:
 
-## Empezar
+| Para… | Lee |
+|-------|-----|
+| Entender el proyecto y recibirlo | [`HANDOFF.md`](HANDOFF.md) |
+| El dominio veterinario (motor de recordatorios) | [`docs/ESQUEMA_VACUNAL.md`](docs/ESQUEMA_VACUNAL.md) |
+| Desplegar el backend | [`docs/DESPLIEGUE.md`](docs/DESPLIEGUE.md) |
+| Estado y follow-ups de seguridad | [`docs/SECURITY.md`](docs/SECURITY.md) |
+| Pasos manuales pendientes del dueño | [`docs/PENDIENTES.md`](docs/PENDIENTES.md) |
 
-- **Probar local:** abre `index.html` (o `VacuPet.html`) en el navegador. Funcionará offline;
-  el backend (IA, OCR, firma, push) degradará con elegancia si no está desplegado.
-- **Activar backend:** sigue `docs/DESPLIEGUE.md` (SQL → claves → `bash deploy.sh`) — disponible en Fase 4.
-- **Plan del proyecto:** `docs/ROADMAP.md`.
+## Arquitectura en una frase
+
+Front vanilla-JS de un solo archivo (PWA, offline-first, `localStorage`) + backend Supabase
+(auth, Postgres con RLS, Storage, Edge Functions en Deno) + Capacitor para Android. Sin
+framework ni build de bundling hoy — ver [`HANDOFF.md`](HANDOFF.md) §3 para la verdad técnica
+y la ruta de modularización recomendada.
+
+---
 
 Registro personal de apoyo — **no reemplaza el carné oficial ni la consulta veterinaria**.
-</content>
