@@ -9,6 +9,7 @@
     "e2e:install": "playwright install --with-deps chromium",
     "serve": "python -m http.server 8080 --bind 127.0.0.1",
     "lint": "eslint .",
+    "lint:css": "stylelint \"**/*.css\"",
     "format": "prettier --write \"scripts/**/*.mjs\" \"tests/**/*.mjs\"",
     "format:check": "prettier --check \"scripts/**/*.mjs\" \"tests/**/*.mjs\"",
     "check": "npm run lint && npm test",
@@ -21,7 +22,8 @@
     "@capacitor/cli": "^8.4.1",
     "@playwright/test": "^1.49.0",
     "eslint": "^9.0.0",
-    "prettier": "^3.3.0"
+    "prettier": "^3.3.0",
+    "stylelint": "^16.0.0"
   },
   "dependencies": {
     "@capacitor/core": "^8.4.1",

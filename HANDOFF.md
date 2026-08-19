@@ -85,7 +85,7 @@ Prioridad: **P0** bloquea calidad/seguridad/negocio · **P1** importante para pr
 | 9 | Widget Android sin compilar; flujo Capacitor no verificado end-to-end. | P1 |
 | 10 | Documentación: **consolidada en esta entrega** (índice en `docs/README.md`, obsoletos en `docs/_archivo/`). | ✅ |
 | 11 | Licencia y propiedad: **añadido `LICENSE`** (propietaria). Falta cerrar el contrato de titularidad. | P1 |
-| 12 | i18n manual (objetos JS inline). Migrar a JSON/ICU + verificación de paridad en CI. | P2 |
+| 12 | i18n manual (objetos JS inline). **Gate de paridad añadido en CI** (`tests/run.mjs`); migrar a JSON/ICU es opcional. | ✅ |
 | 13 | `render()` completo en cada cambio: no escala; un framework con render dirigido lo resuelve. | P2 |
 | 14 | Arnés de tests unitarios peculiar (extrae el `<script>` por regex). Modularizar habilita Vitest/Jest. | P2 |
 | 15 | Accesibilidad parcial: base decente, falta auditoría WCAG dedicada. | P2 |
@@ -105,8 +105,9 @@ los tests que ya existen:
   humanas, estados de salud. Lo más difícil de reconstruir y ya probado. Ref:
   [`docs/ESQUEMA_VACUNAL.md`](docs/ESQUEMA_VACUNAL.md).
 - **🌐 Traducciones es/en/pt** — ~676 claves × 3 idiomas, revisadas. Migrar a JSON, no reescribir.
-- **🎨 Sistema visual** — paleta (teal + acentos AA), logo escudo, iconografía, componentes.
-  Traducible a design tokens directamente.
+- **🎨 Sistema de diseño** — documentado en [`docs/DESIGN.md`](docs/DESIGN.md): tokens, escalas
+  (espaciado/radio/tipografía), catálogo de componentes, reglas de interacción y los gates
+  anti-inconsistencia. Es la fuente única de verdad de UI/UX; conservar y hacer cumplir.
 - **🔒 Investigación de seguridad** — [`docs/SECURITY.md`](docs/SECURITY.md): qué se auditó,
   arregló y qué falta. Ahorra repetir el análisis.
 - **📊 Análisis de mercado** — competidores, precios, huecos, regulación LATAM, con fuentes.

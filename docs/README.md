@@ -12,6 +12,10 @@ Punto de entrada único a toda la documentación. Si acabas de llegar, lee prime
 - [`ESQUEMA_VACUNAL.md`](ESQUEMA_VACUNAL.md) — esquemas de vacunación por especie/país, reglas
   de rabia y de viaje. Es la lógica más valiosa; conservar intacta.
 
+## Diseño (consistencia UI/UX)
+- [`DESIGN.md`](DESIGN.md) — sistema de diseño: tokens, escalas, catálogo de componentes,
+  reglas de interacción y **gates anti-inconsistencia**. Fuente única de verdad de UI/UX.
+
 ## Despliegue y publicación
 - [`DESPLIEGUE.md`](DESPLIEGUE.md) — backend Supabase + Edge Functions (SQL → claves → `deploy.sh`).
 - [`PUBLICAR.md`](PUBLICAR.md) — publicar el front estático (hosting HTTPS).

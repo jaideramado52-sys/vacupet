@@ -541,5 +541,29 @@ section('Seguridad: sanitización XSS');
 }
 
 // =========================================================================
+// Consistencia: paridad de traducciones (gate anti-deriva). Falla si una clave
+// existe en un idioma y no en los otros — así no se queda nada sin traducir.
+section('Consistencia: paridad i18n (es/en/pt)');
+{
+  const m = html.match(/const STR\s*=\s*\{[\s\S]*?\n\};/);
+  ok('bloque STR encontrado', !!m);
+  if (m) {
+    let STR; // eslint-disable-line no-unused-vars
+    eval(m[0].replace('const STR', 'STR'));
+    const langs = Object.keys(STR);
+    ok('tres idiomas (es/en/pt)', langs.length === 3 && langs.every((l) => ['es', 'en', 'pt'].includes(l)));
+    const keys = Object.fromEntries(langs.map((l) => [l, new Set(Object.keys(STR[l]))]));
+    const base = keys.es;
+    for (const l of langs) {
+      if (l === 'es') continue;
+      const missing = [...base].filter((k) => !keys[l].has(k));
+      const extra = [...keys[l]].filter((k) => !base.has(k));
+      ok(`${l}: sin claves faltantes` + (missing.length ? ` [${missing.slice(0, 8).join(',')}]` : ''), missing.length === 0);
+      ok(`${l}: sin claves sobrantes` + (extra.length ? ` [${extra.slice(0, 8).join(',')}]` : ''), extra.length === 0);
+    }
+  }
+}
+
+// =========================================================================
 console.log(`\n${'='.repeat(48)}\nRESULTADO: ${pass} OK, ${fail} fallos\n${'='.repeat(48)}`);
 process.exit(fail ? 1 : 0);
