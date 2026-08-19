@@ -766,7 +766,8 @@ const STR = {
     sec_achievements:'Logros', ach_uptodate:'Carné al día', ach_microchip:'Microchip', ach_complete:'Esquema completo', ach_tracker:'Control de peso',
     dest_ue:'Unión Europea', dest_uk:'Reino Unido', dest_us:'Estados Unidos', dest_rabiesfree:'Países libres de rabia', dest_latam:'Latinoamérica (general)',
     a11y_big:'Texto grande', a11y_big_sub:'Aumenta el tamaño de la interfaz', update_ready:'Nueva versión disponible. Recarga la app.',
-    demo_view:'Ver ejemplo', demo_loaded:'6 mascotas de ejemplo creadas · cámbialas en el carrusel y bórralas cuando quieras',
+    demo_view:'Ver ejemplo', demo_loaded:'Muestra cargada: 6 mascotas con todo su potencial · empieza con la tuya cuando quieras',
+    demo_banner:'Estás viendo la muestra de ejemplo', demo_banner_sub:'Explora todo lo que puede hacer VacuPet', demo_start:'Empezar con mi mascota',
     sec_cares:'Cuidados', tile_care:'Cuidado', tile_care_sub:'Baño, uñas, medicación…', add_care:'Añadir cuidado', no_cares:'Sin cuidados programados', reg_care:'Registrar cuidado', saved_care:'Cuidado guardado',
     sello_aldia:'AL DÍA', bday:'¡Feliz cumpleaños, {name}!', bday_sub:'Hoy cumple {n} 🎂',
     streak_w:'🔥 {n} semanas con todo al día', streak_d:'🔥 {n} días con todo al día',
@@ -935,7 +936,8 @@ const STR = {
     sec_achievements:'Achievements', ach_uptodate:'Record up to date', ach_microchip:'Microchip', ach_complete:'Schedule complete', ach_tracker:'Weight tracking',
     dest_ue:'European Union', dest_uk:'United Kingdom', dest_us:'United States', dest_rabiesfree:'Rabies-free countries', dest_latam:'Latin America (general)',
     a11y_big:'Large text', a11y_big_sub:'Increase the interface size', update_ready:'New version available. Reload the app.',
-    demo_view:'View example', demo_loaded:'6 example pets created · switch in the carousel and delete anytime',
+    demo_view:'View example', demo_loaded:'Sample loaded: 6 pets showing the full potential · start with yours anytime',
+    demo_banner:'You are viewing the sample', demo_banner_sub:'Explore everything VacuPet can do', demo_start:'Start with my pet',
     sec_cares:'Care', tile_care:'Care', tile_care_sub:'Bath, nails, medication…', add_care:'Add care', no_cares:'No care scheduled', reg_care:'Add care task', saved_care:'Care saved',
     sello_aldia:'UP TO DATE', bday:'Happy birthday, {name}!', bday_sub:'Turns {n} today 🎂',
     streak_w:'🔥 {n} weeks all up to date', streak_d:'🔥 {n} days all up to date',
@@ -1104,7 +1106,8 @@ const STR = {
     sec_achievements:'Conquistas', ach_uptodate:'Carteira em dia', ach_microchip:'Microchip', ach_complete:'Esquema completo', ach_tracker:'Controle de peso',
     dest_ue:'União Europeia', dest_uk:'Reino Unido', dest_us:'Estados Unidos', dest_rabiesfree:'Países livres de raiva', dest_latam:'América Latina (geral)',
     a11y_big:'Texto grande', a11y_big_sub:'Aumenta o tamanho da interface', update_ready:'Nova versão disponível. Recarregue o app.',
-    demo_view:'Ver exemplo', demo_loaded:'6 pets de exemplo criados · troque no carrossel e exclua quando quiser',
+    demo_view:'Ver exemplo', demo_loaded:'Amostra carregada: 6 pets com todo o potencial · comece com o seu quando quiser',
+    demo_banner:'Você está vendo a amostra', demo_banner_sub:'Explore tudo o que o VacuPet pode fazer', demo_start:'Começar com meu pet',
     sec_cares:'Cuidados', tile_care:'Cuidado', tile_care_sub:'Banho, unhas, medicação…', add_care:'Adicionar cuidado', no_cares:'Sem cuidados agendados', reg_care:'Registrar cuidado', saved_care:'Cuidado salvo',
     sello_aldia:'EM DIA', bday:'Feliz aniversário, {name}!', bday_sub:'Faz {n} hoje 🎂',
     streak_w:'🔥 {n} semanas com tudo em dia', streak_d:'🔥 {n} dias com tudo em dia',
@@ -1978,6 +1981,10 @@ function viewHome(){
       <div class="chip" data-go="pet"><div class="n" data-count="${logros}" style="color:var(--green)">${logros}</div><div class="l">${t('sec_achievements')}</div></div>
     </div>
     ${streakHTML(pet)}
+    ${hasDemo()?`<div class="banner c-accent" id="demoBanner" style="margin-top:14px">
+      <span class="ic c-accent" style="font-size:17px">👀</span>
+      <div class="bb"><b>${t('demo_banner')}</b><span>${t('demo_banner_sub')}</span></div>
+      <button class="btn btn-primary" id="demoStart" style="height:36px;padding:0 14px;flex:none">${t('demo_start')}</button></div>`:''}
     ${coachCard('home', t('coach_home'))}
     ${lostBn}
     ${bday}
@@ -3060,10 +3067,22 @@ function runCountUps(){
    ====================================================================== */
 const SB = window.VACUPET_SUPABASE || {};
 function cloudConfigured(){ return !!(SB.url && SB.anonKey); }
-// El "Ver ejemplo" (demo) es exclusivo de la cuenta showcase (y de local para pruebas).
 const DEMO_ACCOUNT = 'kolopor2015@gmail.com';
 function isDemoAccount(){ return !!(session && session.user && String(session.user.email||'').toLowerCase()===DEMO_ACCOUNT); }
-function demoAllowed(){ const h=location.hostname; return isDemoAccount() || h==='localhost' || h==='127.0.0.1'; }
+// La muestra es una ayuda de arranque disponible para CUALQUIER visitante (no
+// requiere cuenta): resuelve el "app vacía" mostrando todo el potencial. El
+// perfil real sigue empezando en blanco; la muestra es aparte y removible.
+function demoAllowed(){ return true; }
+// ¿Hay datos de ejemplo cargados? (cualquier mascota marcada demo:true)
+function hasDemo(){ return (data.pets||[]).some(p=>p.info&&p.info.demo); }
+// Quita la muestra y arranca limpio con la mascota del usuario.
+function startFresh(){
+  data.pets = (data.pets||[]).filter(p=>!(p.info&&p.info.demo));
+  data.activeId = (data.pets[0]&&data.pets[0].info.id)||null;
+  data.owner = null; data.members = [];
+  try{ localStorage.removeItem('vp_member'); }catch(_){}
+  save(); go('home'); petModal(null);
+}
 
 /* ======================================================================
    Monetización (Fase 1 — freemium). Detrás de un feature flag: con
@@ -4567,6 +4586,8 @@ function demoFoto(c1, c2){
   return 'data:image/svg+xml;base64,' + btoa(svg);
 }
 function loadDemoPet(){
+  // Idempotente: si ya hay muestra, no duplicar — solo volver a Inicio.
+  if(hasDemo()){ go('home'); return; }
   const d = n => toISO(addDays(new Date(), n));
   const P = []; // helper para crear cada mascota con valores por defecto seguros
   const add = (info, x) => P.push(Object.assign({ vaccines:[], dewormings:[], weights:[], vetVisits:[], meds:[], symptoms:[], expenses:[], cares:[], album:[], docs:[] }, x, { info: Object.assign({ id:uid(), demo:true }, info) }));
@@ -4574,11 +4595,16 @@ function loadDemoPet(){
   // 🐶 Rocky — perro, con DOSIS PRÓXIMA (estado ámbar) + datos completos
   add({ nombre:'Rocky', especie:'perro', raza:'Labrador', sexo:'m', nacimiento:'2022-03-10', microchip:'941000012345678', esterilizado:true, peso:28, foto:speciesArt('perro'), veterinario:'Clínica Patitas', sangre:'DEA 1.1+', alergias:'Pollo', condiciones:'Displasia leve de cadera', pesoMin:25, pesoMax:30 }, {
     lost:{ active:true, since:d(0), reward:'Q500', lastSeen:'Zona 10, esta mañana', note:'Lleva collar; responde a su nombre.' },
-    vaccines:[ { id:uid(), nombre:'Rabia', fecha:d(-190), proxima:d(5), source:'manual' },
-               { id:uid(), nombre:'Polivalente (quíntuple/séxtuple)', fecha:d(-220), proxima:d(40), source:'manual' },
+    vaccines:[ { id:uid(), nombre:'Rabia', fecha:d(-190), proxima:d(5), source:'manual', sello:{clinica:'Clínica Patitas'}, por:'Ana' },
+               { id:uid(), nombre:'Polivalente (quíntuple/séxtuple)', fecha:d(-220), proxima:d(40), source:'manual', sello:{clinica:'Clínica Patitas'} },
                { id:uid(), nombre:'Leptospirosis', fecha:d(-220), proxima:d(140), source:'manual' } ],
-    dewormings:[ { id:uid(), tipo:'externa', producto:'Pipeta antipulgas', fecha:d(-5), proxima:d(25) },
+    dewormings:[ { id:uid(), tipo:'externa', producto:'Pipeta antipulgas', fecha:d(-5), proxima:d(25), por:'Carlos' },
                  { id:uid(), tipo:'interna', producto:'Drontal', fecha:d(-30), proxima:d(60) } ],
+    symptoms:[ { id:uid(), fecha:d(-3), animo:'bien', apetito:'normal', sintomas:'Cojea un poco de la pata trasera', nota:'Mejora con el antiinflamatorio' } ],
+    expenses:[ { id:uid(), concepto:'Consulta + radiografía', monto:350, categoria:'consulta', fecha:d(-20) },
+               { id:uid(), concepto:'Pipeta antipulgas', monto:85, categoria:'higiene', fecha:d(-5) } ],
+    docs:[ { id:uid(), name:'Certificado de vacunación', mime:'image/svg+xml', fecha:d(-20),
+             data:'data:image/svg+xml;utf8,'+encodeURIComponent('<svg xmlns="http://www.w3.org/2000/svg" width="595" height="420" viewBox="0 0 595 420"><rect width="595" height="420" fill="#fff"/><rect x="16" y="16" width="563" height="388" fill="none" stroke="#0D9488" stroke-width="3" rx="10"/><text x="297" y="70" text-anchor="middle" font-family="sans-serif" font-size="26" font-weight="bold" fill="#0D9488">Certificado de vacunación</text><text x="297" y="105" text-anchor="middle" font-family="sans-serif" font-size="15" fill="#555">Documento de ejemplo · VacuPet</text><line x1="60" y1="140" x2="535" y2="140" stroke="#DCEBE8"/><text x="70" y="185" font-family="sans-serif" font-size="16" fill="#222">Mascota: Rocky (Labrador)</text><text x="70" y="220" font-family="sans-serif" font-size="16" fill="#222">Vacuna: Rabia — aplicada</text><text x="70" y="255" font-family="sans-serif" font-size="16" fill="#222">Clínica: Clínica Patitas</text><text x="70" y="290" font-family="sans-serif" font-size="16" fill="#222">Veterinario: firma y sello</text><circle cx="470" cy="300" r="55" fill="none" stroke="#16A34A" stroke-width="3"/><text x="470" y="306" text-anchor="middle" font-family="sans-serif" font-size="14" font-weight="bold" fill="#16A34A">AL DÍA</text></svg>') } ],
     weights:[ { id:uid(), fecha:d(-100), kg:25 }, { id:uid(), fecha:d(-50), kg:27 }, { id:uid(), fecha:d(-8), kg:28 } ],
     vetVisits:[ { id:uid(), fecha:d(-20), motivo:'Revisión anual', clinica:'Clínica Patitas', diagnostico:'Sano · cadera estable', pesoDia:28, notas:'Radiografía de control' } ],
     meds:[ { id:uid(), nombre:'Carprofeno', dosis:'50 mg', via:'Oral', cada:1, hora:'08:00', inicio:d(-14), fin:'', proxima:d(1), activo:true, notas:'Con comida (antiinflamatorio para la cadera)' },
@@ -4633,6 +4659,8 @@ function loadDemoPet(){
   P.forEach(p => data.pets.push(p));
   data.activeId = P[0].info.id;
   data.owner = { nombre:'Ana López', telefono:'+502 5555 1234', altNombre:'Carlos (vecino)', altTelefono:'+502 5555 9876' };
+  // Manada de ejemplo: muestra la atribución "quién hizo qué" en los registros.
+  data.members = [ { id:uid(), nombre:'Ana' }, { id:uid(), nombre:'Carlos' } ];
   save(); toast(t('demo_loaded')); go('home'); celebrate();
 }
 
@@ -4656,6 +4684,7 @@ document.addEventListener('click', e=>{
   const ob=t0.closest('[data-onb]'); if(ob){ onbStep=Math.max(0,Math.min(2,onbStep+(ob.dataset.onb==='next'?1:-1))); render(); return; }
   if(t0.closest('#onbAdd')||t0.closest('#addPet')){ if(canAddPet()) petModal(null); else paywallModal('pets'); return; }
   if(t0.closest('#onbDemo')){ if(demoAllowed()) loadDemoPet(); return; }
+  if(t0.closest('#demoStart')){ startFresh(); return; }
   if(t0.closest('#presentOpen')){ presentCard(); return; }
   if(t0.closest('#manifOpen')){ manifModal(); return; }
   if(t0.closest('#manadaOpen')){ manadaModal(); return; }
