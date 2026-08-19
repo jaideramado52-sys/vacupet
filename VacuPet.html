@@ -3067,8 +3067,6 @@ function runCountUps(){
    ====================================================================== */
 const SB = window.VACUPET_SUPABASE || {};
 function cloudConfigured(){ return !!(SB.url && SB.anonKey); }
-const DEMO_ACCOUNT = 'kolopor2015@gmail.com';
-function isDemoAccount(){ return !!(session && session.user && String(session.user.email||'').toLowerCase()===DEMO_ACCOUNT); }
 // La muestra es una ayuda de arranque disponible para CUALQUIER visitante (no
 // requiere cuenta): resuelve el "app vacía" mostrando todo el potencial. El
 // perfil real sigue empezando en blanco; la muestra es aparte y removible.

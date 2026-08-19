@@ -33,6 +33,7 @@ Punto de entrada único a toda la documentación. Si acabas de llegar, lee prime
 
 ## Seguridad
 - [`SECURITY.md`](SECURITY.md) — auditoría de 3 frentes: lo corregido y los follow-ups.
+- [`ENTREGA_SEGURA.md`](ENTREGA_SEGURA.md) — qué ocultar/transferir/rotar antes de entregar al equipo.
 
 ## Legal (borradores — revisar con asesoría antes de publicar)
 - [`TERMINOS.md`](TERMINOS.md) · [`PRIVACIDAD.md`](PRIVACIDAD.md) · [`REEMBOLSOS.md`](REEMBOLSOS.md)
